@@ -8,6 +8,9 @@ namespace MAL.Net.Objects
 
         public int Id { get; set; }
         public string Title { get; set; }
+        public string Type { get; set; }
+        public int? Episodes { get; set; }
+
         public string Synopsis { get; set; }
         public List<string> JapaneseTitles { get; set; }
         public List<string> EnglishTitles { get; set; }

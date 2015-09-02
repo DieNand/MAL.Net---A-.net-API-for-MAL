@@ -70,6 +70,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\AnimeRetriever.cs" />
     <Compile Include="Objects\Anime.cs" />
     <Compile Include="MalApi.svc.cs">
       <DependentUpon>MalApi.svc</DependentUpon>
