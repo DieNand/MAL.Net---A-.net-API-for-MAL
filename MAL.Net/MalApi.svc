@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="MAL.Net.Service1" CodeBehind="MalApi.svc.cs" %>
