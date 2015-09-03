@@ -66,6 +66,10 @@ namespace MAL.Net.Classes
                     }
                 }
 
+                var img = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']").Attributes["src"].Value;
+                anime.ImageUrl = img;
+                anime.HighResImageUrl = img.Insert(img.Length - 4, "l");
+
                 foreach (var node in doc.DocumentNode.SelectNodes("//div"))
                 {
                     var innerSpan = node.ChildNodes.Descendants().FirstOrDefault()?.InnerText.Trim(':');
@@ -102,6 +106,51 @@ namespace MAL.Net.Classes
                             var cleanText = Regex.Split(txt, "                                    ").Last().Trim();
                             anime.Classification = cleanText;
                             break;
+                        case "Ranked":
+                            var rankString = node.ChildNodes["#text"].InnerText.Trim().TrimStart('#');
+                            int number;
+                            int.TryParse(rankString, out number);
+                            anime.Rank = number;
+                            break;
+                        case "Popularity":
+                            var pString = node.ChildNodes["#text"].InnerText.Trim().TrimStart('#');
+                            int pNum;
+                            int.TryParse(pString, out pNum);
+                            anime.Popularity = pNum;
+                            break;
+                        case "Score":
+                            var scoreString = node.SelectNodes("//span[@itemprop='ratingValue']")[0].InnerText;
+                            double scoreVal;
+                            double.TryParse(scoreString, out scoreVal);
+                            anime.MemberScore = scoreVal;
+                            break;
+                        case "Members":
+                            var memberString = node.ChildNodes["#text"].InnerText.Trim().Replace(",", "");
+                            int mVal;
+                            int.TryParse(memberString, out mVal);
+                            anime.MemberCount = mVal;
+                            break;
+                        case "Favorites":
+                            var favString = node.ChildNodes["#text"].InnerText.Trim();
+                            int fVal;
+                            int.TryParse(favString, out fVal);
+                            anime.FavoriteCount = fVal;
+                            break;
+                        case "Genres":
+                            foreach (var g in node.SelectNodes("//span[@itemprop='genre']"))
+                            {
+                                anime.Genres.Add(g.InnerText);
+                            }
+                            break;
+                    }
+
+                    foreach (var tagNode in doc.DocumentNode.SelectNodes("//div[@class='tags']"))
+                    {
+                        foreach (var tag in tagNode.ChildNodes.Nodes())
+                        {
+                            if(tag.OriginalName == "a" && !anime.Tags.Contains(tag.InnerText))
+                                anime.Tags.Add(tag.InnerText);
+                        }
                     }
                 }
 
