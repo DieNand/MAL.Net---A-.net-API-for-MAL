@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using MAL.Net.Objects;
 
@@ -80,6 +81,26 @@ namespace MAL.Net.Classes
                                 anime.Episodes = null;
                             else
                                 anime.Episodes = eps;
+                            break;
+                        case "Status":
+                            anime.Status = node.ChildNodes["#text"].InnerText;
+                            break;
+                        case "Aired":
+                            var dateString = node.ChildNodes["#text"].InnerText;
+                            var dates = Regex.Split(dateString, " to ");
+                            var startDate = DateTime.MinValue;
+                            var endDate = DateTime.MinValue;
+                            if(dates.Any())
+                                DateTime.TryParse(dates[0], out startDate);
+                            if(dates.Count() > 1)
+                                DateTime.TryParse(dates[1], out endDate);
+                            anime.StartDate = startDate;
+                            anime.EndDate = endDate;
+                            break;
+                        case "Rating":
+                            var txt = node.InnerText.Replace("\r\n", "");
+                            var cleanText = Regex.Split(txt, "                                    ").Last().Trim();
+                            anime.Classification = cleanText;
                             break;
                     }
                 }
