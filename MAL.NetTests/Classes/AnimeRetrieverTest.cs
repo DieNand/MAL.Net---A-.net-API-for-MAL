@@ -10,7 +10,7 @@ namespace MAL.NetTests.Classes
         public void TestAnimeRetrieval()
         {
             var instance = new AnimeRetriever();
-            var result = instance.GetAnime(28999);
+            var result = instance.GetAnime(11757);
 
             Assert.IsNotNull(result);
             Assert.IsFalse(result.ErrorOccured);
