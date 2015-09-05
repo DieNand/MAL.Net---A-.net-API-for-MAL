@@ -7,11 +7,14 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web;
 using HtmlAgilityPack;
+using MAL.NetLogic.Interfaces;
 using MAL.NetLogic.Objects;
 
 namespace MAL.NetLogic.Classes
 {
-    public class AnimeRetriever
+
+
+    public class AnimeRetriever : IAnimeRetriever
     {
         #region Variables
 
@@ -21,7 +24,7 @@ namespace MAL.NetLogic.Classes
 
         #endregion
 
-        public Anime GetAnime(int animeId)
+        public IAnime GetAnime(int animeId)
         {
             var anime = new Anime();
 

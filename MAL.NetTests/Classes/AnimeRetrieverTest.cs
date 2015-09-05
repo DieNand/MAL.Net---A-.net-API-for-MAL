@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using MAL.NetLogic.Classes;
+using MAL.NetLogic.Objects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MAL.NetTests.Classes
@@ -81,6 +82,11 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(20021, sequelInfo.Id);
             Assert.AreEqual("Sword Art Online: Extra Edition", sequelInfo.Title);
             Assert.AreEqual("http://myanimelist.net/anime/20021/Sword_Art_Online:_Extra_Edition", sequelInfo.Url);
+
+            var mapper = new MappingToJson();
+            var jsonMap = new AnimeOriginalJson();
+            var jsonMapping = mapper.ConvertAnimeToJson(result, jsonMap);
+            Assert.IsFalse(string.IsNullOrEmpty(jsonMapping));
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using MAL.NetLogic.Interfaces;
 
 namespace MAL.NetLogic.Objects
 {
-    public class Anime
+    public class Anime : IAnime
     {
         #region Properties
 
@@ -41,18 +42,18 @@ namespace MAL.NetLogic.Objects
         public List<string> Genres { get; set; } 
         public List<string> Tags { get; set; } 
 
-        public InfoUrls AdditionalInfoUrls { get; set; }
+        public IInfoUrls AdditionalInfoUrls { get; set; }
 
-        public List<Related> MangaAdaptation { get; set; }
-        public List<Related> Prequels { get; set; }
-        public List<Related> Sequels { get; set; }
-        public List<Related> SideStories { get; set; }
-        public Related ParentStory { get; set; }
-        public List<Related> CharacterAnime { get; set; }
-        public List<Related> SpinOffs { get; set; }
-        public List<Related> Summaries { get; set; }
-        public List<Related> AlternativeVersion { get; set; }
-        public List<Related> Others { get; set; } 
+        public List<IRelated> MangaAdaptation { get; set; }
+        public List<IRelated> Prequels { get; set; }
+        public List<IRelated> Sequels { get; set; }
+        public List<IRelated> SideStories { get; set; }
+        public IRelated ParentStory { get; set; }
+        public List<IRelated> CharacterAnime { get; set; }
+        public List<IRelated> SpinOffs { get; set; }
+        public List<IRelated> Summaries { get; set; }
+        public List<IRelated> AlternativeVersion { get; set; }
+        public List<IRelated> Others { get; set; } 
 
         public bool ErrorOccured { get; set; }
         public string ErrorMessage { get; set; }
@@ -71,40 +72,19 @@ namespace MAL.NetLogic.Objects
             Genres = new List<string>();
             Tags = new List<string>();
             AdditionalInfoUrls = new InfoUrls();
-            MangaAdaptation = new List<Related>();
-            Prequels = new List<Related>();
-            Sequels = new List<Related>();
-            SideStories = new List<Related>();
+            MangaAdaptation = new List<IRelated>();
+            Prequels = new List<IRelated>();
+            Sequels = new List<IRelated>();
+            SideStories = new List<IRelated>();
             ParentStory = null;
-            CharacterAnime = new List<Related>();
-            SpinOffs = new List<Related>();
-            Summaries = new List<Related>();
-            AlternativeVersion = new List<Related>();
-            Others = new List<Related>();
+            CharacterAnime = new List<IRelated>();
+            SpinOffs = new List<IRelated>();
+            Summaries = new List<IRelated>();
+            AlternativeVersion = new List<IRelated>();
+            Others = new List<IRelated>();
             ErrorOccured = false;
         }
 
         #endregion
-    }
-
-    public class InfoUrls
-    {
-        public string Episodes { get; set; }
-        public string Reviews { get; set; }
-        public string Recommendation { get; set; }
-        public string Stats { get; set; }
-        public string CharactersAndStaff { get; set; }
-        public string News { get; set; }
-        public string Forum { get; set; }
-        public string Featured { get; set; }
-        public string Clubs { get; set; }
-        public string Pictures { get; set; }
-    }
-
-    public class Related
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Url { get; set; }
     }
 }

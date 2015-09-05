@@ -31,8 +31,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.0.4.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.0.4\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -47,12 +55,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\AnimeRetriever.cs" />
+    <Compile Include="Classes\MappingToJson.cs" />
+    <Compile Include="Interfaces\IAnime.cs" />
+    <Compile Include="Interfaces\IAnimeOriginalJson.cs" />
+    <Compile Include="Interfaces\IAnimeRetriever.cs" />
+    <Compile Include="Interfaces\IInfoUrls.cs" />
+    <Compile Include="Interfaces\IRelated.cs" />
     <Compile Include="Objects\Anime.cs" />
+    <Compile Include="Objects\AnimeOriginalJson.cs" />
+    <Compile Include="Objects\InfoUrls.cs" />
+    <Compile Include="Objects\Related.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
