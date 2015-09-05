@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\AnimeRetriever.cs" />
+    <Compile Include="Classes\CredentialVerification.cs" />
     <Compile Include="Classes\MappingToJson.cs" />
     <Compile Include="Factories\AnimeFactory.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />

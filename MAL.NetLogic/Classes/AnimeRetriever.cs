@@ -36,7 +36,7 @@ namespace MAL.NetLogic.Classes
 
         #endregion
 
-        public async Task<IAnime> GetAnime(int animeId)
+        public async Task<IAnime> GetAnime(int animeId, string username = "", string password = "")
         {
             var anime = _animeFactory.CreateAnime();
 
@@ -45,13 +45,23 @@ namespace MAL.NetLogic.Classes
                 //Our first task is to retrieve the MAL anime - for now we cheat and grab it from our example data
                 var doc = new HtmlDocument();
 
-#if false
+#if true
                 var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 var file = Path.Combine("AnimeExamples", $"{animeId}.html");
                 doc.Load(Path.Combine(path, file));
 #else
                 var url = string.Format(MalUrl, animeId);
-                var webClient = new HttpClient();
+                HttpClient webClient;
+
+                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+                {
+                    var handler = new HttpClientHandler {Credentials = new NetworkCredential(username, password)};
+                    webClient = new HttpClient(handler);
+                }
+                else
+                {
+                    webClient = new HttpClient();
+                }
                 var data = await webClient.GetStreamAsync(new Uri(url));
                 doc.Load(data);
 #endif
@@ -107,8 +117,7 @@ namespace MAL.NetLogic.Classes
                             anime.Type = node.ChildNodes["#text"].InnerText.Trim();
                             break;
                         case "Episodes":
-                            string epString;
-                            epString = node.ChildNodes["#text"].InnerText;
+                            var epString = node.ChildNodes["#text"].InnerText;
                             int eps;
                             int.TryParse(epString, out eps);
                             if (eps == 0)
@@ -177,6 +186,29 @@ namespace MAL.NetLogic.Classes
                                 anime.Genres.Add(g.InnerText);
                             }
                             break;
+                    }
+
+                    var epNode =
+                        doc.DocumentNode.SelectSingleNode("//input[@type='text' and @name='myinfo_watchedeps']")
+                            .Attributes["value"].Value;
+                    int myScore;
+                    int.TryParse(epNode, out myScore);
+                    anime.UserWatchedEpisodes = myScore;
+
+                    foreach(var scoreNodes in doc.DocumentNode.SelectSingleNode("//select[@name='myinfo_score']").ChildNodes)
+                    {
+                        if(scoreNodes.GetAttributeValue("selected", "") != "selected") continue;
+                        var epWatched = scoreNodes.Attributes["value"].Value;
+                        int usrScore;
+                        int.TryParse(epWatched, out usrScore);
+                        anime.UserScore = usrScore;
+                    }
+
+                    foreach (var statusNode in doc.DocumentNode.SelectSingleNode("//select[@name='myinfo_status']").ChildNodes)
+                    {
+                        if(statusNode.GetAttributeValue("selected", "") != "selected") continue;
+                        var status = statusNode.NextSibling.InnerText;
+                        anime.UserWatchedStatus = status;
                     }
 
                     foreach (var tagNode in doc.DocumentNode.SelectNodes("//div[@class='tags']"))
@@ -250,8 +282,10 @@ namespace MAL.NetLogic.Classes
 
         private void GetRelated(HtmlDocument doc, IAnime anime)
         {
-            var node = doc.DocumentNode.SelectSingleNode("//table[@class='anime_detail_related_anime']").ChildNodes["tr"];
-            ParseTd(node, anime);
+            foreach(var node in doc.DocumentNode.SelectSingleNode("//table[@class='anime_detail_related_anime']").ChildNodes)
+            {
+                ParseTd(node, anime);
+            }
         }
 
         private void ParseTd(HtmlNode node, IAnime anime)

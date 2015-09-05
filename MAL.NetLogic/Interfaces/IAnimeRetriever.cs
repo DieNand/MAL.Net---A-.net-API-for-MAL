@@ -5,6 +5,6 @@ namespace MAL.NetLogic.Interfaces
 {
     public interface IAnimeRetriever
     {
-        Task<IAnime> GetAnime(int animeId);
+        Task<IAnime> GetAnime(int animeId, string username = "", string password = "");
     }
 }

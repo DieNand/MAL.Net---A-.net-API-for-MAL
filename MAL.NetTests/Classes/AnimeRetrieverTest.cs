@@ -59,12 +59,12 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual("http://cdn.myanimelist.net/images/anime/11/39717l.jpg", result.HighResImageUrl);
 
             Assert.AreEqual(8.05, result.MemberScore);
-            Assert.AreEqual(580338, result.MemberCount);
-            Assert.AreEqual(31613, result.FavoriteCount);
+            Assert.AreEqual(580604, result.MemberCount);
+            Assert.AreEqual(31622, result.FavoriteCount);
 
-            Assert.AreEqual(0, result.UserScore);
-            Assert.AreEqual(0, result.UserWatchedEpisodes);
-            Assert.IsTrue(string.IsNullOrEmpty(result.UserWatchedStatus));
+            Assert.AreEqual(10, result.UserScore);
+            Assert.AreEqual(25, result.UserWatchedEpisodes);
+            Assert.AreEqual("Completed", result.UserWatchedStatus);
 
             Assert.AreEqual(5, result.Genres.Count);
             Assert.AreEqual(7, result.Tags.Count);
