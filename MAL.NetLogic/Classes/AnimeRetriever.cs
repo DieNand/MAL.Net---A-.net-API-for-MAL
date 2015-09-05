@@ -45,7 +45,7 @@ namespace MAL.NetLogic.Classes
                 //Our first task is to retrieve the MAL anime - for now we cheat and grab it from our example data
                 var doc = new HtmlDocument();
 
-#if true
+#if false
                 var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 var file = Path.Combine("AnimeExamples", $"{animeId}.html");
                 doc.Load(Path.Combine(path, file));
@@ -117,7 +117,7 @@ namespace MAL.NetLogic.Classes
                             anime.Type = node.ChildNodes["#text"].InnerText.Trim();
                             break;
                         case "Episodes":
-                            var epString = node.ChildNodes["#text"].InnerText;
+                            var epString = node.ChildNodes["#text"].InnerText.TrimEnd("\n\t".ToCharArray());
                             int eps;
                             int.TryParse(epString, out eps);
                             if (eps == 0)
@@ -127,8 +127,10 @@ namespace MAL.NetLogic.Classes
                                 anime.Episodes = eps;
                             }
 
-                            if(eps == 0)
+                            if (eps == 0)
                                 anime.Episodes = null;
+                            else
+                                anime.Episodes = eps;
                             break;
                         case "Status":
                             anime.Status = node.ChildNodes["#text"].InnerText.Trim();
@@ -187,6 +189,28 @@ namespace MAL.NetLogic.Classes
                             }
                             break;
                     }
+                }
+
+                foreach (var tagNode in doc.DocumentNode.SelectNodes("//div[@class='tags']"))
+                {
+                    foreach (var tag in tagNode.ChildNodes.Nodes())
+                    {
+                        if (tag.OriginalName == "a" && !anime.Tags.Contains(tag.InnerText))
+                            anime.Tags.Add(tag.InnerText);
+                    }
+                }
+
+                GetInfoUrls(doc, anime);
+                GetRelated(doc, anime);
+
+                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+                {
+                    foreach (var statusNode in doc.DocumentNode.SelectSingleNode("//select[@name='myinfo_status']").ChildNodes)
+                    {
+                        if (statusNode.GetAttributeValue("selected", "") != "selected") continue;
+                        var status = statusNode.NextSibling.InnerText;
+                        anime.UserWatchedStatus = status;
+                    }
 
                     var epNode =
                         doc.DocumentNode.SelectSingleNode("//input[@type='text' and @name='myinfo_watchedeps']")
@@ -195,34 +219,17 @@ namespace MAL.NetLogic.Classes
                     int.TryParse(epNode, out myScore);
                     anime.UserWatchedEpisodes = myScore;
 
-                    foreach(var scoreNodes in doc.DocumentNode.SelectSingleNode("//select[@name='myinfo_score']").ChildNodes)
+                    foreach (
+                        var scoreNodes in doc.DocumentNode.SelectSingleNode("//select[@name='myinfo_score']").ChildNodes
+                        )
                     {
-                        if(scoreNodes.GetAttributeValue("selected", "") != "selected") continue;
+                        if (scoreNodes.GetAttributeValue("selected", "") != "selected") continue;
                         var epWatched = scoreNodes.Attributes["value"].Value;
                         int usrScore;
                         int.TryParse(epWatched, out usrScore);
                         anime.UserScore = usrScore;
                     }
-
-                    foreach (var statusNode in doc.DocumentNode.SelectSingleNode("//select[@name='myinfo_status']").ChildNodes)
-                    {
-                        if(statusNode.GetAttributeValue("selected", "") != "selected") continue;
-                        var status = statusNode.NextSibling.InnerText;
-                        anime.UserWatchedStatus = status;
-                    }
-
-                    foreach (var tagNode in doc.DocumentNode.SelectNodes("//div[@class='tags']"))
-                    {
-                        foreach (var tag in tagNode.ChildNodes.Nodes())
-                        {
-                            if(tag.OriginalName == "a" && !anime.Tags.Contains(tag.InnerText))
-                                anime.Tags.Add(tag.InnerText);
-                        }
-                    }
                 }
-                GetInfoUrls(doc, anime);
-                GetRelated(doc, anime);
-
             }
             catch (Exception ex)
             {

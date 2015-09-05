@@ -8,16 +8,16 @@ namespace MAL.NetSelfHosted.Handlers
     {
         #region Variables
 
-        private readonly IAnimeRetriever _retriever;
+        private readonly ICacheHandler _cacheHandler;
         private readonly IMappingToJson _jsonMapper;
 
         #endregion
 
         #region Constructor
 
-        public AnimeHandler(IAnimeRetriever retriever, IMappingToJson jsonMapper)
+        public AnimeHandler(ICacheHandler cacheHandler, IMappingToJson jsonMapper)
         {
-            _retriever = retriever;
+            _cacheHandler = cacheHandler;
             _jsonMapper = jsonMapper;
         }
 
@@ -27,7 +27,16 @@ namespace MAL.NetSelfHosted.Handlers
 
         public async Task<string> HandleRequest(int id)
         {
-            var obj = await _retriever.GetAnime(id);
+            var obj = await _cacheHandler.GetAnime(id);
+            var jsonObj = _jsonMapper.ConvertAnimeToJson(obj);
+
+            return jsonObj;
+        }
+
+        public async Task<string> HandleRequest(int id, string username, string password)
+        {
+            //var obj = await _retriever.GetAnime(id, username, password);
+            var obj = await _cacheHandler.GetAnime(id, username, password);
             var jsonObj = _jsonMapper.ConvertAnimeToJson(obj);
 
             return jsonObj;

@@ -50,6 +50,20 @@ namespace MAL.NetSelfHosted.Controllers
             return response;
         }
 
+        public async Task<HttpResponseMessage> Get(int id, string username, string password)
+        {
+            _stopwatch.Reset();
+            _stopwatch.Start();
+            Console.WriteLine($"{DateTime.Now} - [Anime] Received request for Anime ID {id}");
+            var anime = await _animeHandler.HandleRequest(id, username, password);
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(anime, Encoding.UTF8, "application/json");
+            _stopwatch.Stop();
+            Console.WriteLine($"{DateTime.Now} - [Anime] Sent response for Anime ID {id}. Processing took {_stopwatch.Elapsed}");
+
+            return response;
+        }
+
         // POST api/values 
         public void Post([FromBody]string value)
         {

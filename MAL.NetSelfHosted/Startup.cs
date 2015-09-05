@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Web.Http;
+﻿using System.Web.Http;
 using AutoMapper;
 using MAL.NetLogic.Classes;
 using MAL.NetLogic.Factories;
@@ -37,7 +35,8 @@ namespace MAL.NetSelfHosted
             container.Register<IAnimeFactory, AnimeFactory>(Lifestyle.Singleton);
             container.Register<IAnimeRetriever, AnimeRetriever>(Lifestyle.Singleton);
             container.Register<IMappingToJson, MappingToJson>(Lifestyle.Singleton);
-            container.Register<IAnimeHandler, AnimeHandler>();
+            container.Register<IAnimeHandler, AnimeHandler>(Lifestyle.Singleton);
+            container.Register<ICacheHandler, CacheHandler>(Lifestyle.Singleton);
 
             container.RegisterWebApiControllers(config);
 
