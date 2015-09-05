@@ -65,7 +65,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AnimeExamples\28999.html" />
     <Content Include="MalApi.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
