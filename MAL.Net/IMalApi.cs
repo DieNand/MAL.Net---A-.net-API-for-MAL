@@ -1,5 +1,5 @@
 ﻿using System.ServiceModel;
-using MAL.Net.Objects;
+using MAL.NetLogic.Objects;
 
 namespace MAL.Net
 {

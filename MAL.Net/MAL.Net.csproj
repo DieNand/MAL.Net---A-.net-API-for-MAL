@@ -69,8 +69,6 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\AnimeRetriever.cs" />
-    <Compile Include="Objects\Anime.cs" />
     <Compile Include="MalApi.svc.cs">
       <DependentUpon>MalApi.svc</DependentUpon>
     </Compile>
@@ -88,6 +86,12 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MAL.NetLogic\MAL.NetLogic.csproj">
+      <Project>{A7578C8B-D620-49CC-9FBE-B9D40C760FBD}</Project>
+      <Name>MAL.NetLogic</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MAL.Net.Objects
+namespace MAL.NetLogic.Objects
 {
     public class Anime
     {

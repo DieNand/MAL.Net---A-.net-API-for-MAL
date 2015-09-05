@@ -1,5 +1,5 @@
-﻿using MAL.Net.Classes;
-using MAL.Net.Objects;
+﻿using MAL.NetLogic.Classes;
+using MAL.NetLogic.Objects;
 
 namespace MAL.Net
 {

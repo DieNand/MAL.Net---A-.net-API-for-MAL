@@ -59,6 +59,10 @@
     <Folder Include="Objects\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MAL.NetLogic\MAL.NetLogic.csproj">
+      <Project>{A7578C8B-D620-49CC-9FBE-B9D40C760FBD}</Project>
+      <Name>MAL.NetLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MAL.Net\MAL.Net.csproj">
       <Project>{ED030098-00F4-421B-91A9-57213CCBF1D5}</Project>
       <Name>MAL.Net</Name>

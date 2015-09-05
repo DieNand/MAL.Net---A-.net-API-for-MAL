@@ -5,11 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Web.UI.WebControls;
+using System.Web;
 using HtmlAgilityPack;
-using MAL.Net.Objects;
+using MAL.NetLogic.Objects;
 
-namespace MAL.Net.Classes
+namespace MAL.NetLogic.Classes
 {
     public class AnimeRetriever
     {
@@ -46,8 +46,11 @@ namespace MAL.Net.Classes
 
                 anime.Title =
                     doc.DocumentNode.SelectSingleNode("//h1").SelectSingleNode("//span[@itemprop='name']").InnerText;
-                anime.Synopsis = doc.DocumentNode.SelectSingleNode("//span[@itemprop='description']").InnerText;
-                //We need to do some synopsis cleanup
+                var synopsis = doc.DocumentNode.SelectSingleNode("//span[@itemprop='description']").InnerText;
+
+                synopsis = synopsis.TrimStart("\r\n".ToCharArray()).Trim();
+                synopsis = HttpUtility.HtmlDecode(synopsis);
+                anime.Synopsis = synopsis;
 
                 //Retrieve Alternative titles
                 foreach (var node in doc.DocumentNode.SelectNodes("//div[@class='spaceit_pad']"))

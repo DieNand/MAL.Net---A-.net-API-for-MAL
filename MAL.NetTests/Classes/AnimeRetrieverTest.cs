@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using MAL.Net.Classes;
+using MAL.NetLogic.Classes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MAL.NetTests.Classes
@@ -18,7 +18,7 @@ namespace MAL.NetTests.Classes
             var result = instance.GetAnime(11757);
 
             Assert.IsNotNull(result);
-            Assert.IsFalse(result.ErrorOccured);
+            Assert.IsFalse(result.ErrorOccured, result.ErrorMessage);
             Assert.IsTrue(string.IsNullOrEmpty(result.ErrorMessage));
 
             Assert.AreEqual(11757, result.Id);
