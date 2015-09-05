@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Web;
+using AutoMapper;
+using FakeItEasy;
 using MAL.NetLogic.Classes;
+using MAL.NetLogic.Interfaces;
 using MAL.NetLogic.Objects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SimpleInjector;
 
 namespace MAL.NetTests.Classes
 {
@@ -15,8 +20,16 @@ namespace MAL.NetTests.Classes
             var startDate = new DateTime(2012, 7, 8);
             var endDate = new DateTime(2012, 12, 23);
 
-            var instance = new AnimeRetriever();
-            var result = instance.GetAnime(11757);
+            var fakeFactory = A.Fake<IAnimeFactory>();
+            var fakeAnime = A.Fake<IAnime>();
+            var fakeJson = A.Fake<IAnimeOriginalJson>();
+
+            A.CallTo(() => fakeFactory.CreateAnime()).Returns(fakeAnime);
+            A.CallTo(() => fakeFactory.CreateJsonAnime()).Returns(fakeJson);
+
+            var instance = new AnimeRetriever(fakeFactory);
+            var tResult = instance.GetAnime(11757);
+            var result = tResult.Result;
 
             Assert.IsNotNull(result);
             Assert.IsFalse(result.ErrorOccured, result.ErrorMessage);
@@ -26,7 +39,7 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual("Sword Art Online", result.Title);
             Assert.IsFalse(string.IsNullOrEmpty(result.Synopsis));
             Assert.AreEqual(1, result.JapaneseTitles.Count);
-            Assert.AreEqual("ソードアート・オンライン", result.JapaneseTitles.First());
+            Assert.AreEqual("ソードアート・オンライン", HttpUtility.HtmlDecode(result.JapaneseTitles.First()));
             Assert.AreEqual(1, result.EnglishTitles.Count);
             Assert.AreEqual("Sword Art Online", result.EnglishTitles.First());
             Assert.AreEqual(2, result.SynonymousTitles.Count);
@@ -71,7 +84,6 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(0, result.Prequels.Count);
             Assert.AreEqual(1, result.Sequels.Count);
             Assert.AreEqual(0, result.SideStories.Count);
-            Assert.IsNull(result.ParentStory);
             Assert.AreEqual(0, result.CharacterAnime.Count);
             Assert.AreEqual(0, result.SpinOffs.Count);
             Assert.AreEqual(0, result.Summaries.Count);
@@ -82,11 +94,6 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(20021, sequelInfo.Id);
             Assert.AreEqual("Sword Art Online: Extra Edition", sequelInfo.Title);
             Assert.AreEqual("http://myanimelist.net/anime/20021/Sword_Art_Online:_Extra_Edition", sequelInfo.Url);
-
-            var mapper = new MappingToJson();
-            var jsonMap = new AnimeOriginalJson();
-            var jsonMapping = mapper.ConvertAnimeToJson(result, jsonMap);
-            Assert.IsFalse(string.IsNullOrEmpty(jsonMapping));
         }
     }
 }

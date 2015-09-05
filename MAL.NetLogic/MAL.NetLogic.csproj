@@ -35,12 +35,28 @@
       <HintPath>..\packages\AutoMapper.4.0.4\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Glimpse.AspNet, Version=1.9.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Glimpse.AspNet.1.9.2\lib\net45\Glimpse.AspNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Glimpse.Core, Version=1.8.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Glimpse.1.8.6\lib\net45\Glimpse.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Glimpse.SimpleInjector, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Glimpse.SimpleInjector.1.0.0\lib\net40\Glimpse.SimpleInjector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SimpleInjector, Version=2.8.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.2.8.0\lib\net45\SimpleInjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -56,10 +72,14 @@
   <ItemGroup>
     <Compile Include="Classes\AnimeRetriever.cs" />
     <Compile Include="Classes\MappingToJson.cs" />
+    <Compile Include="Factories\AnimeFactory.cs" />
+    <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Interfaces\IAnime.cs" />
+    <Compile Include="Interfaces\IAnimeFactory.cs" />
     <Compile Include="Interfaces\IAnimeOriginalJson.cs" />
     <Compile Include="Interfaces\IAnimeRetriever.cs" />
     <Compile Include="Interfaces\IInfoUrls.cs" />
+    <Compile Include="Interfaces\IMappingToJson.cs" />
     <Compile Include="Interfaces\IRelated.cs" />
     <Compile Include="Objects\Anime.cs" />
     <Compile Include="Objects\AnimeOriginalJson.cs" />

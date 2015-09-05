@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
 using MAL.NetLogic.Interfaces;
@@ -20,23 +23,37 @@ namespace MAL.NetLogic.Classes
 
         private const string MalUrl = @"http://myanimelist.net/anime/{0}";
         private const string CleanMalUrl = @"http://myanimelist.net{0}";
-        private readonly string _examplePath = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+        private readonly IAnimeFactory _animeFactory;
 
         #endregion
 
-        public IAnime GetAnime(int animeId)
+        #region Constructor
+
+        public AnimeRetriever(IAnimeFactory animeFactory)
         {
-            var anime = new Anime();
+            _animeFactory = animeFactory;
+        }
+
+        #endregion
+
+        public async Task<IAnime> GetAnime(int animeId)
+        {
+            var anime = _animeFactory.CreateAnime();
 
             try
             {
                 //Our first task is to retrieve the MAL anime - for now we cheat and grab it from our example data
                 var doc = new HtmlDocument();
-#if DEBUG
+
+#if false
+                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 var file = Path.Combine("AnimeExamples", $"{animeId}.html");
-                doc.Load(Path.Combine(_examplePath, file));
+                doc.Load(Path.Combine(path, file));
 #else
-            doc.LoadHtml(string.Format(MalUrl, animeId));
+                var url = string.Format(MalUrl, animeId);
+                var webClient = new HttpClient();
+                var data = await webClient.GetStreamAsync(new Uri(url));
+                doc.Load(data);
 #endif
 
                 //Retrieve the MAL ID
@@ -139,7 +156,7 @@ namespace MAL.NetLogic.Classes
                         case "Score":
                             var scoreString = node.SelectNodes("//span[@itemprop='ratingValue']")[0].InnerText;
                             double scoreVal;
-                            double.TryParse(scoreString, System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out scoreVal);
+                            double.TryParse(scoreString, NumberStyles.Any, CultureInfo.InvariantCulture, out scoreVal);
                             anime.MemberScore = scoreVal;
                             break;
                         case "Members":
@@ -184,9 +201,9 @@ namespace MAL.NetLogic.Classes
             return anime;
         }
 
-        #region Private Methods
+#region Private Methods
 
-        private void GetInfoUrls(HtmlDocument doc, Anime anime)
+        private void GetInfoUrls(HtmlDocument doc, IAnime anime)
         {
             foreach (var listItem in doc.DocumentNode.SelectNodes("//div[@id='horiznav_nav']"))
             {
@@ -231,13 +248,13 @@ namespace MAL.NetLogic.Classes
             }
         }
 
-        private void GetRelated(HtmlDocument doc, Anime anime)
+        private void GetRelated(HtmlDocument doc, IAnime anime)
         {
             var node = doc.DocumentNode.SelectSingleNode("//table[@class='anime_detail_related_anime']").ChildNodes["tr"];
             ParseTd(node, anime);
         }
 
-        private void ParseTd(HtmlNode node, Anime anime)
+        private void ParseTd(HtmlNode node, IAnime anime)
         {
             switch (node.ChildNodes[0].InnerText.Replace(":",""))
             {
@@ -307,6 +324,6 @@ namespace MAL.NetLogic.Classes
 
             return relatedShows;
         }
-        #endregion
+#endregion
     }
 }

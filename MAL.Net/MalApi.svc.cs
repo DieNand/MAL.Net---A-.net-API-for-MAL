@@ -8,8 +8,9 @@ namespace MAL.Net
     {
         public IAnime GetAnime(int animeId)
         {
-            var retriever = new AnimeRetriever();
-            return retriever.GetAnime(animeId);
+            return new Anime();
+            //var retriever = new AnimeRetriever();
+            //return retriever.GetAnime(animeId);
         }
     }
 }

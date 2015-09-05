@@ -1,9 +1,10 @@
-﻿using MAL.NetLogic.Objects;
+﻿using System.Threading.Tasks;
+using MAL.NetLogic.Objects;
 
 namespace MAL.NetLogic.Interfaces
 {
     public interface IAnimeRetriever
     {
-        IAnime GetAnime(int animeId);
+        Task<IAnime> GetAnime(int animeId);
     }
 }

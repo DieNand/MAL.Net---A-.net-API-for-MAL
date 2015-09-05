@@ -1,26 +1,35 @@
 ﻿using AutoMapper;
 using MAL.NetLogic.Interfaces;
-using MAL.NetLogic.Objects;
 using Newtonsoft.Json;
 
 namespace MAL.NetLogic.Classes
 {
-    public class MappingToJson
+    public class MappingToJson : IMappingToJson
     {
+        #region Variables
+
+        private readonly IMappingEngine _mappingEngine;
+        private readonly IAnimeFactory _factory;
+
+        #endregion
+
         #region Constructor
 
-        public MappingToJson()
+        public MappingToJson(IMappingEngine mappingEngine, IAnimeFactory factory)
         {
-            Mapper.CreateMap<Anime, AnimeOriginalJson>();
+            _mappingEngine = mappingEngine;
+            _mappingEngine.ConfigurationProvider.CreateTypeMap(typeof (IAnime), typeof (IAnimeOriginalJson));
+            _factory = factory;
         }
 
         #endregion
 
         #region Public Methods
 
-        public string ConvertAnimeToJson(IAnime anime, IAnimeOriginalJson jsonAnime)
+        public string ConvertAnimeToJson(IAnime anime)
         {
-            Mapper.Map(anime, jsonAnime);
+            var jsonAnime = _factory.CreateJsonAnime();
+            _mappingEngine.Map(anime, jsonAnime);
             jsonAnime.OtherTitles["japanese"].AddRange(anime.JapaneseTitles);
             jsonAnime.OtherTitles["english"].AddRange(anime.EnglishTitles);
             jsonAnime.OtherTitles["synonyms"].AddRange(anime.SynonymousTitles);
