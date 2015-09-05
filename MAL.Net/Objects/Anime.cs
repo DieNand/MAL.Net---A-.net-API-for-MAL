@@ -30,7 +30,6 @@ namespace MAL.Net.Objects
         public string ImageUrl { get; set; }
         public string HighResImageUrl { get; set; }
 
-        public int Ranked { get; set; }
         public double MemberScore { get; set; }
         public int MemberCount { get; set; }
         public int FavoriteCount { get; set; }
@@ -76,7 +75,7 @@ namespace MAL.Net.Objects
             Prequels = new List<Related>();
             Sequels = new List<Related>();
             SideStories = new List<Related>();
-            ParentStory = new Related();
+            ParentStory = null;
             CharacterAnime = new List<Related>();
             SpinOffs = new List<Related>();
             Summaries = new List<Related>();

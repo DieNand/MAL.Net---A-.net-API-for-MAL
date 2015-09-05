@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -45,6 +47,7 @@ namespace MAL.Net.Classes
                 anime.Title =
                     doc.DocumentNode.SelectSingleNode("//h1").SelectSingleNode("//span[@itemprop='name']").InnerText;
                 anime.Synopsis = doc.DocumentNode.SelectSingleNode("//span[@itemprop='description']").InnerText;
+                //We need to do some synopsis cleanup
 
                 //Retrieve Alternative titles
                 foreach (var node in doc.DocumentNode.SelectNodes("//div[@class='spaceit_pad']"))
@@ -55,15 +58,15 @@ namespace MAL.Net.Classes
                     {
                         case "Japanese":
                             var jTitle = node.ChildNodes["#text"].InnerText;
-                            anime.JapaneseTitles.AddRange(jTitle.Split(','));
+                            anime.JapaneseTitles.AddRange(jTitle.Split(',').Select(t => t.Trim()));
                             break;
                         case "English":
                             var eTitle = node.ChildNodes["#text"].InnerText;
-                            anime.EnglishTitles.AddRange(eTitle.Split(','));
+                            anime.EnglishTitles.AddRange(eTitle.Split(',').Select(t => t.Trim()));
                             break;
                         case "Synonyms":
                             var sTitle = node.ChildNodes["#text"].InnerText;
-                            anime.SynonymousTitles.AddRange(sTitle.Split(','));
+                            anime.SynonymousTitles.AddRange(sTitle.Split(',').Select(t => t.Trim()));
                             break;
                     }
                 }
@@ -78,18 +81,25 @@ namespace MAL.Net.Classes
                     switch (innerSpan)
                     {
                         case "Type":
-                            anime.Type = node.ChildNodes["#text"].InnerText;
+                            anime.Type = node.ChildNodes["#text"].InnerText.Trim();
                             break;
                         case "Episodes":
-                            var epString = node.ChildNodes["#text"].InnerText;
+                            string epString;
+                            epString = node.ChildNodes["#text"].InnerText;
                             int eps;
-                            if (!int.TryParse(epString, out eps))
-                                anime.Episodes = null;
-                            else
+                            int.TryParse(epString, out eps);
+                            if (eps == 0)
+                            {
+                                epString = node.ChildNodes[2].InnerText.Replace("\r\n", "").Trim();
+                                int.TryParse(epString, out eps);
                                 anime.Episodes = eps;
+                            }
+
+                            if(eps == 0)
+                                anime.Episodes = null;
                             break;
                         case "Status":
-                            anime.Status = node.ChildNodes["#text"].InnerText;
+                            anime.Status = node.ChildNodes["#text"].InnerText.Trim();
                             break;
                         case "Aired":
                             var dateString = node.ChildNodes["#text"].InnerText;
@@ -123,7 +133,7 @@ namespace MAL.Net.Classes
                         case "Score":
                             var scoreString = node.SelectNodes("//span[@itemprop='ratingValue']")[0].InnerText;
                             double scoreVal;
-                            double.TryParse(scoreString, out scoreVal);
+                            double.TryParse(scoreString, System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out scoreVal);
                             anime.MemberScore = scoreVal;
                             break;
                         case "Members":
@@ -135,7 +145,7 @@ namespace MAL.Net.Classes
                         case "Favorites":
                             var favString = node.ChildNodes["#text"].InnerText.Trim();
                             int fVal;
-                            int.TryParse(favString, out fVal);
+                            int.TryParse(favString, NumberStyles.Any, CultureInfo.InvariantCulture, out fVal);
                             anime.FavoriteCount = fVal;
                             break;
                         case "Genres":
@@ -226,37 +236,38 @@ namespace MAL.Net.Classes
             switch (node.ChildNodes[0].InnerText.Replace(":",""))
             {
                 case "Adaptation":
-                    anime.MangaAdaptation.Add(MapRelated(node));
+                    anime.MangaAdaptation.AddRange(MapRelated(node));
                     break;
                 case "Prequel":
-                    anime.Prequels.Add(MapRelated(node));
+                    anime.Prequels.AddRange(MapRelated(node));
                     break;
                 case "Sequel":
-                    anime.Sequels.Add(MapRelated(node));
+                    anime.Sequels.AddRange(MapRelated(node));
                     break;
                 case "Side Story":
-                    anime.SideStories.Add(MapRelated(node));
+                    anime.SideStories.AddRange(MapRelated(node));
                     break;
                 case "Parent Story":
-                    anime.ParentStory = MapRelated(node);
+                    anime.ParentStory = MapRelated(node).FirstOrDefault();
                     break;
                 case "Character Anime":
-                    anime.CharacterAnime.Add(MapRelated(node));
+                    anime.CharacterAnime.AddRange(MapRelated(node));
                     break;
                 case "Spin Off":
-                    anime.SpinOffs.Add(MapRelated(node));
+                    anime.SpinOffs.AddRange(MapRelated(node));
                     break;
                 case "Summary":
-                    anime.Summaries.Add(MapRelated(node));
+                    anime.Summaries.AddRange(MapRelated(node));
                     break;
                 case "Alternative Versions":
-                    anime.AlternativeVersion.Add(MapRelated(node));
+                    anime.AlternativeVersion.AddRange(MapRelated(node));
                     break;
                 default:
-                    anime.Others.Add(MapRelated(node));
+                    anime.Others.AddRange(MapRelated(node));
                     break;
 
             }
+
             if (node.ChildNodes.Count == 3)
             {
                 var nextNode = node.ChildNodes[2];
@@ -265,20 +276,30 @@ namespace MAL.Net.Classes
             }
         }
 
-        private Related MapRelated(HtmlNode node)
+        private List<Related> MapRelated(HtmlNode node)
         {
+            var relatedShows = new List<Related>();
+
             var subNode = node.ChildNodes[1];
-            var url = subNode.ChildNodes["a"].Attributes["href"].Value;
-            var related = new Related
+            foreach(var url in subNode.ChildNodes)
             {
-                Title = subNode.InnerText,
-                Url = string.Format(CleanMalUrl, url)
-            };
-            var parts = url.Split('/');
-            int id;
-            int.TryParse(parts[2], out id);
-            related.Id = id;
-            return related;
+                if (url.Name == "a")
+                {
+                    var related = new Related
+                    {
+                        Title = url.InnerText,
+                        Url = string.Format(CleanMalUrl, url.Attributes["href"].Value)
+                    };
+                    var parts = related.Url.Split('/');
+                    int id;
+                    int.TryParse(parts[4], out id);
+                    related.Id = id;
+                    relatedShows.Add(related);
+                }
+            }
+
+
+            return relatedShows;
         }
         #endregion
     }
