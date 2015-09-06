@@ -30,15 +30,13 @@ namespace MAL.NetSelfHosted
         {
             ReadSettings();
 
-            HttpSelfHostConfiguration config;
-            if (_host.StartsWith("https"))
-            {
-                config = new SecureHttpSelfHostConfiguration($"{_host}:{_port}");
-            }
-            else
-            {
-                config = new HttpSelfHostConfiguration($"{_host}:{_port}");
-            }
+            //To run over https you require a ssl certificate
+            //Execute the following commands to prepare the server
+            //netsh http add urlacl url=https://+:port/ user=Everyone
+            //netsh http add sslcert ipport = 0.0.0.0:port certhash = certThumbprint appid ={ 50e6f7c6 - 6ca0 - 4477 - b3c7 - 178141c0df60}
+            //Note: The self test will fail if the ssl certificate isn't valid - This is the expected behaviour and should NOT be changed
+
+            var config = _host.StartsWith("https") ? new SecureHttpSelfHostConfiguration($"{_host}:{_port}") : new HttpSelfHostConfiguration($"{_host}:{_port}");
 
             config.Routes.MapHttpRoute("DefaultApi", "1.0/{controller}/{id}", new { id = RouteParameter.Optional });
             var server = new HttpSelfHostServer(config);
