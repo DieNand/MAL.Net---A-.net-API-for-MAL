@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using AutoMapper;
 using FakeItEasy;
 using MAL.NetLogic.Classes;
 using MAL.NetLogic.Interfaces;
-using MAL.NetLogic.Objects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimpleInjector;
 
 namespace MAL.NetTests.Classes
 {
@@ -28,7 +25,7 @@ namespace MAL.NetTests.Classes
             A.CallTo(() => fakeFactory.CreateJsonAnime()).Returns(fakeJson);
 
             var instance = new AnimeRetriever(fakeFactory);
-            var tResult = instance.GetAnime(11757);
+            var tResult = instance.GetAnime(11757, "testuser", "testPass");
             var result = tResult.Result;
 
             Assert.IsNotNull(result);
