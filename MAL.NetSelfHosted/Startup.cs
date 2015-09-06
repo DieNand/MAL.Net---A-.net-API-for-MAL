@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System.Net;
+using System.Web.Http;
 using AutoMapper;
 using MAL.NetLogic.Classes;
 using MAL.NetLogic.Factories;
@@ -24,6 +25,7 @@ namespace MAL.NetSelfHosted
             var config = new HttpConfiguration();
             config.Routes.MapHttpRoute("DefaultApi", "1.0/{controller}/{id}", new { id = RouteParameter.Optional });
             app.UseWebApi(config);
+
 
             var container = new Container();
             container.Options.DefaultScopedLifestyle = new ExecutionContextScopeLifestyle();
