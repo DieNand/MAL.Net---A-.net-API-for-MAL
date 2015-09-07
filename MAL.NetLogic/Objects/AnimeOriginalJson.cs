@@ -57,10 +57,10 @@ namespace MAL.NetLogic.Objects
             [JsonProperty(PropertyName = "high_res_image_url")]
             public string HighResImageUrl { get; set; }
 
-            [JsonProperty(PropertyName = "member_score")]
+            [JsonProperty(PropertyName = "members_score")]
             public double MemberScore { get; set; }
 
-            [JsonProperty(PropertyName = "member_count")]
+            [JsonProperty(PropertyName = "members_count")]
             public int MemberCount { get; set; }
 
             [JsonProperty(PropertyName = "favorited_count")]
