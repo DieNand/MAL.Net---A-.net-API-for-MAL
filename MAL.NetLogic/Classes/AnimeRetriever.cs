@@ -45,7 +45,7 @@ namespace MAL.NetLogic.Classes
                 //Our first task is to retrieve the MAL anime - for now we cheat and grab it from our example data
                 var doc = new HtmlDocument();
 
-#if !DEBUG
+#if DEBUG
                 var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 var file = Path.Combine("AnimeExamples", $"{animeId}.html");
                 doc.Load(Path.Combine(path, file));
