@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System.Net;
+using System.Web.Http;
 using AutoMapper;
 using MAL.NetLogic.Classes;
 using MAL.NetLogic.Factories;
@@ -21,9 +22,15 @@ namespace MAL.NetSelfHosted
         public void Configuration(IAppBuilder app)
         {
             // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=316888
+
+            //See here:
+            //https://chanmingman.wordpress.com/2015/01/01/implement-ssl-in-self-hosted-web-api/
+            //https://pfelix.wordpress.com/2012/02/26/enabling-https-with-self-hosted-asp-net-web-api/
+            //https://katanaproject.codeplex.com/discussions/545123
             var config = new HttpConfiguration();
             config.Routes.MapHttpRoute("DefaultApi", "1.0/{controller}/{id}", new { id = RouteParameter.Optional });
             app.UseWebApi(config);
+
 
             var container = new Container();
             container.Options.DefaultScopedLifestyle = new ExecutionContextScopeLifestyle();
