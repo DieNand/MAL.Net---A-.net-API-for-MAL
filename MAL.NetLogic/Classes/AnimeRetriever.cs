@@ -199,12 +199,18 @@ namespace MAL.NetLogic.Classes
                     }
                 }
 
-                foreach (var tagNode in doc.DocumentNode.SelectNodes("//div[@class='tags']"))
+                var tagNodes = doc.DocumentNode.SelectNodes("//div[@class='tags']");
+
+                if (tagNodes != null)
                 {
-                    foreach (var tag in tagNode.ChildNodes.Nodes())
+
+                    foreach (var tagNode in tagNodes)
                     {
-                        if (tag.OriginalName == "a" && !anime.Tags.Contains(tag.InnerText))
-                            anime.Tags.Add(tag.InnerText);
+                        foreach (var tag in tagNode.ChildNodes.Nodes())
+                        {
+                            if (tag.OriginalName == "a" && !anime.Tags.Contains(tag.InnerText))
+                                anime.Tags.Add(tag.InnerText);
+                        }
                     }
                 }
 
@@ -333,6 +339,12 @@ namespace MAL.NetLogic.Classes
                     break;
                 case "Alternative Versions":
                     anime.AlternativeVersion.AddRange(MapRelated(node));
+                    break;
+                case "Alternative setting":
+                    anime.AlternativeSetting.AddRange(MapRelated(node));
+                    break;
+                case "Full story":
+                    anime.FullStories.AddRange(MapRelated(node));
                     break;
                 default:
                     anime.Others.AddRange(MapRelated(node));
