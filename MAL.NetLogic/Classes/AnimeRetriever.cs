@@ -45,7 +45,7 @@ namespace MAL.NetLogic.Classes
                 //Our first task is to retrieve the MAL anime - for now we cheat and grab it from our example data
                 var doc = new HtmlDocument();
 
-#if DEBUG
+#if !DEBUG
                 var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 var file = Path.Combine("AnimeExamples", $"{animeId}.html");
                 doc.Load(Path.Combine(path, file));
@@ -117,20 +117,27 @@ namespace MAL.NetLogic.Classes
                             anime.Type = node.ChildNodes["#text"].InnerText.Trim();
                             break;
                         case "Episodes":
-                            var epString = node.ChildNodes["#text"].InnerText.TrimEnd("\n\t".ToCharArray());
-                            int eps;
-                            int.TryParse(epString, out eps);
-                            if (eps == 0)
+                            var epString = node.ChildNodes["#text"].InnerText.TrimEnd("\n\t".ToCharArray()).Trim();
+                            if (epString.ToLower() == "unknown")
                             {
-                                epString = node.ChildNodes[2].InnerText.Replace("\r\n", "").Trim();
-                                int.TryParse(epString, out eps);
-                                anime.Episodes = eps;
+                                anime.Episodes = -1;
                             }
-
-                            if (eps == 0)
-                                anime.Episodes = null;
                             else
-                                anime.Episodes = eps;
+                            {
+                                int eps;
+                                int.TryParse(epString, out eps);
+                                if (eps == 0)
+                                {
+                                    epString = node.ChildNodes[2].InnerText.Replace("\r\n", "").Trim();
+                                    int.TryParse(epString, out eps);
+                                    anime.Episodes = eps;
+                                }
+
+                                if (eps == 0)
+                                    anime.Episodes = null;
+                                else
+                                    anime.Episodes = eps;
+                            }
                             break;
                         case "Status":
                             anime.Status = node.ChildNodes["#text"].InnerText.Trim();
@@ -150,6 +157,7 @@ namespace MAL.NetLogic.Classes
                         case "Rating":
                             var txt = node.InnerText.Replace("\r\n", "");
                             var cleanText = Regex.Split(txt, "                                    ").Last().Trim();
+                            cleanText = cleanText.Replace("Rating:\n\t ", "").Trim();
                             anime.Classification = cleanText;
                             break;
                         case "Ranked":
