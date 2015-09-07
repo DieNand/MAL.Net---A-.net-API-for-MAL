@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MAL.NetTests")]
+[assembly: AssemblyTitle("MAL.NetSelfHosted")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MAL.NetTests")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("Ninetail Labs")]
+[assembly: AssemblyProduct("MAL.NetSelfHosted")]
+[assembly: AssemblyCopyright("Copyright © Ninetail Labs 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ff191008-1c62-4d1d-baef-3502ba3cdb5a")]
+[assembly: Guid("50e6f7c6-6ca0-4477-b3c7-178141c0df60")]
 
 // Version information for an assembly consists of the following four values:
 //
