@@ -53,6 +53,7 @@ namespace MAL.NetSelfHosted
             container.Register<IMappingToJson, MappingToJson>(Lifestyle.Singleton);
             container.Register<IAnimeHandler, AnimeHandler>(Lifestyle.Singleton);
             container.Register<ICacheHandler, CacheHandler>(Lifestyle.Singleton);
+            container.Register<ILogWriter, LogWriter>(Lifestyle.Singleton);
 
             container.RegisterWebApiControllers(config);
 
@@ -77,11 +78,19 @@ namespace MAL.NetSelfHosted
                 var client = new HttpClient();
                 var response = client.GetAsync($"{_host}:{_port}" + "/1.0/Anime").Result;
                 var answer = response.Content.ReadAsStringAsync().Result;
-                Console.WriteLine($"Self test passed: {answer == "\"Call with an ID to get an anime value\""}");
+                var result = answer == "\"Call with an ID to get an anime value\"";
+                Console.Write($"Self test passed: ");
+                Console.ForegroundColor = result ? ConsoleColor.Green : ConsoleColor.Red;
+                Console.WriteLine(result);
+                Console.ResetColor();
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Self test passed: False");
+                Console.Write($"Self test passed: ");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("False");
+                Console.ResetColor();
                 Console.WriteLine($"The following error occured:\r\n{ex}");
             }
 

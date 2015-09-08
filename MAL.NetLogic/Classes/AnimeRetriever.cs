@@ -24,20 +24,24 @@ namespace MAL.NetLogic.Classes
         private const string MalUrl = @"http://myanimelist.net/anime/{0}";
         private const string CleanMalUrl = @"http://myanimelist.net{0}";
         private readonly IAnimeFactory _animeFactory;
+        private readonly ILogWriter _logWriter;
 
         #endregion
 
         #region Constructor
 
-        public AnimeRetriever(IAnimeFactory animeFactory)
+        public AnimeRetriever(IAnimeFactory animeFactory, ILogWriter logWriter)
         {
             _animeFactory = animeFactory;
+            _logWriter = logWriter;
         }
 
         #endregion
 
         public async Task<IAnime> GetAnime(int animeId, string username = "", string password = "")
         {
+            string fullTrace = string.Empty;
+
             var anime = _animeFactory.CreateAnime();
 
             try
@@ -104,9 +108,29 @@ namespace MAL.NetLogic.Classes
                     }
                 }
 
-                var img = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']").Attributes["src"].Value;
-                anime.ImageUrl = img;
-                anime.HighResImageUrl = img.Insert(img.Length - 4, "l");
+                var img = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']")?.Attributes["src"].Value;
+                //If we cannot find an image check if there is a na_series image
+                if (string.IsNullOrEmpty(img))
+                {
+                    var noImg =
+                        doc.DocumentNode.SelectSingleNode(
+                            "//img[@src='http://cdn.myanimelist.net/images/na_series.gif']")?.Attributes["src"].Value;
+                    if (!string.IsNullOrEmpty(noImg))
+                    {
+                        anime.ImageUrl = noImg;
+                        anime.HighResImageUrl = noImg;
+                    }
+                    else
+                    {
+                        throw new Exception("Cannot find the image for this series and there is no na_series.gif");
+                    }
+                }
+                else
+                {
+                    anime.ImageUrl = img;
+                    anime.HighResImageUrl = img.Insert(img.Length - 4, "l");
+                }
+
 
                 foreach (var node in doc.DocumentNode.SelectNodes("//div"))
                 {
@@ -173,7 +197,17 @@ namespace MAL.NetLogic.Classes
                             anime.Popularity = pNum;
                             break;
                         case "Score":
-                            var scoreString = node.SelectNodes("//span[@itemprop='ratingValue']")[0].InnerText;
+                            var scoreString = string.Empty;
+                            var scoreNode = node.SelectNodes("//span[@itemprop='ratingValue']");
+                            if (scoreNode != null && scoreNode.Count >= 1)
+                            {
+                                scoreString = scoreNode[0].InnerText;
+                            }
+                            else
+                            {
+                                var sNode = node.ChildNodes["#text"].InnerText;
+                                scoreString = sNode;
+                            }
                             double scoreVal;
                             double.TryParse(scoreString, NumberStyles.Any, CultureInfo.InvariantCulture, out scoreVal);
                             anime.MemberScore = scoreVal;
@@ -249,6 +283,12 @@ namespace MAL.NetLogic.Classes
             {
                 anime.ErrorOccured = true;
                 anime.ErrorMessage = ex.Message;
+                fullTrace = ex.ToString();
+            }
+
+            if (anime.ErrorOccured)
+            {
+                _logWriter.WriteLogData($"Error occured retrieving {anime.Id}. Error msg:{fullTrace}");
             }
 
             return anime;
@@ -303,9 +343,14 @@ namespace MAL.NetLogic.Classes
 
         private void GetRelated(HtmlDocument doc, IAnime anime)
         {
-            foreach(var node in doc.DocumentNode.SelectSingleNode("//table[@class='anime_detail_related_anime']").ChildNodes)
+            var relatedNodes = doc.DocumentNode.SelectSingleNode("//table[@class='anime_detail_related_anime']");
+
+            if (relatedNodes != null)
             {
-                ParseTd(node, anime);
+                foreach (var node in relatedNodes.ChildNodes)
+                {
+                    ParseTd(node, anime);
+                }
             }
         }
 
