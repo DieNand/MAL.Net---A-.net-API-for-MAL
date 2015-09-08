@@ -21,11 +21,12 @@ namespace MAL.NetTests.Classes
             var fakeAnime = A.Fake<IAnime>();
             var fakeJson = A.Fake<IAnimeOriginalJson>();
             var fakeLog = A.Fake<ILogWriter>();
+            var fakeWriter = A.Fake<IConsoleWriter>();
 
             A.CallTo(() => fakeFactory.CreateAnime()).Returns(fakeAnime);
             A.CallTo(() => fakeFactory.CreateJsonAnime()).Returns(fakeJson);
 
-            var instance = new AnimeRetriever(fakeFactory, fakeLog);
+            var instance = new AnimeRetriever(fakeFactory, fakeLog, fakeWriter);
             var tResult = instance.GetAnime(11757, "testuser", "testPass");
             var result = tResult.Result;
 

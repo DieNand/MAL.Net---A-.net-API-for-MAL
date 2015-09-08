@@ -54,6 +54,7 @@ namespace MAL.NetSelfHosted
             container.Register<IAnimeHandler, AnimeHandler>(Lifestyle.Singleton);
             container.Register<ICacheHandler, CacheHandler>(Lifestyle.Singleton);
             container.Register<ILogWriter, LogWriter>(Lifestyle.Singleton);
+            container.Register<IConsoleWriter, ConsoleWriter>(Lifestyle.Singleton);
 
             container.RegisterWebApiControllers(config);
 
@@ -63,15 +64,20 @@ namespace MAL.NetSelfHosted
 
             server.OpenAsync().Wait();
 
+            var consoleWriter = container.GetInstance<IConsoleWriter>();
             var version = Assembly.GetEntryAssembly().GetName().Version;
             Console.WriteLine("########################################################");
-            Console.WriteLine("# MAL.NET Self Hosted - Ninetail Labs");
-            Console.WriteLine($"# Version {version}");
-            Console.WriteLine($"# Running on {config.BaseAddress}");
-            Console.WriteLine($"# Startup Time - {DateTime.Now}");
+            Console.Write("# MAL.NET Self Hosted - Ninetail Labs".PadRight(55));
+            Console.WriteLine("#");
+            Console.Write($"# Version {version}".PadRight(55));
+            Console.WriteLine("#");
+            Console.Write($"# Running on {config.BaseAddress}".PadRight(55));
+            Console.WriteLine("#");
+            Console.Write($"# Startup Time - {DateTime.Now}".PadRight(55));
+            Console.WriteLine("#");
             Console.WriteLine("########################################################");
-            Console.Write("");
-            Console.WriteLine("Running self test...");
+            Console.WriteLine("");
+            consoleWriter.WriteAsLineEnd("Running self test...", ConsoleColor.DarkYellow);
 
             try
             {
@@ -79,19 +85,16 @@ namespace MAL.NetSelfHosted
                 var response = client.GetAsync($"{_host}:{_port}" + "/1.0/Anime").Result;
                 var answer = response.Content.ReadAsStringAsync().Result;
                 var result = answer == "\"Call with an ID to get an anime value\"";
-                Console.Write($"Self test passed: ");
-                Console.ForegroundColor = result ? ConsoleColor.Green : ConsoleColor.Red;
-                Console.WriteLine(result);
-                Console.ResetColor();
-
+                consoleWriter.WriteAsLineEnd($"Self test passed: ", ConsoleColor.DarkYellow);
+                consoleWriter.WriteAsLineEnd(result.ToString(), result ? ConsoleColor.Green : ConsoleColor.Red);
             }
             catch (Exception ex)
             {
-                Console.Write($"Self test passed: ");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("False");
-                Console.ResetColor();
-                Console.WriteLine($"The following error occured:\r\n{ex}");
+                consoleWriter.WriteInline($"Self test passed: ", ConsoleColor.DarkYellow);
+                consoleWriter.WriteAsLineEnd("False", ConsoleColor.Red);
+                Console.WriteLine("");
+                consoleWriter.WriteInline($"The following error occured:\r\n", ConsoleColor.Gray);
+                consoleWriter.WriteAsLineEnd($"{ex}", ConsoleColor.Red);
             }
 
 

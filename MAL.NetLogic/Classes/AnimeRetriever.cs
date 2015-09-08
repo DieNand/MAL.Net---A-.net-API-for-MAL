@@ -25,15 +25,17 @@ namespace MAL.NetLogic.Classes
         private const string CleanMalUrl = @"http://myanimelist.net{0}";
         private readonly IAnimeFactory _animeFactory;
         private readonly ILogWriter _logWriter;
+        private readonly IConsoleWriter _consoleWriter;
 
         #endregion
 
         #region Constructor
 
-        public AnimeRetriever(IAnimeFactory animeFactory, ILogWriter logWriter)
+        public AnimeRetriever(IAnimeFactory animeFactory, ILogWriter logWriter, IConsoleWriter consoleWriter)
         {
             _animeFactory = animeFactory;
             _logWriter = logWriter;
+            _consoleWriter = consoleWriter;
         }
 
         #endregion
@@ -197,7 +199,7 @@ namespace MAL.NetLogic.Classes
                             anime.Popularity = pNum;
                             break;
                         case "Score":
-                            var scoreString = string.Empty;
+                            string scoreString;
                             var scoreNode = node.SelectNodes("//span[@itemprop='ratingValue']");
                             if (scoreNode != null && scoreNode.Count >= 1)
                             {
@@ -284,6 +286,7 @@ namespace MAL.NetLogic.Classes
                 anime.ErrorOccured = true;
                 anime.ErrorMessage = ex.Message;
                 fullTrace = ex.ToString();
+                Console.WriteLine($"{DateTime.Now} - {_consoleWriter.WriteInline($"[Anime] Error occured while retrieving {animeId}. Error: {ex.Message}", ConsoleColor.Red)}");
             }
 
             if (anime.ErrorOccured)
