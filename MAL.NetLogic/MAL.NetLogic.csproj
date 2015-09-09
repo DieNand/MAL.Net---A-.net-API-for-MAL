@@ -60,6 +60,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -87,19 +88,25 @@
     <Compile Include="Classes\CacheHandler.cs" />
     <Compile Include="Classes\CredentialVerification.cs" />
     <Compile Include="Classes\MappingToJson.cs" />
+    <Compile Include="Classes\UserAuthentication.cs" />
     <Compile Include="Factories\AnimeFactory.cs" />
+    <Compile Include="Factories\AuthFactory.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Interfaces\IAnime.cs" />
     <Compile Include="Interfaces\IAnimeFactory.cs" />
     <Compile Include="Interfaces\IAnimeOriginalJson.cs" />
     <Compile Include="Interfaces\IAnimeRetriever.cs" />
+    <Compile Include="Interfaces\IAuthFactory.cs" />
     <Compile Include="Interfaces\ICacheHandler.cs" />
     <Compile Include="Interfaces\IInfoUrls.cs" />
+    <Compile Include="Interfaces\ILoginData.cs" />
     <Compile Include="Interfaces\IMappingToJson.cs" />
     <Compile Include="Interfaces\IRelated.cs" />
+    <Compile Include="Interfaces\IUserAuthentication.cs" />
     <Compile Include="Objects\Anime.cs" />
     <Compile Include="Objects\AnimeOriginalJson.cs" />
     <Compile Include="Objects\InfoUrls.cs" />
+    <Compile Include="Objects\LoginData.cs" />
     <Compile Include="Objects\Related.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
