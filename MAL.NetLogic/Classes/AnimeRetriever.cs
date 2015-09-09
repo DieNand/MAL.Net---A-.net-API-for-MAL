@@ -227,7 +227,9 @@ namespace MAL.NetLogic.Classes
                             anime.FavoriteCount = fVal;
                             break;
                         case "Genres":
-                            foreach (var g in node.SelectNodes("//span[@itemprop='genre']"))
+                            var genreNodes = node.SelectNodes("//span[@itemprop='genre']");
+                            if (genreNodes == null) break;
+                            foreach (var g in genreNodes)
                             {
                                 anime.Genres.Add(g.InnerText);
                             }

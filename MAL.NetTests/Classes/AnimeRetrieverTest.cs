@@ -27,7 +27,7 @@ namespace MAL.NetTests.Classes
             A.CallTo(() => fakeFactory.CreateJsonAnime()).Returns(fakeJson);
 
             var instance = new AnimeRetriever(fakeFactory, fakeLog, fakeWriter);
-            var tResult = instance.GetAnime(11757, "testuser", "testPass");
+            var tResult = instance.GetAnime(28691, "testuser", "testPass");
             var result = tResult.Result;
 
             Assert.IsNotNull(result);
