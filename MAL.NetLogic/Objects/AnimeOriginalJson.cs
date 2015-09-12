@@ -111,6 +111,12 @@ namespace MAL.NetLogic.Objects
             [JsonProperty(PropertyName = "alternative_versions")]
             public List<IRelated> AlternativeVersion { get; set; }
 
+            [JsonProperty(PropertyName = "alternative_settings")]
+            public List<IRelated> AlternativeSetting { get; set; }
+
+            [JsonProperty(PropertyName = "full_stories")]
+            public List<IRelated> FullStories { get; set; }
+            
             [JsonProperty(PropertyName = "others")]
             public List<IRelated> Others { get; set; }
 

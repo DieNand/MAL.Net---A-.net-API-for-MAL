@@ -53,6 +53,8 @@ namespace MAL.NetLogic.Objects
         public List<IRelated> SpinOffs { get; set; }
         public List<IRelated> Summaries { get; set; }
         public List<IRelated> AlternativeVersion { get; set; }
+        public List<IRelated> AlternativeSetting { get; set; }
+        public List<IRelated> FullStories { get; set; }  
         public List<IRelated> Others { get; set; } 
 
         public bool ErrorOccured { get; set; }
@@ -81,6 +83,8 @@ namespace MAL.NetLogic.Objects
             SpinOffs = new List<IRelated>();
             Summaries = new List<IRelated>();
             AlternativeVersion = new List<IRelated>();
+            AlternativeSetting = new List<IRelated>();
+            FullStories = new List<IRelated>();
             Others = new List<IRelated>();
             ErrorOccured = false;
         }

@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="Classes\AnimeRetriever.cs" />
     <Compile Include="Classes\CacheHandler.cs" />
+    <Compile Include="Classes\ConsoleWriter.cs" />
     <Compile Include="Classes\CredentialVerification.cs" />
     <Compile Include="Classes\MappingToJson.cs" />
     <Compile Include="Classes\UserAuthentication.cs" />
@@ -99,11 +100,14 @@
     <Compile Include="Interfaces\IAnimeRetriever.cs" />
     <Compile Include="Interfaces\IAuthFactory.cs" />
     <Compile Include="Interfaces\ICacheHandler.cs" />
+    <Compile Include="Interfaces\IConsoleWriter.cs" />
     <Compile Include="Interfaces\IInfoUrls.cs" />
+    <Compile Include="Interfaces\ILogWriter.cs" />
     <Compile Include="Interfaces\ILoginData.cs" />
     <Compile Include="Interfaces\IMappingToJson.cs" />
     <Compile Include="Interfaces\IRelated.cs" />
     <Compile Include="Interfaces\IUserAuthentication.cs" />
+    <Compile Include="Classes\LogWriter.cs" />
     <Compile Include="Interfaces\IWebHttpWebRequest.cs" />
     <Compile Include="Interfaces\IWebHttpWebRequestFactory.cs" />
     <Compile Include="Objects\Anime.cs" />

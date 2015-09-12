@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Runtime.Caching;
 using System.Security.Cryptography;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using MAL.NetLogic.Interfaces;
@@ -14,18 +15,19 @@ namespace MAL.NetLogic.Classes
 
         private readonly IAnimeRetriever _animeRetriever;
         private readonly IUserAuthentication _userAuthentication;
+        private readonly IConsoleWriter _consoleWriter;
         private readonly MemoryCache _animeCahce;
         private readonly MemoryCache _authCache;
         public const string AnimeCache = "AnimeCache";
         public const string AuthCache = "AuthCache";
-        public readonly ConcurrentDictionary<string, object> AnimePadlock;
+        public readonly ConcurrentDictionary<string, object> AnimePadlock;  
         public readonly ConcurrentDictionary<string, object> AuthPadlock; 
 
         #endregion
 
         #region Constructor
 
-        public CacheHandler(IAnimeRetriever animeRetriever, IUserAuthentication userAuthentication)
+        public CacheHandler(IAnimeRetriever animeRetriever, IUserAuthentication userAuthentication, IConsoleWriter consoleWriter)
         {
             _animeCahce = new MemoryCache(AnimeCache);
             AnimePadlock = new ConcurrentDictionary<string, object>();
@@ -33,6 +35,7 @@ namespace MAL.NetLogic.Classes
             AuthPadlock = new ConcurrentDictionary<string, object>();
             _animeRetriever = animeRetriever;
             _userAuthentication = userAuthentication;
+            _consoleWriter = consoleWriter;
         }
 
         #endregion
@@ -41,7 +44,7 @@ namespace MAL.NetLogic.Classes
 
         public async Task<IAnime> GetAnime(int id)
         {
-            IAnime finalItem;
+            IAnime finalItem = null;
             var item = _animeCahce.Get(id.ToString());
             if (item == null)
             {
@@ -128,7 +131,7 @@ namespace MAL.NetLogic.Classes
 
         private void RemovedCallback(CacheEntryRemovedArguments arguments)
         {
-            Console.WriteLine($"{DateTime.Now} - [Cache] {arguments.CacheItem.Key} expired. Removed from cache");
+            Console.WriteLine($"{DateTime.Now} - {_consoleWriter.WriteInline($"[Cache] {arguments.CacheItem.Key} expired. Removed from cache", ConsoleColor.DarkYellow)}");
         }
 
         private void RemovedAuthCallback(CacheEntryRemovedArguments arguments)

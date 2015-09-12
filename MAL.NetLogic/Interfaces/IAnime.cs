@@ -42,6 +42,8 @@ namespace MAL.NetLogic.Interfaces
         List<IRelated> SpinOffs { get; set; }
         List<IRelated> Summaries { get; set; }
         List<IRelated> AlternativeVersion { get; set; }
+        List<IRelated> AlternativeSetting { get; set; }
+        List<IRelated> FullStories { get; set; }
         List<IRelated> Others { get; set; }
         bool ErrorOccured { get; set; }
         string ErrorMessage { get; set; }
