@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using MAL.NetLogic.Interfaces;
 using MAL.NetSelfHosted.Interfaces;
 
 namespace MAL.NetSelfHosted.Controllers
@@ -14,28 +15,30 @@ namespace MAL.NetSelfHosted.Controllers
         #region Variables
 
         private readonly IAnimeHandler _animeHandler;
+        private readonly IAnimeListRetriever _animeListRetriever;
+        private readonly IMappingToJson _mapper;
         private readonly Stopwatch _stopwatch;
 
         #endregion
 
         #region Constructor
 
-        public AnimeController(IAnimeHandler animeHandler)
+        public AnimeController(IAnimeHandler animeHandler, IAnimeListRetriever animeListRetriever, IMappingToJson mapper)
         {
             _animeHandler = animeHandler;
+            _animeListRetriever = animeListRetriever;
+            _mapper = mapper;
             _stopwatch = new Stopwatch();
         }
 
         #endregion
 
-            // GET api/values 
         public string Get()
         {
             Console.WriteLine("Naked request received");
             return "Call with an ID to get an anime value";
         }
 
-        // GET api/values/5 
         public async Task<HttpResponseMessage> Get(int id)
         {
             _stopwatch.Reset();

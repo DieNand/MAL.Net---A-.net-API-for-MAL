@@ -22,6 +22,7 @@ namespace MAL.NetTests.Classes
             var fakeWebFactory = A.Fake<IWebHttpWebRequestFactory>();
             var fakeWebRequest = A.Fake<IWebHttpWebRequest>();
             var loginFakeRequest = A.Fake<IWebHttpWebRequest>();
+            var fakeConsole = A.Fake<IConsoleWriter>();
 
             A.CallTo(() => fakeFactory.CreateLingData()).Returns(fakeLoginData);
             A.CallTo(() => fakeWebFactory.Create()).ReturnsNextFromSequence(fakeWebRequest, loginFakeRequest);
@@ -45,7 +46,7 @@ namespace MAL.NetTests.Classes
             var rStream = File.Open(rFullPath, FileMode.Open, FileAccess.Read);
             A.CallTo(() => fakeWebRequest.GetResponseStream()).Returns(rStream);
 
-            var instance = new UserAuthentication(fakeFactory, fakeWebFactory);
+            var instance = new UserAuthentication(fakeFactory, fakeWebFactory, fakeConsole);
             var result = instance.Login("testUsr", "testPass");
             
             Assert.IsNotNull(fakeWebRequest.CookieContainer);

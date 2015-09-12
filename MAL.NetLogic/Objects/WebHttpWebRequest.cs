@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net;
+using System.Net.Mime;
 using MAL.NetLogic.Interfaces;
 
 namespace MAL.NetLogic.Objects
@@ -49,6 +50,7 @@ namespace MAL.NetLogic.Objects
         {
             _webRequest = WebRequest.Create(url);
             _httpRequest = (HttpWebRequest) _webRequest;
+            _httpRequest.AutomaticDecompression = DecompressionMethods.GZip;
         }
 
         public Stream GetRequestStream()

@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
+using System.Web.Http.Routing;
 using System.Web.Http.SelfHost;
 using AutoMapper;
 using MAL.NetLogic.Classes;
@@ -39,15 +40,14 @@ namespace MAL.NetSelfHosted
             var config = _host.StartsWith("https") ? new SecureHttpSelfHostConfiguration($"{_host}:{_port}") : new HttpSelfHostConfiguration($"{_host}:{_port}");
 
             config.Routes.MapHttpRoute("DefaultApi", "1.0/{controller}/{id}", new { id = RouteParameter.Optional });
+            config.Routes.MapHttpRoute("ListApi", "1.0/{controller}/{username}", new { username = RouteParameter.Optional });
             var server = new HttpSelfHostServer(config);
 
             var container = new Container();
             container.Options.DefaultScopedLifestyle = new ExecutionContextScopeLifestyle();
 
             container.RegisterSingleton(Mapper.Engine);
-
-            container.Register<IAnime, Anime>();
-            container.Register<IAnimeOriginalJson, AnimeOriginalJson>();
+                     
             container.Register<IAnimeFactory, AnimeFactory>(Lifestyle.Singleton);
             container.Register<IAnimeRetriever, AnimeRetriever>(Lifestyle.Singleton);
             container.Register<IMappingToJson, MappingToJson>(Lifestyle.Singleton);
@@ -59,6 +59,19 @@ namespace MAL.NetSelfHosted
             container.Register<IWebHttpWebRequestFactory, WebHttpWebRequestFactory>(Lifestyle.Singleton);
             container.Register<IAuthFactory, AuthFactory>(Lifestyle.Singleton);
             container.Register<IWebHttpWebRequest, WebHttpWebRequest>();
+            container.Register<IAnimeListRetriever, AnimeListRetriever>();
+
+            container.Register<IAnime, Anime>();
+            container.Register<IAnimeDetails, AnimeDetails>();
+            container.Register<IAnimeDetailsJson, AnimeDetailsJson>();
+            container.Register<IAnimeDetailsXml, AnimeDetailsXml>();
+            container.Register<IAnimeOriginalJson, AnimeOriginalJson>();
+            container.Register<IListAnime, ListAnime>();
+            container.Register<IListAnimeJson, ListAnimeJson>();
+            container.Register<IListAnimeXml, ListAnimeXml>();
+            container.Register<IMyAnimeList, MyAnimeList>();
+            container.Register<IMyAnimeListJson, MyAnimeListJson>();
+            container.Register<IMyInfo, MyInfo>();
 
 
             container.RegisterWebApiControllers(config);
