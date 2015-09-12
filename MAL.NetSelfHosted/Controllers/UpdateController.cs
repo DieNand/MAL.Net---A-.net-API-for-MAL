@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MAL.NetLogic.Interfaces;
+using MAL.NetLogic.Objects;
 
 namespace MAL.NetSelfHosted.Controllers
 {
@@ -29,8 +30,15 @@ namespace MAL.NetSelfHosted.Controllers
 
         #region Public Methods
 
-        [Route("1.0/Update/{username, password, cancache}")]
-        public async Task<HttpResponseMessage> Post(string username, string password, bool cancache, [FromBody] IAnimeDetails updateDetails)
+        /// <summary>
+        /// Update an anime in a user's anime list. If the anime doesn't exist in the user's list it will be added with the details provided.
+        /// </summary>
+        /// <param name="username">MAL Username</param>
+        /// <param name="password">MAL Password</param>
+        /// <param name="cancache">Can the server cache the user's login temporarily</param>
+        /// <param name="updateDetails">The details for the show to be updated</param>
+        /// <returns>OK - Updated succeeded, NotModified - Error occured, no update happened</returns>
+        public async Task<HttpResponseMessage> Post(string username, string password, bool cancache, [FromBody] AnimeDetails updateDetails)
         {
             _stopwatch.Reset();
             _stopwatch.Start();

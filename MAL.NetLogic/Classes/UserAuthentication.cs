@@ -51,6 +51,11 @@ namespace MAL.NetLogic.Classes
             loginRequest.ContentType = "application/x-www-form-urlencoded";
 
             var csrfToken = GetCsrfToken(cookieJar);
+            if (string.IsNullOrEmpty(csrfToken))
+            {
+                loginData.LoginValid = false;
+                return loginData;
+            }
             var requestText = $"user_name={username}&password={password}&cookie=1&sublogin=Login&submit=1&csrf_token={csrfToken}";
             var stream = loginRequest.GetRequestStream();
             var requestWriter = new StreamWriter(stream);
@@ -105,7 +110,14 @@ namespace MAL.NetLogic.Classes
 
             var docStream = loginRequest.GetResponseStream();
             doc.Load(docStream);
-            var csrfToken = doc.DocumentNode.SelectSingleNode("//meta[@name='csrf_token']").Attributes["content"].Value;
+            var tokenNode = doc.DocumentNode.SelectSingleNode("//meta[@name='csrf_token']");
+            if (tokenNode == null)
+            {
+                var text = doc.DocumentNode.InnerText;
+                Console.Write($"{DateTime.Now} - ");
+                _consoleWriter.WriteAsLineEnd($"[Auth] Failed to access Login.php. Returned value: {text}", ConsoleColor.Red);
+            }
+            var csrfToken = tokenNode?.Attributes["content"].Value;
 
             return csrfToken;
         }

@@ -33,8 +33,11 @@ namespace MAL.NetSelfHosted.Controllers
 
         #endregion
 
-        [Route("1.0/MyList/{username}")]
-        [HttpGet]
+        /// <summary>
+        /// Retrieve user list for a spesific user
+        /// </summary>
+        /// <param name="username">MAL Username</param>
+        /// <returns>List containing User information and all anime in the user's list</returns>
         public async Task<HttpResponseMessage> Get(string username)
         {
             _stopwatch.Reset();

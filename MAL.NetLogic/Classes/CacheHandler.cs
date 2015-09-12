@@ -89,7 +89,7 @@ namespace MAL.NetLogic.Classes
                 var sha256 = SHA256.Create();
                 var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes($"{username}{password}"));
                 //We use a hash of the username and password to cache the values if the login was a success
-                var userToken = BitConverter.ToString(hash);
+                var userToken = BitConverter.ToString(hash).Replace("-", "");
 
                 var item = _authCache.Get(userToken);
                 if (item == null)

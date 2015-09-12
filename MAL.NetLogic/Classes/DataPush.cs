@@ -56,7 +56,13 @@ namespace MAL.NetLogic.Classes
             else
             {
                 result = await UpdateAnimeDetails(details, username, password, canCache, true);
-                Console.WriteLine($"{DateTime.Now} - [DataPush] Updated {details.AnimeId} for {username}");
+                if (result)
+                    Console.WriteLine($"{DateTime.Now} - [DataPush] Updated {details.AnimeId} for {username}");
+                else
+                {
+                    Console.Write($"{DateTime.Now} - ");
+                    _consoleWriter.WriteAsLineEnd($"[DataPush] Update of {details.AnimeId} failed for {username}", ConsoleColor.Red);
+                }
             }
             return result;
         }

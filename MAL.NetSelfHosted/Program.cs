@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
@@ -15,6 +17,7 @@ using MAL.NetSelfHosted.Interfaces;
 using SimpleInjector;
 using SimpleInjector.Extensions.ExecutionContextScoping;
 using SimpleInjector.Integration.WebApi;
+using Swashbuckle.Application;
 
 namespace MAL.NetSelfHosted
 {
@@ -39,9 +42,21 @@ namespace MAL.NetSelfHosted
 
             var config = _host.StartsWith("https") ? new SecureHttpSelfHostConfiguration($"{_host}:{_port}") : new HttpSelfHostConfiguration($"{_host}:{_port}");
 
-            config.Routes.MapHttpRoute("DefaultApi", "1.0/{controller}/{id}", new { id = RouteParameter.Optional });
-            config.Routes.MapHttpRoute("ListApi", "1.0/{controller}/{username}", new { username = RouteParameter.Optional });
-            config.Routes.MapHttpRoute("UpdateApi", "1.0/{controller}/1.0/Update/{username, password, cancache}", new { });
+            config.Routes.MapHttpRoute("AnimeApi", "1.0/{controller}/", new {});
+            config.Routes.MapHttpRoute("AnimeItemApi", "1.0/{controller}/{id}", new { id = RouteParameter.Optional });
+
+            //Configure swagger
+            config.EnableSwagger((c) =>
+            {
+                var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                var commentsFileName = Assembly.GetExecutingAssembly().GetName().Name + ".XML";
+                var commentsFile = Path.Combine(baseDirectory, commentsFileName);
+
+                c.SingleApiVersion("v1", "MAL.Net - A .net API for MAL");
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+                c.IncludeXmlComments(commentsFile);
+            }).EnableSwaggerUi();
+
             var server = new HttpSelfHostServer(config);
 
             var container = new Container();
@@ -74,6 +89,7 @@ namespace MAL.NetSelfHosted
             container.Register<IMyAnimeList, MyAnimeList>();
             container.Register<IMyAnimeListJson, MyAnimeListJson>();
             container.Register<IMyInfo, MyInfo>();
+            container.Register<ILoginData, LoginData>();
 
 
             container.RegisterWebApiControllers(config);
