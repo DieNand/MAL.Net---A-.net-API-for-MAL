@@ -92,7 +92,7 @@ namespace MAL.NetLogic.Classes
                 if (item == null)
                 {
                     Console.WriteLine($"{DateTime.Now} - [Cache] Cache miss for [{userToken}]");
-                    var loginData = await _userAuthentication.Login(username, password);
+                    var loginData = _userAuthentication.Login(username, password);
                     if (!loginData.LoginValid) return loginData;
                     finalItem = loginData;
                     var cip = new CacheItemPolicy
@@ -117,7 +117,7 @@ namespace MAL.NetLogic.Classes
             else
             {
                 Console.WriteLine($"{DateTime.Now} - [Cache] Requesting login with NoCache");
-                return await _userAuthentication.Login(username, password, false);
+                return _userAuthentication.Login(username, password, false);
             }
             return finalItem;
         }

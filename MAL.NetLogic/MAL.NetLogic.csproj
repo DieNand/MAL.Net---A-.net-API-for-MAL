@@ -91,6 +91,7 @@
     <Compile Include="Classes\UserAuthentication.cs" />
     <Compile Include="Factories\AnimeFactory.cs" />
     <Compile Include="Factories\AuthFactory.cs" />
+    <Compile Include="Factories\WebHttpWebRequestFactory.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Interfaces\IAnime.cs" />
     <Compile Include="Interfaces\IAnimeFactory.cs" />
@@ -103,11 +104,14 @@
     <Compile Include="Interfaces\IMappingToJson.cs" />
     <Compile Include="Interfaces\IRelated.cs" />
     <Compile Include="Interfaces\IUserAuthentication.cs" />
+    <Compile Include="Interfaces\IWebHttpWebRequest.cs" />
+    <Compile Include="Interfaces\IWebHttpWebRequestFactory.cs" />
     <Compile Include="Objects\Anime.cs" />
     <Compile Include="Objects\AnimeOriginalJson.cs" />
     <Compile Include="Objects\InfoUrls.cs" />
     <Compile Include="Objects\LoginData.cs" />
     <Compile Include="Objects\Related.cs" />
+    <Compile Include="Objects\WebHttpWebRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

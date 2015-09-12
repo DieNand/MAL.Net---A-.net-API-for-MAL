@@ -3,7 +3,6 @@ using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using HtmlAgilityPack;
 using MAL.NetLogic.Interfaces;
 
@@ -16,32 +15,34 @@ namespace MAL.NetLogic.Classes
         private const string LoginUrl = @"http://myanimelist.net/login.php";
         private readonly string _userAgent;
         private readonly IAuthFactory _authFactory;
+        private readonly IWebHttpWebRequestFactory _webRequestFactory;
 
         #endregion
 
         #region Constructor
 
-        public UserAuthentication(IAuthFactory authFactory)
+        public UserAuthentication(IAuthFactory authFactory, IWebHttpWebRequestFactory webHttpWebRequestFactory)
         {
             _userAgent = ConfigurationManager.AppSettings["UserAgent"];
             _authFactory = authFactory;
+            _webRequestFactory = webHttpWebRequestFactory;
         }
 
         #endregion
 
         #region Public Methods
 
-        public async Task<ILoginData> Login(string username, string password, bool canCache = true)
+        public ILoginData Login(string username, string password, bool canCache = true)
         {
             var loginData = _authFactory.CreateLingData();
-
             loginData.Username = username;
             loginData.Password = password;
             loginData.CanCache = canCache;
 
             var cookieJar = new CookieContainer();
 
-            var loginRequest = (HttpWebRequest)WebRequest.Create(LoginUrl);
+            var loginRequest = _webRequestFactory.Create();
+            loginRequest.CreateRequest(LoginUrl);
             loginRequest.CookieContainer = cookieJar;
             loginRequest.UserAgent = _userAgent;
             loginRequest.Method = WebRequestMethods.Http.Post;
@@ -54,7 +55,7 @@ namespace MAL.NetLogic.Classes
             requestWriter.Write(requestText);
             requestWriter.Close();
 
-            var response = await GetResponse(loginRequest);
+            var response = GetResponse(loginRequest);
 
             if (!string.IsNullOrEmpty(response))
             {
@@ -92,26 +93,29 @@ namespace MAL.NetLogic.Classes
         private string GetCsrfToken(CookieContainer cookieContainer)
         {
             var doc = new HtmlDocument();
-            var loginRequest = (HttpWebRequest)WebRequest.Create(LoginUrl);
+            var loginRequest = _webRequestFactory.Create();
+            loginRequest.CreateRequest(LoginUrl);
             loginRequest.CookieContainer = cookieContainer;
+            loginRequest.GetResponse();
 
-            doc.Load(loginRequest.GetResponse().GetResponseStream());
+            var docStream = loginRequest.GetResponseStream();
+            doc.Load(docStream);
             var csrfToken = doc.DocumentNode.SelectSingleNode("//meta[@name='csrf_token']").Attributes["content"].Value;
 
             return csrfToken;
         }
 
-        private async Task<string> GetResponse(HttpWebRequest request)
+        private string GetResponse(IWebHttpWebRequest request)
         {
             var result = string.Empty;
             try
             {
                 //var response = await request.GetResponseAsync();
-                var response = request.GetResponse();
-                var statusCode = ((HttpWebResponse)response).StatusCode;
+                request.GetResponse();
+                var statusCode = request.StatusCode;
                 if (statusCode == HttpStatusCode.OK)
                 {
-                    using (var stream = response.GetResponseStream())
+                    using (var stream = request.GetResponseStream())
                     {
                         if (stream != null)
                         {
@@ -139,7 +143,7 @@ namespace MAL.NetLogic.Classes
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{DateTime.Now} - [Auth] Error occured while waitin for web response. {ex}");
+                Console.WriteLine($"{DateTime.Now} - [Auth] Error occured while waiting for web response. {ex}");
             }
             return result;
         }
