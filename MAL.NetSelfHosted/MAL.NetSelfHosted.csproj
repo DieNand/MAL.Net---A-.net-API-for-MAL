@@ -129,6 +129,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AnimeController.cs" />
     <Compile Include="Controllers\MyListController.cs" />
+    <Compile Include="Controllers\UpdateController.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Handlers\AnimeHandler.cs" />
     <Compile Include="Interfaces\IAnimeHandler.cs" />

@@ -41,6 +41,7 @@ namespace MAL.NetSelfHosted
 
             config.Routes.MapHttpRoute("DefaultApi", "1.0/{controller}/{id}", new { id = RouteParameter.Optional });
             config.Routes.MapHttpRoute("ListApi", "1.0/{controller}/{username}", new { username = RouteParameter.Optional });
+            config.Routes.MapHttpRoute("UpdateApi", "1.0/{controller}/1.0/Update/{username, password, cancache}", new { });
             var server = new HttpSelfHostServer(config);
 
             var container = new Container();
@@ -60,6 +61,7 @@ namespace MAL.NetSelfHosted
             container.Register<IAuthFactory, AuthFactory>(Lifestyle.Singleton);
             container.Register<IWebHttpWebRequest, WebHttpWebRequest>();
             container.Register<IAnimeListRetriever, AnimeListRetriever>();
+            container.Register<IDataPush, DataPush>();
 
             container.Register<IAnime, Anime>();
             container.Register<IAnimeDetails, AnimeDetails>();

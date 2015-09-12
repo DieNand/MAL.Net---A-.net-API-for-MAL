@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ using MAL.NetLogic.Objects;
 
 namespace MAL.NetLogic.Classes
 {
-    public class DataPush
+    public class DataPush : IDataPush
     {
         #region Variables
 
@@ -19,66 +20,52 @@ namespace MAL.NetLogic.Classes
         private readonly ICacheHandler _cacheHandler;
         private readonly IWebHttpWebRequestFactory _webHttpWebRequestFactory;
         private readonly IMappingToJson _jsonMapper;
+        private readonly IAnimeListRetriever _animeListRetriever;
         private readonly string _userAgent;
 
         #endregion
 
         #region Constructor
 
-        public DataPush(IConsoleWriter consoleWriter, ICacheHandler cacheHandler, IWebHttpWebRequestFactory webHttpWebRequestFactory, IMappingToJson jsonMapper)
+        public DataPush(IConsoleWriter consoleWriter, ICacheHandler cacheHandler, IWebHttpWebRequestFactory webHttpWebRequestFactory, IMappingToJson jsonMapper, IAnimeListRetriever animeListRetriever)
         {
             _userAgent = ConfigurationManager.AppSettings["UserAgent"];
             _consoleWriter = consoleWriter;
             _cacheHandler = cacheHandler;
             _webHttpWebRequestFactory = webHttpWebRequestFactory;
             _jsonMapper = jsonMapper;
+            _animeListRetriever = animeListRetriever;
         }
 
         #endregion
 
         #region Public Methods
 
-        public void PushAnimeDetailsToMal(IAnimeDetails details, string username, string password, bool canCache = true)
+        public async Task<bool> PushAnimeDetailsToMal(IAnimeDetails details, string username, string password, bool canCache = true)
         {
-            
-        }
-
-        /*
-        try
+            var result = false;
+            Console.WriteLine($"{DateTime.Now} - [DataPush] Received request to update {details.AnimeId} for {username}");
+            var userlist = await _animeListRetriever.GetAnimeList(username);
+            var item = userlist.Anime.FirstOrDefault(t => t.SeriesId == details.AnimeId);
+            //The item doesn't exists - Use the add new method
+            if (item == null)
             {
-                if (Helpers.NetworkHelper.isInternetOnline)
-                {
-                    //The item is in MAL - do an update
-                    if (CookieJar.getInstance.getMALList.Where(t => t.series_animedb_id == watchDetails.animeID).Count() > 0)
-                    {
-                        Logger.getInstance.addInformation(moduleName, "Running update for " + watchDetails.animeID);
-                        doUpdate(CookieJar.getInstance.loginCookies, watchDetails);
-                    }
-                    //The item is new - do an add
-                    else
-                    {
-                        Logger.getInstance.addInformation(moduleName, "Adding new item for " + watchDetails.animeID);
-                        addNew(CookieJar.getInstance.loginCookies, watchDetails);
-                    }
-                }
-                else
-                {
-                    Logger.getInstance.addWarning(moduleName, "Cannot sync, internet is offline");
-                    //Failed sync needs to be stored for later sync
-                    LiveSync.getInstance.addForFailedSync(watchDetails);
-                }
+                result = await UpdateAnimeDetails(details, username, password, canCache);
+                Console.WriteLine($"{DateTime.Now} - [DataPush] Added {details.AnimeId} for {username}");
             }
-            catch(Exception ex)
+            else
             {
-                Logger.getInstance.addWarning(moduleName, "Failed to sync with MAL\r\n" + ex.ToString());
-                LiveSync.getInstance.addForFailedSync(watchDetails);
-            }*/
+                result = await UpdateAnimeDetails(details, username, password, canCache, true);
+                Console.WriteLine($"{DateTime.Now} - [DataPush] Updated {details.AnimeId} for {username}");
+            }
+            return result;
+        }
 
         #endregion
 
         #region Private Methods
 
-        private async Task<bool> UpdateAnimeDetails(IAnimeDetails details, string username, string password, bool canCache = true)
+        private async Task<bool> UpdateAnimeDetails(IAnimeDetails details, string username, string password, bool canCache = true, bool isupdate = false)
         {
             try
             {
@@ -90,7 +77,9 @@ namespace MAL.NetLogic.Classes
                     return false;
                 }
                 var updateRequest = _webHttpWebRequestFactory.Create();
-                updateRequest.CreateRequest(string.Format(EditShowUrl, details.AnimeId));
+                updateRequest.CreateRequest(isupdate
+                    ? string.Format(EditShowUrl, details.AnimeId)
+                    : string.Format(AddShowUrl, details.AnimeId));
                 updateRequest.UserAgent = _userAgent;
                 updateRequest.CookieContainer = loginData.Cookies;
                 updateRequest.Method = WebRequestMethods.Http.Post;
