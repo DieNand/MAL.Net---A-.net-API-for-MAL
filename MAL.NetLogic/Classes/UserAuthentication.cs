@@ -14,6 +14,7 @@ namespace MAL.NetLogic.Classes
 
         private const string LoginUrl = @"http://myanimelist.net/login.php";
         private readonly string _userAgent;
+        private readonly IConsoleWriter _consoleWriter;
         private readonly IAuthFactory _authFactory;
         private readonly IWebHttpWebRequestFactory _webRequestFactory;
 
@@ -21,11 +22,12 @@ namespace MAL.NetLogic.Classes
 
         #region Constructor
 
-        public UserAuthentication(IAuthFactory authFactory, IWebHttpWebRequestFactory webHttpWebRequestFactory)
+        public UserAuthentication(IAuthFactory authFactory, IWebHttpWebRequestFactory webHttpWebRequestFactory, IConsoleWriter consoleWriter)
         {
             _userAgent = ConfigurationManager.AppSettings["UserAgent"];
             _authFactory = authFactory;
             _webRequestFactory = webHttpWebRequestFactory;
+            _consoleWriter = consoleWriter;
         }
 
         #endregion
@@ -61,12 +63,14 @@ namespace MAL.NetLogic.Classes
             {
                 if (response.Contains("Could not find that username") || response.Contains("Password is incorrect"))
                 {
-                    Console.WriteLine($"{DateTime.Now} - [Auth] Auth failed for username and password pair");
+                    Console.Write($"{DateTime.Now} - ");
+                    _consoleWriter.WriteAsLineEnd("[Auth] Auth failed for username and password pair", ConsoleColor.Red);
                     loginData.LoginValid = false;
                 }
                 else
                 {
-                    Console.WriteLine($"{DateTime.Now} - [Auth] Auth succeeded for username and password pair");
+                    Console.WriteLine($"{DateTime.Now} - ");
+                    _consoleWriter.WriteAsLineEnd("[Auth] Auth succeeded for username and password pair", ConsoleColor.Green);
                     loginData.LoginValid = true;
                     loginData.Cookies = cookieJar;
 
@@ -74,7 +78,8 @@ namespace MAL.NetLogic.Classes
             }
             else
             {
-                Console.WriteLine($"{DateTime.Now} - [Auth] No response received from the server");
+                Console.WriteLine($"{DateTime.Now} - ");
+                _consoleWriter.WriteAsLineEnd("[Auth] No response received from the server", ConsoleColor.Red);
                 loginData.LoginValid = false;
             }
             return loginData;
@@ -143,7 +148,8 @@ namespace MAL.NetLogic.Classes
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{DateTime.Now} - [Auth] Error occured while waiting for web response. {ex}");
+                Console.WriteLine($"{DateTime.Now} - ");
+                _consoleWriter.WriteAsLineEnd("[Auth] Error occured while waiting for web response. {ex}", ConsoleColor.Red);
             }
             return result;
         }
