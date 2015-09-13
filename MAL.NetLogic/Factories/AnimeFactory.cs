@@ -62,6 +62,11 @@ namespace MAL.NetLogic.Factories
             return _container.GetInstance<IMyInfo>();
         }
 
+        public IAnimeDetailsXml CreateAnimeDetailsXml()
+        {
+            return _container.GetInstance<IAnimeDetailsXml>();
+        }
+
         #endregion
     }
 }

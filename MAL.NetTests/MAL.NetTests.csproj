@@ -83,7 +83,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Classes\AnimeRetrieverTest.cs" />
-    <Compile Include="Classes\UserAuthenticationTest.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

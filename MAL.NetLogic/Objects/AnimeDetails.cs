@@ -14,8 +14,10 @@ namespace MAL.NetLogic.Objects
         public float StorageValue { get; set; }
         public int Rewatched { get; set; }
         public int RewatchValue { get; set; }
-        public DateTime DateStart { get; set; }
-        public DateTime DateFinish { get; set; }
+        //Format of date is mmddyyyy
+        public string DateStart { get; set; }
+        //Format of date is mmddyyyy
+        public string DateFinish { get; set; }
         public int Priority { get; set; }
         public int EnableDiscussion { get; set; }
         public int EnableRewatching { get; set; }

@@ -16,5 +16,6 @@ namespace MAL.NetLogic.Interfaces
         Stream GetRequestStream();
         void GetResponse();
         Stream GetResponseStream();
+        void SetCredentials(string username, string password);
     }
 }

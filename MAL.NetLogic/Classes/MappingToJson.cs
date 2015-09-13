@@ -1,7 +1,10 @@
 ﻿using System.IO;
+using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using AutoMapper;
 using MAL.NetLogic.Interfaces;
+using MAL.NetLogic.Objects;
 using Newtonsoft.Json;
 
 namespace MAL.NetLogic.Classes
@@ -59,13 +62,17 @@ namespace MAL.NetLogic.Classes
 
         public string ConvertAnimeDetailsToXml(IAnimeDetails animeDetails)
         {
-            var xmlString = string.Empty;
-            var serializer = new XmlSerializer(typeof(IAnimeDetailsXml));
-            using (var mStream = new MemoryStream())
-            using (var streamWriter = new StreamWriter(mStream))
+            string xmlString;
+            var xmlVariant = _factory.CreateAnimeDetailsXml();
+            _mappingEngine.Map(animeDetails, xmlVariant);
+            var serializer = new XmlSerializer(typeof(AnimeDetailsXml));
+            using (var mStream = new Utf8StringWriter())
+            using (var streamWriter = XmlWriter.Create(mStream, new XmlWriterSettings {Encoding = Encoding.UTF8}))
             {
-                serializer.Serialize(mStream, animeDetails);
-                streamWriter.Write(xmlString);
+                var ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
+                serializer.Serialize(streamWriter, xmlVariant, ns);
+                xmlString = mStream.ToString();
             }
             return xmlString;
         }

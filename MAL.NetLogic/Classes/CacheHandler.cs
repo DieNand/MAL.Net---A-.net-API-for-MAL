@@ -14,27 +14,20 @@ namespace MAL.NetLogic.Classes
         #region Variables
 
         private readonly IAnimeRetriever _animeRetriever;
-        private readonly IUserAuthentication _userAuthentication;
         private readonly IConsoleWriter _consoleWriter;
         private readonly MemoryCache _animeCahce;
-        private readonly MemoryCache _authCache;
         public const string AnimeCache = "AnimeCache";
-        public const string AuthCache = "AuthCache";
         public readonly ConcurrentDictionary<string, object> AnimePadlock;  
-        public readonly ConcurrentDictionary<string, object> AuthPadlock; 
 
         #endregion
 
         #region Constructor
 
-        public CacheHandler(IAnimeRetriever animeRetriever, IUserAuthentication userAuthentication, IConsoleWriter consoleWriter)
+        public CacheHandler(IAnimeRetriever animeRetriever, IConsoleWriter consoleWriter)
         {
             _animeCahce = new MemoryCache(AnimeCache);
             AnimePadlock = new ConcurrentDictionary<string, object>();
-            _authCache = new MemoryCache(AuthCache);
-            AuthPadlock = new ConcurrentDictionary<string, object>();
             _animeRetriever = animeRetriever;
-            _userAuthentication = userAuthentication;
             _consoleWriter = consoleWriter;
         }
 
@@ -81,50 +74,6 @@ namespace MAL.NetLogic.Classes
             return await _animeRetriever.GetAnime(id, username, password);
         }
 
-        public async Task<ILoginData> GetAuth(string username, string password, bool canCache = true)
-        {
-            ILoginData finalItem;
-            if (canCache)
-            {
-                var sha256 = SHA256.Create();
-                var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes($"{username}{password}"));
-                //We use a hash of the username and password to cache the values if the login was a success
-                var userToken = BitConverter.ToString(hash).Replace("-", "");
-
-                var item = _authCache.Get(userToken);
-                if (item == null)
-                {
-                    Console.WriteLine($"{DateTime.Now} - [Cache] Cache miss for [{userToken}]");
-                    var loginData = _userAuthentication.Login(username, password);
-                    if (!loginData.LoginValid) return loginData;
-                    finalItem = loginData;
-                    var cip = new CacheItemPolicy
-                    {
-                        AbsoluteExpiration = DateTime.Now.AddHours(1),
-                        RemovedCallback = RemovedAuthCallback
-                    };
-                    lock (AuthPadlock.GetOrAdd(userToken, new object()))
-                    {
-                        item = _authCache.Get(userToken);
-                        if (item != null) return finalItem;
-                        _authCache.Add(userToken, finalItem, cip);
-                        Console.WriteLine($"{DateTime.Now} - [Cache] Added to cache [{userToken}]");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"{DateTime.Now} - [Cache] Cache hit [{userToken}]");
-                    finalItem = (ILoginData) item;
-                }
-            }
-            else
-            {
-                Console.WriteLine($"{DateTime.Now} - [Cache] Requesting login with NoCache");
-                return _userAuthentication.Login(username, password, false);
-            }
-            return finalItem;
-        }
-
         #endregion
 
         #region Private Methods
@@ -132,11 +81,6 @@ namespace MAL.NetLogic.Classes
         private void RemovedCallback(CacheEntryRemovedArguments arguments)
         {
             Console.WriteLine($"{DateTime.Now} - {_consoleWriter.WriteInline($"[Cache] {arguments.CacheItem.Key} expired. Removed from cache", ConsoleColor.DarkYellow)}");
-        }
-
-        private void RemovedAuthCallback(CacheEntryRemovedArguments arguments)
-        {
-            Console.WriteLine($"{DateTime.Now} - [Cache] {arguments.CacheItem.Key} expired. Removed from cache");
         }
 
         #endregion

@@ -34,10 +34,10 @@ namespace MAL.NetLogic.Objects
         public int RewatchValue { get; set; }
 
         [JsonProperty(PropertyName = "date_start")]
-        public DateTime DateStart { get; set; }
+        public string DateStart { get; set; }
 
         [JsonProperty(PropertyName = "date_finished")]
-        public DateTime DateFinish { get; set; }
+        public string DateFinish { get; set; }
 
         [JsonProperty(PropertyName = "priority")]
         public int Priority { get; set; }

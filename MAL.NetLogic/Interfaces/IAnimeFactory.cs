@@ -10,5 +10,6 @@
         IMyAnimeListJson CreateJsonAnimeList();
         IListAnime CreateListAnime();
         IMyInfo CreateMyInfo();
+        IAnimeDetailsXml CreateAnimeDetailsXml();
     }
 }

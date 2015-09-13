@@ -4,6 +4,7 @@ using MAL.NetLogic.Interfaces;
 
 namespace MAL.NetLogic.Objects
 {
+    [XmlRoot(ElementName = "entry")]
     public class AnimeDetailsXml : IAnimeDetailsXml
     {
         [XmlElement(ElementName = "episode")]
@@ -31,10 +32,10 @@ namespace MAL.NetLogic.Objects
         public int RewatchValue { get; set; }
 
         [XmlElement(ElementName = "date_start")]
-        public DateTime DateStart { get; set; }
+        public string DateStart { get; set; }
 
         [XmlElement(ElementName = "date_finish")]
-        public DateTime DateFinish { get; set; }
+        public string DateFinish { get; set; }
 
         [XmlElement(ElementName = "priority")]
         public int Priority { get; set; }

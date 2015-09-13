@@ -12,8 +12,8 @@ namespace MAL.NetLogic.Interfaces
         float StorageValue { get; set; }
         int Rewatched { get; set; }
         int RewatchValue { get; set; }
-        DateTime DateStart { get; set; }
-        DateTime DateFinish { get; set; }
+        string DateStart { get; set; }
+        string DateFinish { get; set; }
         int Priority { get; set; }
         int EnableDiscussion { get; set; }
         int EnableRewatching { get; set; }

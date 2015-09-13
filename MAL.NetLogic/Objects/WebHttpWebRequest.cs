@@ -68,6 +68,11 @@ namespace MAL.NetLogic.Objects
             return _response.GetResponseStream();
         }
 
+        public void SetCredentials(string username, string password)
+        {
+            _httpRequest.Credentials = new NetworkCredential(username, password);
+        }
+
         #endregion
     }
 }

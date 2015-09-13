@@ -71,9 +71,7 @@ namespace MAL.NetSelfHosted
             container.Register<ICacheHandler, CacheHandler>(Lifestyle.Singleton);
             container.Register<ILogWriter, LogWriter>(Lifestyle.Singleton);
             container.Register<IConsoleWriter, ConsoleWriter>(Lifestyle.Singleton);
-            container.Register<IUserAuthentication, UserAuthentication>(Lifestyle.Singleton);
             container.Register<IWebHttpWebRequestFactory, WebHttpWebRequestFactory>(Lifestyle.Singleton);
-            container.Register<IAuthFactory, AuthFactory>(Lifestyle.Singleton);
             container.Register<IWebHttpWebRequest, WebHttpWebRequest>();
             container.Register<IAnimeListRetriever, AnimeListRetriever>();
             container.Register<IDataPush, DataPush>();

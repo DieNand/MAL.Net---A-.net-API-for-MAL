@@ -14,10 +14,9 @@ namespace MAL.NetLogic.Classes
     {
         #region Variables
 
-        private const string AddShowUrl = "http://myanimelist.net/panel.php?go=add&selected_series_id={0}";
-        private const string EditShowUrl = "http://myanimelist.net/editlist.php?type=anime&id={0}&hideLayout";
+        private const string AddShowUrl = "http://myanimelist.net/api/animelist/add/{0}.xml";
+        private const string EditShowUrl = "http://myanimelist.net/api/animelist/update/{0}.xml";
         private readonly IConsoleWriter _consoleWriter;
-        private readonly ICacheHandler _cacheHandler;
         private readonly IWebHttpWebRequestFactory _webHttpWebRequestFactory;
         private readonly IMappingToJson _jsonMapper;
         private readonly IAnimeListRetriever _animeListRetriever;
@@ -27,11 +26,10 @@ namespace MAL.NetLogic.Classes
 
         #region Constructor
 
-        public DataPush(IConsoleWriter consoleWriter, ICacheHandler cacheHandler, IWebHttpWebRequestFactory webHttpWebRequestFactory, IMappingToJson jsonMapper, IAnimeListRetriever animeListRetriever)
+        public DataPush(IConsoleWriter consoleWriter, IWebHttpWebRequestFactory webHttpWebRequestFactory, IMappingToJson jsonMapper, IAnimeListRetriever animeListRetriever)
         {
             _userAgent = ConfigurationManager.AppSettings["UserAgent"];
             _consoleWriter = consoleWriter;
-            _cacheHandler = cacheHandler;
             _webHttpWebRequestFactory = webHttpWebRequestFactory;
             _jsonMapper = jsonMapper;
             _animeListRetriever = animeListRetriever;
@@ -75,30 +73,23 @@ namespace MAL.NetLogic.Classes
         {
             try
             {
-                var loginData = await _cacheHandler.GetAuth(username, password, canCache);
-                if (!loginData.LoginValid)
-                {
-                    Console.Write($"{DateTime.Now} - ");
-                    _consoleWriter.WriteAsLineEnd($"[DataPush] Login Failed - Cannot update details", ConsoleColor.Red);
-                    return false;
-                }
                 var updateRequest = _webHttpWebRequestFactory.Create();
                 updateRequest.CreateRequest(isupdate
                     ? string.Format(EditShowUrl, details.AnimeId)
                     : string.Format(AddShowUrl, details.AnimeId));
                 updateRequest.UserAgent = _userAgent;
-                updateRequest.CookieContainer = loginData.Cookies;
+                updateRequest.SetCredentials(username, password);
                 updateRequest.Method = WebRequestMethods.Http.Post;
                 updateRequest.ContentType = "application/x-www-form-urlencoded";
                 var requestStream = updateRequest.GetRequestStream();
                 var requestWriter = new StreamWriter(requestStream);
-                requestWriter.Write(_jsonMapper.ConvertAnimeDetailsToXml(details));
+                requestWriter.Write($"data={_jsonMapper.ConvertAnimeDetailsToXml(details)}");
                 requestWriter.Close();
                 var response = GetResponse(updateRequest);
-                if (response == "Error")
+                if (response.Contains("Error"))
                 {
                     Console.Write($"{DateTime.Now} - ");
-                    _consoleWriter.WriteAsLineEnd($"[DataPush] Failed to update the anime", ConsoleColor.Red);
+                    _consoleWriter.WriteAsLineEnd($"[DataPush] Failed to update the anime.\r\nError: {response}", ConsoleColor.Red);
                     return false;
                 }
                 Console.WriteLine($"{DateTime.Now} - [DataPush] Successfully completed the anime update request");
@@ -121,7 +112,7 @@ namespace MAL.NetLogic.Classes
                 //var response = await request.GetResponseAsync();
                 request.GetResponse();
                 var statusCode = request.StatusCode;
-                if (statusCode == HttpStatusCode.OK)
+                if (statusCode == HttpStatusCode.OK || statusCode == HttpStatusCode.Created)
                 {
                     using (var stream = request.GetResponseStream())
                     {

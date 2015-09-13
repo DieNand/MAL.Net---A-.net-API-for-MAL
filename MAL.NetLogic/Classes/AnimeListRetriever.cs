@@ -51,30 +51,13 @@ namespace MAL.NetLogic.Classes
             request.CreateRequest(listUrl);
             request.UserAgent = _userAgent;
             request.Method = WebRequestMethods.Http.Get;
-            GetCsrfToken(cookies);
             request.CookieContainer = cookies;
-
         
             //Use getResponse to get the response
             var result = await GetResponse(request);
             var myList = ConvertXml(result);
 
             return myList;
-        }
-
-        /// <summary>
-        /// To be able to do a login we need both the CSRF token embedded in the webpage as well as the cookies.
-        /// Retrieve the required values by visiting the login page
-        /// </summary>
-        /// <returns>CSRF Token embedded in Login Page</returns>
-        private void GetCsrfToken(CookieContainer cookieContainer)
-        {
-            var doc = new HtmlDocument();
-            var loginRequest = _webHttpWebRequestFactory.Create();
-            loginRequest.CreateRequest(@"http://myanimelist.net/login.php");
-            loginRequest.CookieContainer = cookieContainer;
-            loginRequest.GetResponse();
-
         }
 
         #endregion
