@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Runtime.Caching;
+using System.Security.Cryptography;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 using MAL.NetLogic.Interfaces;
 
@@ -12,8 +14,8 @@ namespace MAL.NetLogic.Classes
         #region Variables
 
         private readonly IAnimeRetriever _animeRetriever;
-        private readonly MemoryCache _animeCahce;
         private readonly IConsoleWriter _consoleWriter;
+        private readonly MemoryCache _animeCahce;
         public const string AnimeCache = "AnimeCache";
         public readonly ConcurrentDictionary<string, object> AnimePadlock;  
 
