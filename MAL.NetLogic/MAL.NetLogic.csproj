@@ -93,6 +93,7 @@
     <Compile Include="Classes\MappingToJson.cs" />
     <Compile Include="Classes\ReverseMapper.cs" />
     <Compile Include="Factories\AnimeFactory.cs" />
+    <Compile Include="Factories\CharacterFactory.cs" />
     <Compile Include="Factories\WebHttpWebRequestFactory.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Interfaces\IAnime.cs" />
@@ -105,6 +106,8 @@
     <Compile Include="Interfaces\IAnimeRetriever.cs" />
     <Compile Include="Interfaces\IAuthFactory.cs" />
     <Compile Include="Interfaces\ICacheHandler.cs" />
+    <Compile Include="Interfaces\ICharacterFactory.cs" />
+    <Compile Include="Interfaces\ICharacterInformation.cs" />
     <Compile Include="Interfaces\IConsoleWriter.cs" />
     <Compile Include="Interfaces\ICredentialVerification.cs" />
     <Compile Include="Interfaces\IDataPush.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="Interfaces\IMyInfoXml.cs" />
     <Compile Include="Interfaces\IRelated.cs" />
     <Compile Include="Classes\LogWriter.cs" />
+    <Compile Include="Interfaces\ISeiyuuInformation.cs" />
     <Compile Include="Interfaces\IWebHttpWebRequest.cs" />
     <Compile Include="Interfaces\IWebHttpWebRequestFactory.cs" />
     <Compile Include="Objects\Anime.cs" />
@@ -129,6 +133,7 @@
     <Compile Include="Objects\AnimeDetailsJson.cs" />
     <Compile Include="Objects\AnimeDetailsXml.cs" />
     <Compile Include="Objects\AnimeOriginalJson.cs" />
+    <Compile Include="Objects\CharacterInformation.cs" />
     <Compile Include="Objects\InfoUrls.cs" />
     <Compile Include="Objects\ListAnime.cs" />
     <Compile Include="Objects\ListAnimeJson.cs" />
@@ -140,6 +145,7 @@
     <Compile Include="Objects\MyInfoXml.cs" />
     <Compile Include="Objects\ListAnimeXml.cs" />
     <Compile Include="Objects\Related.cs" />
+    <Compile Include="Objects\SeiyuuInformation.cs" />
     <Compile Include="Objects\Utf8StringWriter.cs" />
     <Compile Include="Objects\WebHttpWebRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -26,16 +26,18 @@ namespace MAL.NetLogic.Classes
         private readonly IAnimeFactory _animeFactory;
         private readonly ILogWriter _logWriter;
         private readonly IConsoleWriter _consoleWriter;
+        private readonly ICharacterFactory _characterFactory;
 
         #endregion
 
         #region Constructor
 
-        public AnimeRetriever(IAnimeFactory animeFactory, ILogWriter logWriter, IConsoleWriter consoleWriter)
+        public AnimeRetriever(IAnimeFactory animeFactory, ILogWriter logWriter, IConsoleWriter consoleWriter, ICharacterFactory characterFactory)
         {
             _animeFactory = animeFactory;
             _logWriter = logWriter;
             _consoleWriter = consoleWriter;
+            _characterFactory = characterFactory;
         }
 
         #endregion
@@ -279,6 +281,7 @@ namespace MAL.NetLogic.Classes
 
                 GetInfoUrls(doc, anime);
                 GetRelated(doc, anime);
+                await GetCharacterAndSeiyuuInformation(anime, username, password);
 
                 if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
                 {
@@ -325,6 +328,77 @@ namespace MAL.NetLogic.Classes
         }
 
         #region Private Methods
+
+        private async Task GetCharacterAndSeiyuuInformation(IAnime anime, string username, string password)
+        {
+            try
+            {
+                //Our first task is to retrieve the MAL anime - for now we cheat and grab it from our example data
+                var doc = new HtmlDocument();
+
+#if DEBUG
+                var animeId = anime.Id;
+                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var file = Path.Combine("AnimeExamples", $"{animeId}charInfo.html");
+                doc.Load(Path.Combine(path, file));
+#else
+                var url = anime.AdditionalInfoUrls.CharactersAndStaff;
+                HttpClient webClient;
+
+                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+                {
+                    var handler = new HttpClientHandler {Credentials = new NetworkCredential(username, password)};
+                    webClient = new HttpClient(handler);
+                }
+                else
+                {
+                    webClient = new HttpClient();
+                }
+                var data = await webClient.GetStreamAsync(new Uri(url));
+                doc.Load(data);
+#endif
+                var tableNodes = doc.DocumentNode.SelectNodes("//table");
+                foreach (var table in tableNodes)
+                {
+                    var rows = table.SelectNodes("//tr");
+                    if (rows != null)
+                    {
+                        foreach (var row in rows)
+                        {
+                            var columns = row.ChildNodes.Where(t => t.Name == "td").ToList();
+                            if (columns.Count == 3)
+                            {
+                                var tmpChar = _characterFactory.CreateCharacter();
+
+                                tmpChar.CharacterPicture = columns[0].ChildNodes["div"].ChildNodes["a"].ChildNodes["img"].Attributes["src"].Value;
+                                tmpChar.CharacterName = columns[1].ChildNodes["a"].InnerText;
+                                tmpChar.CharacterUrl = columns[1].ChildNodes["a"].Attributes["href"].Value;
+                                tmpChar.CharacterType = columns[1].ChildNodes["div"].InnerText;
+
+                                var vaDetail = columns[2].ChildNodes["table"]?.ChildNodes.Where(t => t.Name == "tr").ToList();
+                                if(vaDetail == null) continue;
+                                foreach (var detail in vaDetail)
+                                {
+                                    var tmpSeiyuu = _characterFactory.CreateSeiyuu();
+                                    tmpSeiyuu.Language = detail.ChildNodes["td"].ChildNodes["small"].InnerText;
+                                    tmpSeiyuu.Name = detail.ChildNodes["td"].ChildNodes["a"].InnerText;
+                                    tmpSeiyuu.Url = detail.ChildNodes["td"].ChildNodes["a"].Attributes["href"].Value;
+                                    tmpSeiyuu.PictureUrl = detail.ChildNodes[3].ChildNodes["div"].ChildNodes["a"].ChildNodes["img"].Attributes["src"].Value;
+                                    tmpChar.Seiyuu.Add(tmpSeiyuu);
+                                }
+                                anime.CharacterInformation.Add(tmpChar);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Write($"{DateTime.Now} - ");
+                _consoleWriter.WriteAsLineEnd($"[Anime] Error occured retrieving character and staff data\r\n{ex}", ConsoleColor.Red);
+            }
+
+        }
 
         private void GetInfoUrls(HtmlDocument doc, IAnime anime)
         {

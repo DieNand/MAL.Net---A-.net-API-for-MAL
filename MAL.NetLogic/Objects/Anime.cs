@@ -55,8 +55,8 @@ namespace MAL.NetLogic.Objects
         public List<IRelated> AlternativeVersion { get; set; }
         public List<IRelated> AlternativeSetting { get; set; }
         public List<IRelated> FullStories { get; set; }  
-        public List<IRelated> Others { get; set; } 
-
+        public List<IRelated> Others { get; set; }
+        public List<ICharacterInformation> CharacterInformation { get; set; }
         public bool ErrorOccured { get; set; }
         public string ErrorMessage { get; set; }
 
@@ -86,6 +86,7 @@ namespace MAL.NetLogic.Objects
             AlternativeSetting = new List<IRelated>();
             FullStories = new List<IRelated>();
             Others = new List<IRelated>();
+            CharacterInformation = new List<ICharacterInformation>();
             ErrorOccured = false;
         }
 

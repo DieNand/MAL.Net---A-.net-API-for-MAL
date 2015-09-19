@@ -76,6 +76,7 @@ namespace MAL.NetSelfHosted
             container.Register<IAnimeListRetriever, AnimeListRetriever>();
             container.Register<IDataPush, DataPush>();
             container.Register<ICredentialVerification, CredentialVerification>();
+            container.Register<ICharacterFactory, CharacterFactory>(Lifestyle.Singleton);
 
             container.Register<IAnime, Anime>();
             container.Register<IAnimeDetails, AnimeDetails>();
@@ -89,6 +90,8 @@ namespace MAL.NetSelfHosted
             container.Register<IMyAnimeListJson, MyAnimeListJson>();
             container.Register<IMyInfo, MyInfo>();
             container.Register<ILoginData, LoginData>();
+            container.Register<ISeiyuuInformation, SeiyuuInformation>();
+            container.Register<ICharacterInformation, CharacterInformation>();
 
 
             container.RegisterWebApiControllers(config);

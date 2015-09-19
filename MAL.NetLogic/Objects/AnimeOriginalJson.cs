@@ -120,6 +120,9 @@ namespace MAL.NetLogic.Objects
             [JsonProperty(PropertyName = "others")]
             public List<IRelated> Others { get; set; }
 
+            [JsonProperty(PropertyName = "character_voice_actors")]
+            public List<ICharacterInformation> CharacterInformation { get; set; }
+
             [JsonProperty(PropertyName = "error_occured")]
             public bool ErrorOccured { get; set; }
 
