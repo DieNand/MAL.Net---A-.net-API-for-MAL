@@ -32,6 +32,16 @@ namespace MAL.NetLogic.Factories
             return _container.GetInstance<ISeiyuuInformation>();
         }
 
+        public ICharacterInformationJson CreateJsonCharacter()
+        {
+            return _container.GetInstance<ICharacterInformationJson>();
+        }
+
+        public ICharacter CreateFullCharacter()
+        {
+            return _container.GetInstance<ICharacter>();
+        }
+
         #endregion
     }
 }

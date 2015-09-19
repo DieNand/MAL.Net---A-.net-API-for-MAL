@@ -83,6 +83,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Classes\AnimeRetrieverTest.cs" />
+    <Compile Include="Classes\CharacterRetrieverTest.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -114,6 +115,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="AnimeExamples\11757charInfo.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AnimeExamples\36828.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

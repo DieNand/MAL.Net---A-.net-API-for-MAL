@@ -92,7 +92,7 @@ namespace MAL.NetSelfHosted
             container.Register<ILoginData, LoginData>();
             container.Register<ISeiyuuInformation, SeiyuuInformation>();
             container.Register<ICharacterInformation, CharacterInformation>();
-
+            container.Register<IAnimeographyJson, AnimeographyJson>();
 
             container.RegisterWebApiControllers(config);
 

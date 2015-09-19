@@ -15,12 +15,13 @@ namespace MAL.NetLogic.Classes
 
         private readonly IMappingEngine _mappingEngine;
         private readonly IAnimeFactory _factory;
+        private readonly ICharacterFactory _characterFactory;
 
         #endregion
 
         #region Constructor
 
-        public MappingToJson(IMappingEngine mappingEngine, IAnimeFactory factory)
+        public MappingToJson(IMappingEngine mappingEngine, IAnimeFactory factory, ICharacterFactory characterFactory)
         {
             _mappingEngine = mappingEngine;
             _mappingEngine.ConfigurationProvider.CreateTypeMap(typeof (IAnime), typeof (IAnimeOriginalJson));
@@ -32,7 +33,13 @@ namespace MAL.NetLogic.Classes
             _mappingEngine.ConfigurationProvider.CreateTypeMap(typeof (IMyAnimeList), typeof (IMyAnimeListJson));
             _mappingEngine.ConfigurationProvider.CreateTypeMap(typeof (IMyInfo), typeof (IMyInfoJson));
             _mappingEngine.ConfigurationProvider.CreateTypeMap(typeof (IListAnime), typeof (IListAnimeJson));
+            _mappingEngine.ConfigurationProvider.CreateTypeMap(typeof (ICharacterInformation), typeof (ICharacterInformationJson));
+            _mappingEngine.ConfigurationProvider.CreateTypeMap(typeof (ISeiyuuInformation), typeof (ISeiyuuInformationJson));
+            _mappingEngine.ConfigurationProvider.CreateTypeMap(typeof (IAnimeography), typeof (IAnimeographyJson));
+            _mappingEngine.ConfigurationProvider.CreateTypeMap(typeof (IMangaography), typeof (IMangaographyJson));
+            _mappingEngine.ConfigurationProvider.CreateTypeMap(typeof (ICharacterInformation), typeof (ICharacterInformationJson));
             _factory = factory;
+            _characterFactory = characterFactory;
         }
 
         #endregion
@@ -100,6 +107,14 @@ namespace MAL.NetLogic.Classes
             _mappingEngine.Map(listAnime, retAnime);
 
             return retAnime;
+        }
+
+        public ICharacterInformation ConvertCharacterToJson(ICharacterInformationJson characterInfo)
+        {
+            var retChar = _characterFactory.CreateCharacter();
+            _mappingEngine.Map(characterInfo, retChar);
+
+            return retChar;
         }
 
         #endregion

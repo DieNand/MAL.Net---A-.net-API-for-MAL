@@ -4,5 +4,7 @@
     {
         ICharacterInformation CreateCharacter();
         ISeiyuuInformation CreateSeiyuu();
+        ICharacterInformationJson CreateJsonCharacter();
+        ICharacter CreateFullCharacter();
     }
 }
