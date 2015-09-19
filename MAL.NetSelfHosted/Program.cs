@@ -75,6 +75,7 @@ namespace MAL.NetSelfHosted
             container.Register<IWebHttpWebRequest, WebHttpWebRequest>();
             container.Register<IAnimeListRetriever, AnimeListRetriever>();
             container.Register<IDataPush, DataPush>();
+            container.Register<ICredentialVerification, CredentialVerification>();
 
             container.Register<IAnime, Anime>();
             container.Register<IAnimeDetails, AnimeDetails>();

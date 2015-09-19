@@ -106,6 +106,7 @@
     <Compile Include="Interfaces\IAuthFactory.cs" />
     <Compile Include="Interfaces\ICacheHandler.cs" />
     <Compile Include="Interfaces\IConsoleWriter.cs" />
+    <Compile Include="Interfaces\ICredentialVerification.cs" />
     <Compile Include="Interfaces\IDataPush.cs" />
     <Compile Include="Interfaces\IInfoUrls.cs" />
     <Compile Include="Interfaces\IListAnime.cs" />
