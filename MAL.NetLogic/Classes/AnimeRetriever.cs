@@ -42,7 +42,7 @@ namespace MAL.NetLogic.Classes
 
         public async Task<IAnime> GetAnime(int animeId, string username = "", string password = "")
         {
-            string fullTrace = string.Empty;
+            var fullTrace = string.Empty;
 
             var anime = _animeFactory.CreateAnime();
 
@@ -82,7 +82,26 @@ namespace MAL.NetLogic.Classes
 
                 anime.Title =
                     doc.DocumentNode.SelectSingleNode("//h1").SelectSingleNode("//span[@itemprop='name']").InnerText;
-                var synopsis = doc.DocumentNode.SelectSingleNode("//span[@itemprop='description']").InnerText;
+
+                var synopsis = string.Empty;
+                var synopsisNode = doc.DocumentNode.SelectSingleNode("//span[@itemprop='description']");
+                if (synopsisNode != null)
+                {
+                    synopsis = doc.DocumentNode.SelectSingleNode("//span[@itemprop='description']").InnerText;
+                }
+                else
+                {
+                    var tableRows = doc.DocumentNode.SelectNodes("//td[@valign='top']");
+                    foreach (var row in tableRows)
+                    {
+                        var header = row.ChildNodes["h2"];
+                        if (header != null && header.InnerText.Contains("Synopsis"))
+                        {
+                            var synopsisData = row.ChildNodes.Where(t => t.Name == "#text").Select(t => t.InnerText).ToList();
+                            synopsis = synopsisData[1];
+                        }
+                    }
+                }
 
                 synopsis = synopsis.TrimStart("\r\n".ToCharArray()).Trim();
                 synopsis = HttpUtility.HtmlDecode(synopsis);
@@ -173,9 +192,9 @@ namespace MAL.NetLogic.Classes
                             var dates = Regex.Split(dateString, " to ");
                             var startDate = DateTime.MinValue;
                             var endDate = DateTime.MinValue;
-                            if(dates.Any())
+                            if (dates.Any())
                                 DateTime.TryParse(dates[0], out startDate);
-                            if(dates.Count() > 1)
+                            if (dates.Count() > 1)
                                 DateTime.TryParse(dates[1], out endDate);
                             anime.StartDate = startDate;
                             anime.EndDate = endDate;
@@ -299,16 +318,16 @@ namespace MAL.NetLogic.Classes
             return anime;
         }
 
-#region Private Methods
+        #region Private Methods
 
         private void GetInfoUrls(HtmlDocument doc, IAnime anime)
         {
             foreach (var listItem in doc.DocumentNode.SelectNodes("//div[@id='horiznav_nav']"))
             {
-                foreach(var child in listItem.ChildNodes["ul"].ChildNodes)
+                foreach (var child in listItem.ChildNodes["ul"].ChildNodes)
                 {
                     var item = child.ChildNodes["a"];
-                    if(item == null) continue;
+                    if (item == null) continue;
                     switch (item.InnerText)
                     {
                         case "Episodes":
@@ -361,7 +380,7 @@ namespace MAL.NetLogic.Classes
 
         private void ParseTd(HtmlNode node, IAnime anime)
         {
-            switch (node.ChildNodes[0].InnerText.Replace(":",""))
+            switch (node.ChildNodes[0].InnerText.Replace(":", ""))
             {
                 case "Adaptation":
                     anime.MangaAdaptation.AddRange(MapRelated(node));
@@ -415,7 +434,7 @@ namespace MAL.NetLogic.Classes
             var relatedShows = new List<Related>();
 
             var subNode = node.ChildNodes[1];
-            foreach(var url in subNode.ChildNodes)
+            foreach (var url in subNode.ChildNodes)
             {
                 if (url.Name == "a")
                 {
@@ -435,6 +454,6 @@ namespace MAL.NetLogic.Classes
 
             return relatedShows;
         }
-#endregion
+        #endregion
     }
 }
