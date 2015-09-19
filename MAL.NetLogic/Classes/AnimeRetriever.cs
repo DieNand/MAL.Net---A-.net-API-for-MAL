@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -19,7 +21,7 @@ namespace MAL.NetLogic.Classes
     {
         #region Variables
 
-        //private const string MalUrl = @"http://myanimelist.net/anime/{0}";
+        private const string MalUrl = @"http://myanimelist.net/anime/{0}";
         private const string CleanMalUrl = @"http://myanimelist.net{0}";
         private readonly IAnimeFactory _animeFactory;
         private readonly ILogWriter _logWriter;
@@ -95,8 +97,8 @@ namespace MAL.NetLogic.Classes
                         var header = row.ChildNodes["h2"];
                         if (header != null && header.InnerText.Contains("Synopsis"))
                         {
-                            var data = row.ChildNodes.Where(t => t.Name == "#text").Select(t => t.InnerText).ToList();
-                            synopsis = data[1];
+                            var synopsisData = row.ChildNodes.Where(t => t.Name == "#text").Select(t => t.InnerText).ToList();
+                            synopsis = synopsisData[1];
                         }
                     }
                 }
