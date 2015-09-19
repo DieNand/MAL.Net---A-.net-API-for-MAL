@@ -135,7 +135,13 @@ namespace MAL.NetLogic.Classes
                 {
                     var noImg =
                         doc.DocumentNode.SelectSingleNode(
+                            "//img[@src='http://cdn.myanimelist.net/images/qm_50.gif']")?.Attributes["src"].Value;
+                    if (string.IsNullOrEmpty(noImg))
+                    {
+                        noImg = doc.DocumentNode.SelectSingleNode(
                             "//img[@src='http://cdn.myanimelist.net/images/na_series.gif']")?.Attributes["src"].Value;
+                    }
+
                     if (!string.IsNullOrEmpty(noImg))
                     {
                         anime.ImageUrl = noImg;
