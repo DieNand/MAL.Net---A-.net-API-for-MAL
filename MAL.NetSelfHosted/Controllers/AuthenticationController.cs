@@ -40,7 +40,16 @@ namespace MAL.NetSelfHosted.Controllers
             _stopwatch.Reset();
             _stopwatch.Start();
             Console.WriteLine($"{DateTime.Now} - [Auth] Received credential verification request for {username}");
-            var result = await _credentialVerification.VerifyCredentials(username, password);
+            bool result;
+            try
+            {
+                result = await _credentialVerification.VerifyCredentials(username, password);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Received unauthorized - Credentails for {username} isn't valid");
+                result = false;
+            }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent($"Valid Credetials: {result}");
             _stopwatch.Start();
