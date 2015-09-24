@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,20 +52,11 @@ namespace MAL.NetLogic.Classes
                 var file = Path.Combine("AnimeExamples", $"{characterId}.html");
                 doc.Load(Path.Combine(path, file));
 #else
-                url = string.Format(MalUrl, animeId);
-                HttpClient webClient;
+                url = string.Format(characterUrl, characterId);
 
-                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
-                {
-                    var handler = new HttpClientHandler {Credentials = new NetworkCredential(username, password)};
-                    webClient = new HttpClient(handler);
-                }
-                else
-                {
-                    webClient = new HttpClient();
-                }
-                var data = await webClient.GetStreamAsync(new Uri(url));
-                doc.Load(data);
+                var webClient = new HttpClient();
+                var htmlData = await webClient.GetStreamAsync(new Uri(url));
+                doc.Load(htmlData);
 #endif
                 character.Id = characterId;
                 character.Url = url;
