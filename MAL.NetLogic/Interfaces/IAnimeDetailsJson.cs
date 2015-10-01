@@ -4,10 +4,11 @@ namespace MAL.NetLogic.Interfaces
 {
     public interface IAnimeDetailsJson
     {
+        int AnimeId { get; set; }
         int Episodes { get; set; }
         string Status { get; set; }
         int Score { get; set; }
-        string DownloadedEpisodes { get; set; }
+        int DownloadedEpisodes { get; set; }
         int StorageType { get; set; }
         float StorageValue { get; set; }
         int Rewatched { get; set; }

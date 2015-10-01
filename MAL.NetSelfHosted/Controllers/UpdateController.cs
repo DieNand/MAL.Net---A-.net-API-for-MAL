@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using AutoMapper;
 using MAL.NetLogic.Interfaces;
 using MAL.NetLogic.Objects;
 
@@ -38,7 +39,7 @@ namespace MAL.NetSelfHosted.Controllers
         /// <param name="cancache">Can the server cache the user's login temporarily</param>
         /// <param name="updateDetails">The details for the show to be updated</param>
         /// <returns>OK - Updated succeeded, NotModified - Error occured, no update happened</returns>
-        public async Task<HttpResponseMessage> Post(string username, string password, bool cancache, [FromBody] AnimeDetails updateDetails)
+        public async Task<HttpResponseMessage> Post(string username, string password, bool cancache, [FromBody] AnimeDetailsJson updateDetails)
         {
             _stopwatch.Reset();
             _stopwatch.Start();

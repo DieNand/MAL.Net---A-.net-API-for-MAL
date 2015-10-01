@@ -9,5 +9,6 @@
 
         IMyInfo ConvertMyInfoFromXmlToObject(IMyInfoXml info);
         IListAnime ConvertListAnimeXmlToObject(IListAnimeXml listAnime);
+        IAnimeDetails ConvertJsonAnimeDetailsToAnimeDetails(IAnimeDetailsJson jsonDetails);
     }
 }

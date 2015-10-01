@@ -19,7 +19,7 @@ namespace MAL.NetLogic.Objects
         public int Score { get; set; }
 
         [JsonProperty(PropertyName = "downloaded_episodes")]
-        public string DownloadedEpisodes { get; set; }
+        public int DownloadedEpisodes { get; set; }
 
         [JsonProperty(PropertyName = "storage_type")]
         public int StorageType { get; set; }

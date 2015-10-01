@@ -39,8 +39,10 @@ namespace MAL.NetLogic.Classes
 
         #region Public Methods
 
-        public async Task<bool> PushAnimeDetailsToMal(IAnimeDetails details, string username, string password, bool canCache = true)
+        public async Task<bool> PushAnimeDetailsToMal(IAnimeDetailsJson details, string username, string password, bool canCache = true)
         {
+            var useDetails = _jsonMapper.ConvertJsonAnimeDetailsToAnimeDetails(details);
+
             var result = false;
             Console.WriteLine($"{DateTime.Now} - [DataPush] Received request to update {details.AnimeId} for {username}");
             var userlist = await _animeListRetriever.GetAnimeList(username);
@@ -48,12 +50,12 @@ namespace MAL.NetLogic.Classes
             //The item doesn't exists - Use the add new method
             if (item == null)
             {
-                result = await UpdateAnimeDetails(details, username, password, canCache);
+                result = await UpdateAnimeDetails(useDetails, username, password, canCache);
                 Console.WriteLine($"{DateTime.Now} - [DataPush] Added {details.AnimeId} for {username}");
             }
             else
             {
-                result = await UpdateAnimeDetails(details, username, password, canCache, true);
+                result = await UpdateAnimeDetails(useDetails, username, password, canCache, true);
                 if (result)
                     Console.WriteLine($"{DateTime.Now} - [DataPush] Updated {details.AnimeId} for {username}");
                 else
@@ -143,7 +145,8 @@ namespace MAL.NetLogic.Classes
             catch (Exception ex)
             {
                 Console.WriteLine($"{DateTime.Now} - ");
-                _consoleWriter.WriteAsLineEnd("[DataPush] Error occured while waiting for web response. {ex}", ConsoleColor.Red);
+                _consoleWriter.WriteAsLineEnd($"[DataPush] Error occured while waiting for web response. {ex}", ConsoleColor.Red);
+                throw;
             }
             return result;
         }

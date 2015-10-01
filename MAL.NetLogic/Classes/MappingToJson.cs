@@ -117,6 +117,14 @@ namespace MAL.NetLogic.Classes
             return retChar;
         }
 
+        public IAnimeDetails ConvertJsonAnimeDetailsToAnimeDetails(IAnimeDetailsJson jsonDetails)
+        {
+            var retAnime = _factory.CreateAnimeDetails();
+            _mappingEngine.Map(jsonDetails, retAnime);
+
+            return retAnime;
+        }
+
         #endregion
     }
 }
