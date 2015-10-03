@@ -117,16 +117,25 @@ namespace MAL.NetLogic.Classes
                     switch (lang)
                     {
                         case "Japanese":
-                            var jTitle = node.ChildNodes["#text"].InnerText;
-                            anime.JapaneseTitles.AddRange(jTitle.Split(',').Select(t => t.Trim()));
+                            var jNodes = node.ChildNodes.Where(t => t.Name == "#text");
+                            foreach (var jTitle in jNodes.Select(title => title.InnerText.Replace("\r\n", "").Trim()).Where(jTitle => !string.IsNullOrEmpty(jTitle)))
+                            {
+                                anime.JapaneseTitles.AddRange(jTitle.Split(',').Select(t => t.Trim()));
+                            }
                             break;
                         case "English":
-                            var eTitle = node.ChildNodes["#text"].InnerText;
-                            anime.EnglishTitles.AddRange(eTitle.Split(',').Select(t => t.Trim()));
+                            var eNodes = node.ChildNodes.Where(t => t.Name == "#text");
+                            foreach (var eTitle in eNodes.Select(title => title.InnerText.Replace("\r\n", "").Trim()).Where(eTitle => !string.IsNullOrEmpty(eTitle)))
+                            {
+                                anime.EnglishTitles.AddRange(eTitle.Split(',').Select(t => t.Trim()));
+                            }
                             break;
                         case "Synonyms":
-                            var sTitle = node.ChildNodes["#text"].InnerText;
-                            anime.SynonymousTitles.AddRange(sTitle.Split(',').Select(t => t.Trim()));
+                            var sNodes = node.ChildNodes.Where(t => t.Name == "#text");
+                            foreach (var sTitle in sNodes.Select(title => title.InnerText.Replace("\r\n", "").Trim()).Where(sTitle => !string.IsNullOrEmpty(sTitle)))
+                            {
+                                anime.SynonymousTitles.AddRange(sTitle.Split(',').Select(t => t.Trim()));
+                            }
                             break;
                     }
                 }
@@ -167,7 +176,11 @@ namespace MAL.NetLogic.Classes
                     switch (innerSpan)
                     {
                         case "Type":
-                            anime.Type = node.ChildNodes["#text"].InnerText.Trim();
+                            var tNodes = node.ChildNodes.Where(t => t.Name == "#text");
+                            foreach (var type in tNodes.Select(item => item.InnerText.Replace("\r\n", "").Trim()).Where(type => !string.IsNullOrEmpty(type)))
+                            {
+                                anime.Type = type;
+                            }
                             break;
                         case "Episodes":
                             var epString = node.ChildNodes["#text"].InnerText.TrimEnd("\n\t".ToCharArray()).Trim();
@@ -193,37 +206,65 @@ namespace MAL.NetLogic.Classes
                             }
                             break;
                         case "Status":
-                            anime.Status = node.ChildNodes["#text"].InnerText.Trim();
+                            var stNode = node.ChildNodes.Where(t => t.Name == "#text");
+                            foreach (
+                                var stat in
+                                    stNode.Select(t => t.InnerText.Replace("\r\n", "").Trim())
+                                        .Where(type => !string.IsNullOrEmpty(type)))
+                            {
+                                anime.Status = stat;
+                            }
                             break;
                         case "Aired":
-                            var dateString = node.ChildNodes["#text"].InnerText;
-                            var dates = Regex.Split(dateString, " to ");
-                            var startDate = DateTime.MinValue;
-                            var endDate = DateTime.MinValue;
-                            if (dates.Any())
-                                DateTime.TryParse(dates[0], out startDate);
-                            if (dates.Count() > 1)
-                                DateTime.TryParse(dates[1], out endDate);
-                            anime.StartDate = startDate;
-                            anime.EndDate = endDate;
+                            var dateNodes = node.ChildNodes.Where(t => t.Name == "#text");
+                            foreach (var item in dateNodes)
+                            {
+                                var dateString = item.InnerText.Replace("\r\n", "").Trim();
+                                if (!string.IsNullOrEmpty(dateString))
+                                {
+                                    var dates = Regex.Split(dateString, " to ");
+                                    var startDate = DateTime.MinValue;
+                                    var endDate = DateTime.MinValue;
+                                    if (dates.Any())
+                                        DateTime.TryParse(dates[0], out startDate);
+                                    if (dates.Count() > 1)
+                                        DateTime.TryParse(dates[1], out endDate);
+                                    anime.StartDate = startDate;
+                                    anime.EndDate = endDate;
+                                }
+                            }     
                             break;
                         case "Rating":
                             var txt = node.InnerText.Replace("\r\n", "");
                             var cleanText = Regex.Split(txt, "                                    ").Last().Trim();
-                            cleanText = cleanText.Replace("Rating:\n\t ", "").Trim();
+                            cleanText = cleanText.Replace("Rating:\n\t ", "").Replace("Rating:\n ", "").Trim();
                             anime.Classification = cleanText;
                             break;
                         case "Ranked":
-                            var rankString = node.ChildNodes["#text"].InnerText.Trim().TrimStart('#');
-                            int number;
-                            int.TryParse(rankString, out number);
-                            anime.Rank = number;
+                            var rankNodes = node.ChildNodes.Where(t => t.Name == "#text");
+                            foreach (var randNode in rankNodes)
+                            {
+                                var rankString = randNode.InnerText.Replace("\r\n", "").Trim().TrimStart('#');
+                                if (!string.IsNullOrEmpty(rankString))
+                                {
+                                    int number;
+                                    int.TryParse(rankString, out number);
+                                    anime.Rank = number;
+                                }
+                            }
                             break;
                         case "Popularity":
-                            var pString = node.ChildNodes["#text"].InnerText.Trim().TrimStart('#');
-                            int pNum;
-                            int.TryParse(pString, out pNum);
-                            anime.Popularity = pNum;
+                            var popNodes = node.ChildNodes.Where(t => t.Name == "#text");
+                            foreach(var popItem in popNodes)
+                            {
+                                var pString = popItem.InnerText.Trim().TrimStart('#');
+                                if (!string.IsNullOrEmpty(pString))
+                                {
+                                    int pNum;
+                                    int.TryParse(pString, out pNum);
+                                    anime.Popularity = pNum;
+                                }
+                            }
                             break;
                         case "Score":
                             string scoreString;
@@ -242,19 +283,33 @@ namespace MAL.NetLogic.Classes
                             anime.MemberScore = scoreVal;
                             break;
                         case "Members":
-                            var memberString = node.ChildNodes["#text"].InnerText.Trim().Replace(",", "");
-                            int mVal;
-                            int.TryParse(memberString, out mVal);
-                            anime.MemberCount = mVal;
+                            var memberNodes = node.ChildNodes.Where(t => t.Name == "#text");
+                            foreach (var memberNode in memberNodes)
+                            {
+                                var memberString = memberNode.InnerText.Replace("\r\n", "").Trim().Replace(",", "");
+                                if (!string.IsNullOrEmpty(memberString))
+                                {
+                                    int mVal;
+                                    int.TryParse(memberString, out mVal);
+                                    anime.MemberCount = mVal;
+                                }
+                            }                         
                             break;
                         case "Favorites":
-                            var favString = node.ChildNodes["#text"].InnerText.Trim();
-                            int fVal;
-                            int.TryParse(favString, NumberStyles.Any, CultureInfo.InvariantCulture, out fVal);
-                            anime.FavoriteCount = fVal;
+                            var favNodes = node.ChildNodes.Where(t => t.Name == "#text");
+                            foreach (var favNode in favNodes)
+                            {
+                                var favString = favNode.InnerText.Replace("\r\n", "").Trim();
+                                if (!string.IsNullOrEmpty(favString))
+                                {
+                                    int fVal;
+                                    int.TryParse(favString, NumberStyles.Any, CultureInfo.InvariantCulture, out fVal);
+                                    anime.FavoriteCount = fVal;
+                                }
+                            }
                             break;
                         case "Genres":
-                            var genreNodes = node.SelectNodes("//span[@itemprop='genre']");
+                            var genreNodes = node.ChildNodes.Where(t => t.Name == "a");
                             if (genreNodes == null) break;
                             foreach (var g in genreNodes)
                             {
@@ -264,7 +319,7 @@ namespace MAL.NetLogic.Classes
                     }
                 }
 
-                var tagNodes = doc.DocumentNode.SelectNodes("//div[@class='tags']");
+                var tagNodes = doc.DocumentNode.SelectNodes("//div[@class='tags-inner']");
 
                 if (tagNodes != null)
                 {
@@ -273,7 +328,7 @@ namespace MAL.NetLogic.Classes
                     {
                         foreach (var tag in tagNode.ChildNodes.Nodes())
                         {
-                            if (tag.OriginalName == "a" && !anime.Tags.Contains(tag.InnerText))
+                            if (tag.OriginalName == "#text" && !anime.Tags.Contains(tag.InnerText))
                                 anime.Tags.Add(tag.InnerText);
                         }
                     }

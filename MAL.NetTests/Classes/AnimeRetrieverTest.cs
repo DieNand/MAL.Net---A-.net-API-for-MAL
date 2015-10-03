@@ -54,20 +54,20 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(endDate, result.EndDate);
 
             Assert.AreEqual(2, result.Popularity);
-            Assert.AreEqual(464, result.Rank);
+            Assert.AreEqual(480, result.Rank);
             Assert.AreEqual("http://cdn.myanimelist.net/images/anime/11/39717.jpg", result.ImageUrl);
             Assert.AreEqual("http://cdn.myanimelist.net/images/anime/11/39717l.jpg", result.HighResImageUrl);
 
-            Assert.AreEqual(8.05, result.MemberScore);
-            Assert.AreEqual(580604, result.MemberCount);
-            Assert.AreEqual(31622, result.FavoriteCount);
+            Assert.AreEqual(8.04, result.MemberScore);
+            Assert.AreEqual(596096, result.MemberCount);
+            Assert.AreEqual(32160, result.FavoriteCount);
 
             Assert.AreEqual(10, result.UserScore);
             Assert.AreEqual(25, result.UserWatchedEpisodes);
             Assert.AreEqual("Completed", result.UserWatchedStatus);
 
             Assert.AreEqual(5, result.Genres.Count);
-            Assert.AreEqual(7, result.Tags.Count);
+            Assert.AreEqual(9, result.Tags.Count);
 
             Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/episode", result.AdditionalInfoUrls.Episodes);
             Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/reviews", result.AdditionalInfoUrls.Reviews);
