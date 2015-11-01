@@ -120,21 +120,31 @@ namespace MAL.NetLogic.Classes
                             var jNodes = node.ChildNodes.Where(t => t.Name == "#text");
                             foreach (var jTitle in jNodes.Select(title => title.InnerText.Replace("\r\n", "").Trim()).Where(jTitle => !string.IsNullOrEmpty(jTitle)))
                             {
-                                anime.JapaneseTitles.AddRange(jTitle.Split(',').Select(t => t.Trim()));
+                                foreach (var innerjTitle in jTitle.Split(',').Select(t => t.Trim()))
+                                {
+                                    anime.JapaneseTitles.Add(@WebUtility.HtmlDecode(innerjTitle));
+                                }
                             }
                             break;
                         case "English":
                             var eNodes = node.ChildNodes.Where(t => t.Name == "#text");
                             foreach (var eTitle in eNodes.Select(title => title.InnerText.Replace("\r\n", "").Trim()).Where(eTitle => !string.IsNullOrEmpty(eTitle)))
                             {
-                                anime.EnglishTitles.AddRange(eTitle.Split(',').Select(t => t.Trim()));
+                                foreach (var innereTitle in eTitle.Split(',').Select(t => t.Trim()))
+                                {
+                                    anime.EnglishTitles.Add(@WebUtility.HtmlDecode(innereTitle));
+                                }
                             }
                             break;
                         case "Synonyms":
                             var sNodes = node.ChildNodes.Where(t => t.Name == "#text");
                             foreach (var sTitle in sNodes.Select(title => title.InnerText.Replace("\r\n", "").Trim()).Where(sTitle => !string.IsNullOrEmpty(sTitle)))
                             {
-                                anime.SynonymousTitles.AddRange(sTitle.Split(',').Select(t => t.Trim()));
+                                foreach (var innersTitle in sTitle.Split(',').Select(t => t.Trim()))
+                                {
+                                    anime.SynonymousTitles.Add(@WebUtility.HtmlDecode(innersTitle))
+                                    ;
+                                }
                             }
                             break;
                     }
