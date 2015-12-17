@@ -425,7 +425,8 @@ namespace MAL.NetLogic.Classes
                 var tableNodes = doc.DocumentNode.SelectNodes("//table");
                 foreach (var table in tableNodes)
                 {
-                    var rows = table.SelectNodes("//tr");
+                    var rows = table.ChildNodes.Where(t => t.Name == "tr");
+                    //var rows = table.SelectNodes("//tr");
                     if (rows != null)
                     {
                         foreach (var row in rows)
@@ -451,7 +452,8 @@ namespace MAL.NetLogic.Classes
                                     tmpSeiyuu.PictureUrl = detail.ChildNodes[3].ChildNodes["div"].ChildNodes["a"].ChildNodes["img"].Attributes["src"].Value;
                                     tmpChar.Seiyuu.Add(tmpSeiyuu);
                                 }
-                                anime.CharacterInformation.Add(tmpChar);
+                                if(anime.CharacterInformation.Count(t => t.CharacterUrl == tmpChar.CharacterUrl) == 0)
+                                    anime.CharacterInformation.Add(tmpChar);
                             }
                         }
                     }
