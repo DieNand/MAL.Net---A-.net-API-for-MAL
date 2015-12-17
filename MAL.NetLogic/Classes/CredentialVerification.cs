@@ -1,9 +1,10 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
+using MAL.NetLogic.Interfaces;
 
 namespace MAL.NetLogic.Classes
 {
-    public class CredentialVerification
+    public class CredentialVerification : ICredentialVerification
     {
         #region Variables
 
