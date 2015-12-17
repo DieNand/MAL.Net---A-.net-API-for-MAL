@@ -1,4 +1,4 @@
-# MAL.Net
+# MAL.Net - A .net API for MAL
 
 [![Build status](https://ci.appveyor.com/api/projects/status/ys3wp59j87wf3kna?svg=true)](https://ci.appveyor.com/project/DeadlyEmbrace/mal-net)
 
