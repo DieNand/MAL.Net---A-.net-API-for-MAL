@@ -54,20 +54,20 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(endDate, result.EndDate);
 
             Assert.AreEqual(2, result.Popularity);
-            Assert.AreEqual(480, result.Rank);
+            Assert.AreEqual(518, result.Rank);
             Assert.AreEqual("http://cdn.myanimelist.net/images/anime/11/39717.jpg", result.ImageUrl);
             Assert.AreEqual("http://cdn.myanimelist.net/images/anime/11/39717l.jpg", result.HighResImageUrl);
 
-            Assert.AreEqual(8.04, result.MemberScore);
-            Assert.AreEqual(596096, result.MemberCount);
-            Assert.AreEqual(32160, result.FavoriteCount);
+            Assert.AreEqual(8, result.MemberScore);
+            Assert.AreEqual(652826, result.MemberCount);
+            Assert.AreEqual(34806, result.FavoriteCount);
 
             Assert.AreEqual(10, result.UserScore);
             Assert.AreEqual(25, result.UserWatchedEpisodes);
             Assert.AreEqual("Completed", result.UserWatchedStatus);
 
             Assert.AreEqual(5, result.Genres.Count);
-            Assert.AreEqual(9, result.Tags.Count);
+            Assert.AreEqual(0, result.Tags.Count);
 
             Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/episode", result.AdditionalInfoUrls.Episodes);
             Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/reviews", result.AdditionalInfoUrls.Reviews);
@@ -88,7 +88,7 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(0, result.SpinOffs.Count);
             Assert.AreEqual(0, result.Summaries.Count);
             Assert.AreEqual(0, result.AlternativeVersion.Count);
-            Assert.AreEqual(1, result.Others.Count);
+            Assert.AreEqual(2, result.Others.Count);
 
             var sequelInfo = result.Sequels.First();
             Assert.AreEqual(20021, sequelInfo.Id);
