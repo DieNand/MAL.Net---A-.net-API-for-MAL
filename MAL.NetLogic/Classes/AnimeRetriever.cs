@@ -186,11 +186,20 @@ namespace MAL.NetLogic.Classes
                     switch (innerSpan)
                     {
                         case "Type":
-                            var tNodes = node.ChildNodes.Where(t => t.Name == "#text");
-                            foreach (var type in tNodes.Select(item => item.InnerText.Replace("\r\n", "").Trim()).Where(type => !string.IsNullOrEmpty(type)))
+                            var tNodes = node.ChildNodes.Where(t => t.Name == "a");
+                            foreach (var innerNode in tNodes)
                             {
-                                anime.Type = type;
+                                if(innerNode.Attributes["href"].Value.StartsWith("http://myanimelist.net/topanime.php?type="))
+                                {
+                                    var type = innerNode.InnerText.Replace("\r\n", "").Trim();
+                                    anime.Type = type;
+                                }
                             }
+                            
+                            //foreach (var type in tNodes.Select(item => item.InnerText.Replace("\r\n", "").Trim()).Where(type => !string.IsNullOrEmpty(type)))
+                            //{
+                            //    anime.Type = type;
+                            //}
                             break;
                         case "Episodes":
                             var epString = node.ChildNodes["#text"].InnerText.TrimEnd("\n\t".ToCharArray()).Trim();
@@ -329,20 +338,20 @@ namespace MAL.NetLogic.Classes
                     }
                 }
 
-                var tagNodes = doc.DocumentNode.SelectNodes("//div[@class='tags-inner']");
+                //var tagNodes = doc.DocumentNode.SelectNodes("//div[@class='tags-inner']");
 
-                if (tagNodes != null)
-                {
+                //if (tagNodes != null)
+                //{
 
-                    foreach (var tagNode in tagNodes)
-                    {
-                        foreach (var tag in tagNode.ChildNodes.Nodes())
-                        {
-                            if (tag.OriginalName == "#text" && !anime.Tags.Contains(tag.InnerText))
-                                anime.Tags.Add(tag.InnerText);
-                        }
-                    }
-                }
+                //    foreach (var tagNode in tagNodes)
+                //    {
+                //        foreach (var tag in tagNode.ChildNodes.Nodes())
+                //        {
+                //            if (tag.OriginalName == "#text" && !anime.Tags.Contains(tag.InnerText))
+                //                anime.Tags.Add(tag.InnerText);
+                //        }
+                //    }
+                //}
 
                 GetInfoUrls(doc, anime);
                 GetRelated(doc, anime);
