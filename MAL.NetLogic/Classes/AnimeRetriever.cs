@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -71,7 +72,7 @@ namespace MAL.NetLogic.Classes
                     webClient = new HttpClient();
                 }
                 var data = await webClient.GetStreamAsync(new Uri(url));
-                doc.Load(data);
+                doc.Load(data, Encoding.UTF8);
 #endif
 
                 //Retrieve the MAL ID
