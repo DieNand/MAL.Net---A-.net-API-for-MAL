@@ -93,6 +93,10 @@ namespace MAL.NetSelfHosted
             container.Register<ISeiyuuInformation, SeiyuuInformation>();
             container.Register<ICharacterInformation, CharacterInformation>();
             container.Register<IAnimeographyJson, AnimeographyJson>();
+            container.Register<ISeasonData, SeasonData>();
+            container.Register<ISeasonRetriever, SeasonRetriever>();
+            container.Register<ISeasonFactory, SeasonFactory>();
+
 
             container.RegisterWebApiControllers(config);
 

@@ -91,10 +91,15 @@
     <Compile Include="Classes\ConsoleWriter.cs" />
     <Compile Include="Classes\CredentialVerification.cs" />
     <Compile Include="Classes\DataPush.cs" />
+    <Compile Include="Interfaces\ISeasonRetriever.cs" />
     <Compile Include="Classes\MappingToJson.cs" />
     <Compile Include="Classes\ReverseMapper.cs" />
+    <Compile Include="Classes\SeasonRetriever.cs" />
+    <Compile Include="Enumerations\Season.cs" />
     <Compile Include="Factories\AnimeFactory.cs" />
     <Compile Include="Factories\CharacterFactory.cs" />
+    <Compile Include="Interfaces\ISeasonFactory.cs" />
+    <Compile Include="Factories\SeasonFactory.cs" />
     <Compile Include="Factories\WebHttpWebRequestFactory.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Interfaces\IAnime.cs" />
@@ -149,6 +154,7 @@
     <Compile Include="Objects\CharacterInformationJson.cs" />
     <Compile Include="Objects\CharacterJson.cs" />
     <Compile Include="Objects\InfoUrls.cs" />
+    <Compile Include="Interfaces\ISeasonData.cs" />
     <Compile Include="Objects\ListAnime.cs" />
     <Compile Include="Objects\ListAnimeJson.cs" />
     <Compile Include="Objects\LoginData.cs" />
@@ -161,6 +167,7 @@
     <Compile Include="Objects\MyInfoXml.cs" />
     <Compile Include="Objects\ListAnimeXml.cs" />
     <Compile Include="Objects\Related.cs" />
+    <Compile Include="Objects\SeasonData.cs" />
     <Compile Include="Objects\SeiyuuInformation.cs" />
     <Compile Include="Objects\SeiyuuInformationJson.cs" />
     <Compile Include="Objects\Utf8StringWriter.cs" />
