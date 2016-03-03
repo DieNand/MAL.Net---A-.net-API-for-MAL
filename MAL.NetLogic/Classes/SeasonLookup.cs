@@ -15,15 +15,15 @@ namespace MAL.NetLogic.Classes
         {
             var currentSeason = "Winter";
 
-            if (date.Month >= 9 && date.Month <= 11)
+            if (date.Month >= 10 && date.Month <= 12)
             {
                 currentSeason = "Fall";
             }
-            if (date.Month >= 3 && date.Month <= 5)
+            if (date.Month >= 4 && date.Month <= 6)
             {
                 currentSeason = "Spring";
             }
-            if (date.Month >= 6 && date.Month <= 8)
+            if (date.Month >= 7 && date.Month <= 9)
             {
                 currentSeason = "Summer";
             }
@@ -64,10 +64,10 @@ namespace MAL.NetLogic.Classes
             switch (currentSeason)
             {
                 case "Spring":
-                case "Winter":
+                case "Fall":
                 case "Summer":
                     return year;
-                case "Fall":
+                case "Winter":
                     return year + 1;
                 default:
                     return year;
