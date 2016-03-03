@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
@@ -51,7 +52,8 @@ namespace MAL.NetLogic.Classes
                 var file = Path.Combine("AnimeExamples", $"{year}{season}.html");
                 doc.Load(Path.Combine(path, file));
 #else
-                var uri = string.Format(SeasonUrl, year, season);
+                var uri = string.Format(SeasonUrl, year, season.ToLower(CultureInfo.InvariantCulture));
+                _consoleWriter.WriteAsLineEnd($"{new DateTime()} [Season] Querying - {uri}", ConsoleColor.DarkYellow);
                 var webClient = new HttpClient();
                 var data = await webClient.GetStreamAsync(new Uri(uri));
                 doc.Load(data, Encoding.UTF8);                
