@@ -56,7 +56,7 @@ namespace MAL.NetLogic.Classes
                 _consoleWriter.WriteAsLineEnd($"{new DateTime()} [Season] Querying - {uri}", ConsoleColor.DarkYellow);
                 var webClient = new HttpClient();
                 var data = await webClient.GetStreamAsync(new Uri(uri));
-                doc.Load(data, Encoding.UTF8);                
+                doc.Load(data, Encoding.UTF8);
 #endif
 
                 var links = doc.DocumentNode.SelectNodes("//a[@class='link-title']");
