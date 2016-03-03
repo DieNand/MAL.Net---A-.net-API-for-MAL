@@ -64,10 +64,10 @@ namespace MAL.NetLogic.Classes
             switch (currentSeason)
             {
                 case "Spring":
-                case "Fall":
+                case "Winter":
                 case "Summer":
                     return year;
-                case "Winter":
+                case "Fall":
                     return year + 1;
                 default:
                     return year;
