@@ -44,6 +44,7 @@ namespace MAL.NetSelfHosted
 
             config.Routes.MapHttpRoute("AnimeApi", "1.0/{controller}/", new {});
             config.Routes.MapHttpRoute("AnimeItemApi", "1.0/{controller}/{id}", new { id = RouteParameter.Optional });
+            config.Routes.MapHttpRoute("SeasonData", "1.0/{controller}/{season}/year/{year}", new { controller = "Season", season = RouteParameter.Optional, year = RouteParameter.Optional });
 
             //Configure swagger
             config.EnableSwagger((c) =>
@@ -93,6 +94,10 @@ namespace MAL.NetSelfHosted
             container.Register<ISeiyuuInformation, SeiyuuInformation>();
             container.Register<ICharacterInformation, CharacterInformation>();
             container.Register<IAnimeographyJson, AnimeographyJson>();
+            container.Register<ISeasonData, SeasonData>();
+            container.Register<ISeasonRetriever, SeasonRetriever>();
+            container.Register<ISeasonFactory, SeasonFactory>();
+            container.Register<ISeasonLookup, SeasonLookup>();
 
             container.RegisterWebApiControllers(config);
 
