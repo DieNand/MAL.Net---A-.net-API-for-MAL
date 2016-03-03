@@ -21,14 +21,16 @@ namespace MAL.NetLogic.Classes
         private readonly ILogWriter _logWriter;
         private readonly IConsoleWriter _consoleWriter;
         private readonly ISeasonFactory _seasonFactory;
+        private readonly ISeasonLookup _seasonLookup;
 
         #region Constructor
 
-        public SeasonRetriever(ILogWriter logWriter, IConsoleWriter consoleWriter, ISeasonFactory seasonFactory)
+        public SeasonRetriever(ILogWriter logWriter, IConsoleWriter consoleWriter, ISeasonFactory seasonFactory, ISeasonLookup seasonLookup)
         {
             _logWriter = logWriter;
             _consoleWriter = consoleWriter;
             _seasonFactory = seasonFactory;
+            _seasonLookup = seasonLookup;
         }
 
         #endregion
@@ -86,6 +88,32 @@ namespace MAL.NetLogic.Classes
                 _logWriter.WriteLogData($"Error occured retrieving season data for {year} - {season}\r\n{fullTrace}");
             }
             return seasonList;
+        }
+
+        public async Task<List<ISeasonData>> RetrieveCurrentSeason()
+        {
+            var seasonData = new List<ISeasonData>();
+            var currentSeason = _seasonLookup.CalculateCurrentSeason(DateTime.Now);
+            var year = DateTime.Now.Year;
+            if (currentSeason == "Winter" && DateTime.Now.Month == 12)
+            {
+                //For some reason MAL classifies winter 2015 as winter 2016 so adjust for this fact
+                year++;
+            }
+
+            for (var r = 0; r < 3; r++)
+            {
+                _consoleWriter.WriteAsLineEnd($"{DateTime.Now} - Retrieving Season data for season {r} - {currentSeason}{year}", ConsoleColor.Gray);
+                var tmpData = await GetSeasonData(year, currentSeason);
+                seasonData.AddRange(tmpData);
+                _consoleWriter.WriteAsLineEnd($"{DateTime.Now} - Retrieved Season data for season {r} - {currentSeason}{year}. {tmpData.Count} item.", ConsoleColor.Gray);
+
+                //Get info for the next seas
+                year = _seasonLookup.NextSeasonYear(currentSeason, year);
+                currentSeason = _seasonLookup.GetNextSeason(currentSeason);
+            }
+
+            return seasonData;
         }
 
 #endregion
