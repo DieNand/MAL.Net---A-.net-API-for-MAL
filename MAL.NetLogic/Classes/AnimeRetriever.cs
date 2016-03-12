@@ -171,7 +171,8 @@ namespace MAL.NetLogic.Classes
                     }
                     else
                     {
-                        throw new Exception("Cannot find the image for this series and there is no na_series.gif");
+                        anime.ImageUrl = null;
+                        //throw new Exception("Cannot find the image for this series and there is no na_series.gif");
                     }
                 }
                 else
