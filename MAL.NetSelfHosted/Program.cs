@@ -10,6 +10,7 @@ using System.Web.Http.SelfHost;
 using AutoMapper;
 using MAL.NetLogic.Classes;
 using MAL.NetLogic.Factories;
+using MAL.NetLogic.Helpers;
 using MAL.NetLogic.Interfaces;
 using MAL.NetLogic.Objects;
 using MAL.NetSelfHosted.Handlers;
@@ -98,6 +99,7 @@ namespace MAL.NetSelfHosted
             container.Register<ISeasonRetriever, SeasonRetriever>();
             container.Register<ISeasonFactory, SeasonFactory>();
             container.Register<ISeasonLookup, SeasonLookup>();
+            container.Register<IUrlHelper, MAL.NetLogic.Helpers.UrlHelper>();
 
             container.RegisterWebApiControllers(config);
 

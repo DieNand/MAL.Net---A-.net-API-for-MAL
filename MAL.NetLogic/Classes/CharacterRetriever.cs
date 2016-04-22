@@ -1,12 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using MAL.NetLogic.Helpers;
 using MAL.NetLogic.Interfaces;
 
 namespace MAL.NetLogic.Classes
@@ -15,20 +13,21 @@ namespace MAL.NetLogic.Classes
     {
         #region Variables
 
-        private const string characterUrl = "@http://myanimelist.net/character/{0}";
         private readonly ILogWriter _logWriter;
         private readonly IConsoleWriter _consoleWriter;
         private readonly ICharacterFactory _characterFactory;
+        private readonly IUrlHelper _urlHelper;
 
         #endregion
 
         #region Constructor
 
-        public CharacterRetriever(ILogWriter logWriter, IConsoleWriter consoleWriter, ICharacterFactory characterFactory)
+        public CharacterRetriever(ILogWriter logWriter, IConsoleWriter consoleWriter, ICharacterFactory characterFactory, IUrlHelper urlHelper)
         {
             _logWriter = logWriter;
             _consoleWriter = consoleWriter;
             _characterFactory = characterFactory;
+            _urlHelper = urlHelper;
         }
 
         #endregion
@@ -47,17 +46,12 @@ namespace MAL.NetLogic.Classes
                 //Our first task is to retrieve the MAL anime - for now we cheat and grab it from our example data
                 var doc = new HtmlDocument();
 
-#if DEBUG
-                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                var file = Path.Combine("AnimeExamples", $"{characterId}.html");
-                doc.Load(Path.Combine(path, file));
-#else
-                url = string.Format(characterUrl, characterId);
+                url = string.Format(_urlHelper.CharacterUrl, characterId);
 
                 var webClient = new HttpClient();
                 var htmlData = await webClient.GetStreamAsync(new Uri(url));
                 doc.Load(htmlData);
-#endif
+
                 character.Id = characterId;
                 character.Url = url;
                 character.Name = doc.DocumentNode.SelectNodes("//div[@class='normal_header']").ToList()[2].InnerText;

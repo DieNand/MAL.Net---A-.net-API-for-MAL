@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Net.Http;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using MAL.NetLogic.Helpers;
 using MAL.NetLogic.Interfaces;
 
 namespace MAL.NetLogic.Classes
@@ -17,21 +16,22 @@ namespace MAL.NetLogic.Classes
 
         #endregion
         
-        //{0} is the year and {1} is the Season
-        private const string SeasonUrl = "http://myanimelist.net/anime/season/{0}/{1}";
+
         private readonly ILogWriter _logWriter;
         private readonly IConsoleWriter _consoleWriter;
         private readonly ISeasonFactory _seasonFactory;
         private readonly ISeasonLookup _seasonLookup;
+        private readonly IUrlHelper _urlHelper;
 
         #region Constructor
 
-        public SeasonRetriever(ILogWriter logWriter, IConsoleWriter consoleWriter, ISeasonFactory seasonFactory, ISeasonLookup seasonLookup)
+        public SeasonRetriever(ILogWriter logWriter, IConsoleWriter consoleWriter, ISeasonFactory seasonFactory, ISeasonLookup seasonLookup, IUrlHelper urlHelper)
         {
             _logWriter = logWriter;
             _consoleWriter = consoleWriter;
             _seasonFactory = seasonFactory;
             _seasonLookup = seasonLookup;
+            _urlHelper = urlHelper;
         }
 
         #endregion
@@ -47,17 +47,11 @@ namespace MAL.NetLogic.Classes
             try
             {
                 var doc = new HtmlDocument();
-#if DEBUG
-                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                var file = Path.Combine("AnimeExamples", $"{year}{season}.html");
-                doc.Load(Path.Combine(path, file));
-#else
-                var uri = string.Format(SeasonUrl, year, season.ToLower(CultureInfo.InvariantCulture));
+                var uri = string.Format(_urlHelper.SeasonUrl, year, season.ToLower(CultureInfo.InvariantCulture));
                 _consoleWriter.WriteAsLineEnd($"{new DateTime()} [Season] Querying - {uri}", ConsoleColor.DarkYellow);
                 var webClient = new HttpClient();
                 var data = await webClient.GetStreamAsync(new Uri(uri));
                 doc.Load(data, Encoding.UTF8);
-#endif
 
                 var links = doc.DocumentNode.SelectNodes("//a[@class='link-title']");
                 foreach (var link in links)
