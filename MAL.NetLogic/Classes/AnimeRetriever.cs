@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
+using MAL.NetLogic.Helpers;
 using MAL.NetLogic.Interfaces;
 using MAL.NetLogic.Objects;
 
@@ -22,23 +23,23 @@ namespace MAL.NetLogic.Classes
     {
         #region Variables
 
-        private const string MalUrl = @"http://myanimelist.net/anime/{0}";
-        private const string CleanMalUrl = @"http://myanimelist.net{0}";
         private readonly IAnimeFactory _animeFactory;
         private readonly ILogWriter _logWriter;
         private readonly IConsoleWriter _consoleWriter;
         private readonly ICharacterFactory _characterFactory;
+        private readonly IUrlHelper _urlHelper;
 
         #endregion
 
         #region Constructor
 
-        public AnimeRetriever(IAnimeFactory animeFactory, ILogWriter logWriter, IConsoleWriter consoleWriter, ICharacterFactory characterFactory)
+        public AnimeRetriever(IAnimeFactory animeFactory, ILogWriter logWriter, IConsoleWriter consoleWriter, ICharacterFactory characterFactory, IUrlHelper urlHelper)
         {
             _animeFactory = animeFactory;
             _logWriter = logWriter;
             _consoleWriter = consoleWriter;
             _characterFactory = characterFactory;
+            _urlHelper = urlHelper;
         }
 
         #endregion
@@ -54,12 +55,7 @@ namespace MAL.NetLogic.Classes
                 //Our first task is to retrieve the MAL anime - for now we cheat and grab it from our example data
                 var doc = new HtmlDocument();
 
-#if DEBUG
-                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                var file = Path.Combine("AnimeExamples", $"{animeId}.html");
-                doc.Load(Path.Combine(path, file));
-#else
-                var url = string.Format(MalUrl, animeId);
+                var url = string.Format(_urlHelper.MalUrl, animeId);
                 HttpClient webClient;
 
                 if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
@@ -73,7 +69,6 @@ namespace MAL.NetLogic.Classes
                 }
                 var data = await webClient.GetStreamAsync(new Uri(url));
                 doc.Load(data, Encoding.UTF8);
-#endif
 
                 //Retrieve the MAL ID
                 int aid;
@@ -599,7 +594,7 @@ namespace MAL.NetLogic.Classes
                     var related = new Related
                     {
                         Title = url.InnerText,
-                        Url = string.Format(CleanMalUrl, url.Attributes["href"].Value)
+                        Url = string.Format(_urlHelper.CleanMalUrl, url.Attributes["href"].Value)
                     };
                     var parts = related.Url.Split('/');
                     int id;

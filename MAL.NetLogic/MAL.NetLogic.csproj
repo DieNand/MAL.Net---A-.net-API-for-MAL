@@ -91,6 +91,8 @@
     <Compile Include="Classes\ConsoleWriter.cs" />
     <Compile Include="Classes\CredentialVerification.cs" />
     <Compile Include="Classes\DataPush.cs" />
+    <Compile Include="Interfaces\IUrlHelper.cs" />
+    <Compile Include="Helpers\UrlHelper.cs" />
     <Compile Include="Interfaces\ISeasonLookup.cs" />
     <Compile Include="Classes\SeasonLookup.cs" />
     <Compile Include="Interfaces\ISeasonRetriever.cs" />
