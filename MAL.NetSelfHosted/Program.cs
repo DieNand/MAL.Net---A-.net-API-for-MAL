@@ -99,7 +99,7 @@ namespace MAL.NetSelfHosted
             container.Register<ISeasonRetriever, SeasonRetriever>();
             container.Register<ISeasonFactory, SeasonFactory>();
             container.Register<ISeasonLookup, SeasonLookup>();
-            container.Register<IUrlHelper, MAL.NetLogic.Helpers.UrlHelper>();
+            container.Register<IUrlHelper, MAL.NetLogic.Helpers.UrlHelper>(Lifestyle.Singleton);
 
             container.RegisterWebApiControllers(config);
 
