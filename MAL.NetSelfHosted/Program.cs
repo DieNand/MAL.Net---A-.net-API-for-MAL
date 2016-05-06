@@ -45,6 +45,7 @@ namespace MAL.NetSelfHosted
             config.Routes.MapHttpRoute("AnimeApi", "1.0/{controller}/", new {});
             config.Routes.MapHttpRoute("AnimeItemApi", "1.0/{controller}/{id}", new { id = RouteParameter.Optional });
             config.Routes.MapHttpRoute("SeasonData", "1.0/{controller}/{season}/year/{year}", new { controller = "Season", season = RouteParameter.Optional, year = RouteParameter.Optional });
+            config.Routes.MapHttpRoute("Health", "1.0/{controller}/", new { });
 
             //Configure swagger
             config.EnableSwagger((c) =>

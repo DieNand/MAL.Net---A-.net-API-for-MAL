@@ -138,6 +138,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AnimeController.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
+    <Compile Include="Controllers\HealthController.cs" />
     <Compile Include="Controllers\MyListController.cs" />
     <Compile Include="Controllers\SeasonController.cs" />
     <Compile Include="Controllers\UpdateController.cs" />
