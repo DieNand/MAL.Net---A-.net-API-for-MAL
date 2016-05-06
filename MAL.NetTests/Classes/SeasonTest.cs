@@ -49,7 +49,7 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(first.Title, "Gakusen Toshi Asterisk 2nd Season");
         }
 
-        [TestMethod]
+        [Test]
         public void TestCurrentSeason()
         {
             const int year = 2016;
