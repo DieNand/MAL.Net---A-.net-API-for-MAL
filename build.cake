@@ -29,6 +29,7 @@ Task ("Build")
 	.Does (() => {
 		NuGetRestore (sln);
 		StartProcess("msbuild.exe", new ProcessSettings{ Arguments = sln + " /t:Build /p:Configuration=Release"});
+		//Using built in DotNetBuild seems to cause MSBuild.exe to not exit correctly blocking future builds
 		//DotNetBuild (sln, c => c.Configuration = "Release");
 		var file = MakeAbsolute(Directory(releaseFolder)) + releaseBinary;
 		version = GetVersionNumber(file);
