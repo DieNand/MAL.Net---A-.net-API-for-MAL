@@ -6,23 +6,22 @@ using System.Web;
 using FakeItEasy;
 using HttpMock;
 using MAL.NetLogic.Classes;
-using MAL.NetLogic.Helpers;
 using MAL.NetLogic.Interfaces;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace MAL.NetTests.Classes
 {
-    [TestClass]
+    [TestFixture]
     public class AnimeRetrieverTest
     {
-        [TestMethod]
+        [Test]
         public void TestSwordArtRetrieval()
         {
             const int animeId = 11757;
 
             //Mock the HttpClient - This allows us to control the response
             var httpMock = HttpMockRepository.At("http://localhost:8080");
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var path = AppDomain.CurrentDomain.BaseDirectory;
             var file = Path.Combine(path, "AnimeExamples", $"{animeId}.html");
             var content = File.ReadAllText(file);
             httpMock.Stub(x => x.Get($"/anime/{animeId}")).Return(content).OK();
