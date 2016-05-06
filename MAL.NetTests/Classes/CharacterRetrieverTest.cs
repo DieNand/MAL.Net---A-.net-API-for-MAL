@@ -1,25 +1,23 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using FakeItEasy;
 using HttpMock;
 using MAL.NetLogic.Classes;
-using MAL.NetLogic.Helpers;
 using MAL.NetLogic.Interfaces;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace MAL.NetTests.Classes
 {
-    [TestClass]
+    [TestFixture]
     public class CharacterRetrieverTest
     {
-        [TestMethod]
+        [Test]
         public void TestAsunaYuuki()
         {
             var charId = 36828;
             //Mock the HttpClient - This allows us to control the response
             var httpMock = HttpMockRepository.At("http://localhost:8081");
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var path = AppDomain.CurrentDomain.BaseDirectory;
             var file = Path.Combine(path, "AnimeExamples", $"{charId}.html");
             var content = File.ReadAllText(file);
             httpMock.Stub(x => x.Get($"/character/{charId}")).Return(content).OK();

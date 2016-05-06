@@ -7,24 +7,25 @@ using FakeItEasy;
 using HttpMock;
 using MAL.NetLogic.Classes;
 using MAL.NetLogic.Interfaces;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using Assert = NUnit.Framework.Assert;
 
 namespace MAL.NetTests.Classes
 {
     /// <summary>
     /// Summary description for SeasonTest
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class SeasonTest
     {
-        [TestMethod]
+        [Test]
         public void TestSeason()
         {
             const int year = 2016;
             const string season = "Spring";
 
             var httpMock = HttpMockRepository.At("http://localhost:8082");
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var path = AppDomain.CurrentDomain.BaseDirectory;
             var file = Path.Combine(path, "AnimeExamples", $"{year}{season}.html");
             var content = File.ReadAllText(file);
             httpMock.Stub(x => x.Get($"/anime/season/{year}/{season.ToLower(CultureInfo.InvariantCulture)}")).Return(content).OK();
@@ -47,7 +48,7 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(first.Title, "Gakusen Toshi Asterisk 2nd Season");
         }
 
-        [TestMethod]
+        [Test]
         public void TestCurrentSeason()
         {
             const int year = 2016;

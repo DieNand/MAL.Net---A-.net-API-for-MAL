@@ -6,23 +6,22 @@ using System.Web;
 using FakeItEasy;
 using HttpMock;
 using MAL.NetLogic.Classes;
-using MAL.NetLogic.Helpers;
 using MAL.NetLogic.Interfaces;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace MAL.NetTests.Classes
 {
-    [TestClass]
+    [TestFixture]
     public class AnimeRetrieverTest
     {
-        [TestMethod]
+        [Test]
         public void TestSwordArtRetrieval()
         {
             const int animeId = 11757;
 
             //Mock the HttpClient - This allows us to control the response
-            var httpMock = HttpMockRepository.At("http://localhost:8080");
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var httpMock = HttpMockRepository.At("http://localhost:8083");
+            var path = AppDomain.CurrentDomain.BaseDirectory;
             var file = Path.Combine(path, "AnimeExamples", $"{animeId}.html");
             var content = File.ReadAllText(file);
             httpMock.Stub(x => x.Get($"/anime/{animeId}")).Return(content).OK();
@@ -40,7 +39,7 @@ namespace MAL.NetTests.Classes
 
             A.CallTo(() => fakeFactory.CreateAnime()).Returns(fakeAnime);
             A.CallTo(() => fakeFactory.CreateJsonAnime()).Returns(fakeJson);
-            A.CallTo(() => fakeUrlHelper.MalUrl).Returns("http://localhost:8080/anime/{0}");
+            A.CallTo(() => fakeUrlHelper.MalUrl).Returns("http://localhost:8083/anime/{0}");
             A.CallTo(() => fakeUrlHelper.CleanMalUrl).Returns("http://myanimelist.net{0}");
 
             var instance = new AnimeRetriever(fakeFactory, fakeLog, fakeWriter, fakeCharFactory, fakeUrlHelper);
