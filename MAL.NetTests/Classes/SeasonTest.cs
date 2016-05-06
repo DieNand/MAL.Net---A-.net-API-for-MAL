@@ -7,7 +7,6 @@ using FakeItEasy;
 using HttpMock;
 using MAL.NetLogic.Classes;
 using MAL.NetLogic.Interfaces;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using Assert = NUnit.Framework.Assert;
 
