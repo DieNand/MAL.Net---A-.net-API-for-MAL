@@ -28,7 +28,8 @@ Task ("Build")
 .IsDependentOn("DiscoverBuildDetails")
 	.Does (() => {
 		NuGetRestore (sln);
-		DotNetBuild (sln, c => c.Configuration = "Release");
+		StartProcess("msbuild.exe", new ProcessSettings{ Arguments = sln + " /t:Build /p:Configuration=Release"});
+		//DotNetBuild (sln, c => c.Configuration = "Release");
 		var file = MakeAbsolute(Directory(releaseFolder)) + releaseBinary;
 		version = GetVersionNumber(file);
 		ciVersion = GetVersionNumberWithContinuesIntegrationNumberAppended(file, buildCounter);
