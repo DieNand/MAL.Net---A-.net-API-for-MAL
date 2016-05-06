@@ -5,12 +5,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
-using System.Web.Http.Routing;
 using System.Web.Http.SelfHost;
 using AutoMapper;
 using MAL.NetLogic.Classes;
 using MAL.NetLogic.Factories;
-using MAL.NetLogic.Helpers;
 using MAL.NetLogic.Interfaces;
 using MAL.NetLogic.Objects;
 using MAL.NetSelfHosted.Handlers;
@@ -26,6 +24,7 @@ namespace MAL.NetSelfHosted
     {
         #region Variables
 
+        private const string EmptyVersion = "0.0.0.0";
         private static string _host;
         private static string _port;
 
@@ -99,7 +98,7 @@ namespace MAL.NetSelfHosted
             container.Register<ISeasonRetriever, SeasonRetriever>();
             container.Register<ISeasonFactory, SeasonFactory>();
             container.Register<ISeasonLookup, SeasonLookup>();
-            container.Register<IUrlHelper, MAL.NetLogic.Helpers.UrlHelper>(Lifestyle.Singleton);
+            container.Register<IUrlHelper, NetLogic.Helpers.UrlHelper>(Lifestyle.Singleton);
 
             container.RegisterWebApiControllers(config);
 
@@ -114,7 +113,7 @@ namespace MAL.NetSelfHosted
             Console.WriteLine("########################################################");
             Console.Write("# MAL.NET Self Hosted - Ninetail Labs".PadRight(55));
             Console.WriteLine("#");
-            Console.Write($"# Version {version}".PadRight(55));
+            Console.Write($"# Version {GetGitInformation()}".PadRight(55));
             Console.WriteLine("#");
             Console.Write($"# Running on {config.BaseAddress}".PadRight(55));
             Console.WriteLine("#");
@@ -154,6 +153,17 @@ namespace MAL.NetSelfHosted
         {
             _host = ConfigurationManager.AppSettings["Host"];
             _port = ConfigurationManager.AppSettings["Port"];
+        }
+
+        private static string GetGitInformation()
+        {
+            var attr = Assembly.GetEntryAssembly().GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), false) as AssemblyInformationalVersionAttribute[];
+            if (attr == null)
+            {
+                return Assembly.GetEntryAssembly()?.GetName().Version.ToString() ?? EmptyVersion;
+            }
+            var value = attr[0].InformationalVersion.Split(' ');
+            return $"{value[0]} ({value[2].Split('=')[1]})";
         }
     }
 }
