@@ -146,7 +146,7 @@ namespace MAL.NetLogic.Classes
                     }
                 }
 
-                var img = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']")?.Attributes["src"].Value;
+                var img = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']")?.Attributes["data-src"].Value;
                 //If we cannot find an image check if there is a na_series image
                 if (string.IsNullOrEmpty(img))
                 {
@@ -253,7 +253,7 @@ namespace MAL.NetLogic.Classes
                         case "Rating":
                             var txt = node.InnerText.Replace("\r\n", "");
                             var cleanText = Regex.Split(txt, "                                    ").Last().Trim();
-                            cleanText = cleanText.Replace("Rating:\n\t ", "").Replace("Rating:\n ", "").Trim();
+                            cleanText = cleanText.Replace("Rating:", "").Replace("Rating:", "").Trim(Environment.NewLine.ToCharArray()).Trim();
                             anime.Classification = cleanText;
                             break;
                         case "Ranked":
@@ -407,12 +407,6 @@ namespace MAL.NetLogic.Classes
                 //Our first task is to retrieve the MAL anime - for now we cheat and grab it from our example data
                 var doc = new HtmlDocument();
 
-#if DEBUG
-                var animeId = anime.Id;
-                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                var file = Path.Combine("AnimeExamples", $"{animeId}charInfo.html");
-                doc.Load(Path.Combine(path, file));
-#else
                 var url = anime.AdditionalInfoUrls.CharactersAndStaff;
                 HttpClient webClient;
 
@@ -427,7 +421,7 @@ namespace MAL.NetLogic.Classes
                 }
                 var data = await webClient.GetStreamAsync(new Uri(url));
                 doc.Load(data);
-#endif
+
                 var tableNodes = doc.DocumentNode.SelectNodes("//table");
                 foreach (var table in tableNodes)
                 {
@@ -442,7 +436,7 @@ namespace MAL.NetLogic.Classes
                             {
                                 var tmpChar = _characterFactory.CreateCharacter();
 
-                                tmpChar.CharacterPicture = columns[0].ChildNodes["div"].ChildNodes["a"].ChildNodes["img"].Attributes["src"].Value;
+                                tmpChar.CharacterPicture = columns[0].ChildNodes["div"].ChildNodes["a"].ChildNodes["img"].Attributes["data-src"].Value;
                                 tmpChar.CharacterName = columns[1].ChildNodes["a"].InnerText;
                                 tmpChar.CharacterUrl = columns[1].ChildNodes["a"].Attributes["href"].Value;
                                 tmpChar.CharacterType = columns[1].ChildNodes["div"].InnerText;

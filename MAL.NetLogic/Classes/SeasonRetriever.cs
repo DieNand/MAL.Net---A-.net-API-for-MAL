@@ -42,7 +42,7 @@ namespace MAL.NetLogic.Classes
         {
             var seasonList = new List<ISeasonData>();
             var errorOccured = false;
-            string fullTrace = string.Empty;
+            var fullTrace = string.Empty;
 
             try
             {
