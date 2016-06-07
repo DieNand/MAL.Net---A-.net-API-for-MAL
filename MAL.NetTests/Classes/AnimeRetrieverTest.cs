@@ -69,13 +69,13 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(endDate, result.EndDate);
 
             Assert.AreEqual(2, result.Popularity);
-            Assert.AreEqual(518, result.Rank);
+            Assert.AreEqual(646, result.Rank);
             Assert.AreEqual("http://cdn.myanimelist.net/images/anime/11/39717.jpg", result.ImageUrl);
             Assert.AreEqual("http://cdn.myanimelist.net/images/anime/11/39717l.jpg", result.HighResImageUrl);
 
-            Assert.AreEqual(8, result.MemberScore);
-            Assert.AreEqual(652826, result.MemberCount);
-            Assert.AreEqual(34806, result.FavoriteCount);
+            Assert.AreEqual(7.92, Math.Round(result.MemberScore, 2));
+            Assert.AreEqual(763723, result.MemberCount);
+            Assert.AreEqual(38446, result.FavoriteCount);
 
             Assert.AreEqual(10, result.UserScore);
             Assert.AreEqual(25, result.UserWatchedEpisodes);
@@ -103,12 +103,12 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(0, result.SpinOffs.Count);
             Assert.AreEqual(0, result.Summaries.Count);
             Assert.AreEqual(0, result.AlternativeVersion.Count);
-            Assert.AreEqual(2, result.Others.Count);
+            Assert.AreEqual(1, result.Others.Count);
 
             var sequelInfo = result.Sequels.First();
             Assert.AreEqual(20021, sequelInfo.Id);
             Assert.AreEqual("Sword Art Online: Extra Edition", sequelInfo.Title);
-            Assert.AreEqual("http://myanimelist.net/anime/20021/Sword_Art_Online:_Extra_Edition", sequelInfo.Url);
+            Assert.AreEqual("http://myanimelist.net/anime/20021/Sword_Art_Online__Extra_Edition", sequelInfo.Url);
         }
     }
 }
