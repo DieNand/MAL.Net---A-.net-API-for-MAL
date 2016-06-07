@@ -57,7 +57,7 @@ namespace MAL.NetLogic.Classes
                 character.Name = doc.DocumentNode.SelectNodes("//div[@class='normal_header']").ToList()[2].InnerText;
                 var leftPanelTable = doc.DocumentNode.SelectNodes("//table")[0];
                 var rows = leftPanelTable.ChildNodes["tr"];
-                character.ImageUrl = rows.ChildNodes["td"].ChildNodes["div"].ChildNodes["img"].Attributes["src"].Value;
+                character.ImageUrl = rows.ChildNodes["td"].ChildNodes["div"].ChildNodes["img"].Attributes["data-src"].Value;
 
                 var data = rows.ChildNodes["td"].ChildNodes.FirstOrDefault(t => t.InnerText.Contains("Member Favorites"));
                 if (data != null)

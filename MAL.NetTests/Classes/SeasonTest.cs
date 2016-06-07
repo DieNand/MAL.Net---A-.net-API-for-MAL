@@ -61,7 +61,7 @@ namespace MAL.NetTests.Classes
             var fakeUrlHelper = A.Fake<IUrlHelper>();
 
             var httpMock = HttpMockRepository.At("http://localhost:8082");
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var path = AppDomain.CurrentDomain.BaseDirectory;
             foreach (var season in seasons)
             {
                 var file = Path.Combine(path, "AnimeExamples", $"{year}{season}.html");
