@@ -37,7 +37,7 @@ namespace MAL.NetLogic.Classes
             var item = _animeCahce.Get(id.ToString());
             if (item == null)
             {
-                Log.Information("Cache miss for {Anime Id}", id);
+                Log.Information("Cache miss for {AnimeId}", id);
 
                 var anime = await _animeRetriever.GetAnime(id);
                 finalItem = anime;
@@ -52,13 +52,13 @@ namespace MAL.NetLogic.Classes
                     if (item == null)
                     {
                         _animeCahce.Add(id.ToString(), finalItem, cip);
-                        Log.Information("Added {Anime Id} to cache", id);
+                        Log.Information("Added {AnimeId} to cache", id);
                     }
                 }
             }
             else
             {
-                Log.Information("Cache hit for {Anime Id}", id);
+                Log.Information("Cache hit for {AnimeId}", id);
                 finalItem = (IAnime) item;
             }
             return finalItem;
@@ -76,7 +76,7 @@ namespace MAL.NetLogic.Classes
 
         private void RemovedCallback(CacheEntryRemovedArguments arguments)
         {
-            Log.Information("{Anime Id} cache expired. Removed from cache", arguments.CacheItem.Key);
+            Log.Information("{AnimeId} cache expired. Removed from cache", arguments.CacheItem.Key);
         }
 
         #endregion

@@ -42,7 +42,7 @@ namespace MAL.NetLogic.Classes
             var useDetails = _jsonMapper.ConvertJsonAnimeDetailsToAnimeDetails(details);
 
             bool result;
-            Log.Information("Received request to update {Anime Id} for {username}", details.AnimeId, username);
+            Log.Information("Received request to update {AnimeId} for {username}", details.AnimeId, username);
             var userlist = await _animeListRetriever.GetAnimeList(username);
             var item = userlist.Anime.FirstOrDefault(t => t.SeriesId == details.AnimeId);
             //The item doesn't exists - Use the add new method
@@ -56,11 +56,11 @@ namespace MAL.NetLogic.Classes
                 result = await UpdateAnimeDetails(useDetails, username, password, canCache, true);
                 if (result)
                 {
-                    Log.Information("Updated {Anime Id} for {username}", details.AnimeId, username);
+                    Log.Information("Updated {AnimeId} for {username}", details.AnimeId, username);
                 }
                 else
                 {
-                    Log.Warning("Update of {Anime Id} for {username} failed", details.AnimeId, username);
+                    Log.Warning("Update of {AnimeId} for {username} failed", details.AnimeId, username);
                 }
             }
             return result;
@@ -89,16 +89,16 @@ namespace MAL.NetLogic.Classes
                 var response = GetResponse(updateRequest);
                 if (response.Contains("Error"))
                 {
-                    Log.Warning("Failed to update {Anime Id} for {username}. Response received was {Response}", details.AnimeId, username, response);
+                    Log.Warning("Failed to update {AnimeId} for {username}. Response received was {Response}", details.AnimeId, username, response);
                     return false;
                 }
-                Log.Information("Successfully completed the update of {Anime Id} for {username}", details.AnimeId, username);
+                Log.Information("Successfully completed the update of {AnimeId} for {username}", details.AnimeId, username);
                 return true;
 
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Error occured while trying to update {Anime Id} for {username}", details.AnimeId, username);
+                Log.Error(ex, "Error occured while trying to update {AnimeId} for {username}", details.AnimeId, username);
                 return false;
             }
         }
@@ -135,7 +135,7 @@ namespace MAL.NetLogic.Classes
                 }
                 else
                 {
-                    Log.Warning("Received {status code} from server", statusCode);
+                    Log.Warning("Received {StatusCode} from server", statusCode);
                     return "Error";
                 }
             }
