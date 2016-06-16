@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using MAL.NetLogic.Interfaces;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace MAL.NetSelfHosted.Controllers
 {
+    /// <summary>
+    /// Controller to retrieve season data
+    /// </summary>
     public class SeasonController : ApiController
     {
         #region Variables
@@ -20,6 +24,10 @@ namespace MAL.NetSelfHosted.Controllers
 
         #region Constructor
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="seasonRetriever"></param>
         public SeasonController(ISeasonRetriever seasonRetriever)
         {
             _seasonRetriever = seasonRetriever;
@@ -39,13 +47,13 @@ namespace MAL.NetSelfHosted.Controllers
         {
             var watch = new Stopwatch();
             watch.Start();
-            Console.WriteLine($"{DateTime.Now} - [Season] Received request for {year} - {season}");
+            Log.Information("Received request for {year} - {season}", year, season);
             var seasonData = await _seasonRetriever.GetSeasonData(year, season);
             var response = Request.CreateResponse(HttpStatusCode.OK);
             var stringResponse = JsonConvert.SerializeObject(seasonData);
             response.Content = new StringContent(stringResponse, Encoding.UTF8, "application/json");
             watch.Stop();
-            Console.WriteLine($"{DateTime.Now} - [Season] Sent response for season request {year} - {season}");
+            Log.Information("Sent response for season request {year} - {season}. Processing took {duration}", year, season, watch.Elapsed);
             return response;
         }
 
@@ -57,13 +65,13 @@ namespace MAL.NetSelfHosted.Controllers
         {
             var watch = new Stopwatch();
             watch.Start();
-            Console.WriteLine($"{DateTime.Now} - [Season] Received request for current season data");
+            Log.Information("Received request for current season data");
             var data = await _seasonRetriever.RetrieveCurrentSeason();
             var response = Request.CreateResponse(HttpStatusCode.OK);
             var stringResponse = JsonConvert.SerializeObject(data);
             response.Content = new StringContent(stringResponse, Encoding.UTF8, "application/json");
             watch.Stop();
-            Console.WriteLine($"{DateTime.Now} - [Season] Completed request for current season data");
+            Log.Information("Send current season data. Processing took {duration}", watch.Elapsed)
             return response;
         }
 
