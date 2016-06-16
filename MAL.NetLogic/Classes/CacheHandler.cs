@@ -14,7 +14,7 @@ namespace MAL.NetLogic.Classes
         private readonly IAnimeRetriever _animeRetriever;
         private readonly MemoryCache _animeCahce;
         private const string AnimeCache = "AnimeCache";
-        private readonly ConcurrentDictionary<string, object> AnimePadlock;  
+        private readonly ConcurrentDictionary<string, object> _animePadlock;  
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace MAL.NetLogic.Classes
         public CacheHandler(IAnimeRetriever animeRetriever)
         {
             _animeCahce = new MemoryCache(AnimeCache);
-            AnimePadlock = new ConcurrentDictionary<string, object>();
+            _animePadlock = new ConcurrentDictionary<string, object>();
             _animeRetriever = animeRetriever;
         }
 
@@ -46,7 +46,7 @@ namespace MAL.NetLogic.Classes
                     AbsoluteExpiration = DateTime.Now.AddHours(1),
                     RemovedCallback = RemovedCallback
                 };
-                lock (AnimePadlock.GetOrAdd(id.ToString(), new object()))
+                lock (_animePadlock.GetOrAdd(id.ToString(), new object()))
                 {
                     item = _animeCahce.Get(id.ToString());
                     if (item == null)
