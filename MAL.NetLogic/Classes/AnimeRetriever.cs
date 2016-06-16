@@ -380,7 +380,7 @@ namespace MAL.NetLogic.Classes
             {
                 anime.ErrorOccured = true;
                 anime.ErrorMessage = ex.Message;
-                Log.Error(ex, "Error occured while trying to retrieve {Anime Id}", animeId);
+                Log.Error(ex, "Error occured while trying to retrieve {AnimeId}", animeId);
             }
 
             return anime;

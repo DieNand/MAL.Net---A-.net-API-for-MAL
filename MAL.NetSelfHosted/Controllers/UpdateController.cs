@@ -48,10 +48,10 @@ namespace MAL.NetSelfHosted.Controllers
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            Log.Information("Received update request for {username} for {Anime Id}", username, updateDetails.AnimeId);
+            Log.Information("Received update request for {username} for {AnimeId}", username, updateDetails.AnimeId);
             var result = await _dataPush.PushAnimeDetailsToMal(updateDetails, username, password, cancache);
             var response = Request.CreateResponse(result ? HttpStatusCode.OK : HttpStatusCode.NotModified);
-            Log.Information("Successfully completed update of {AnimeId} for {username}: {Update Result}. Processing took {duration}", updateDetails.AnimeId, username, result, stopWatch.Elapsed);
+            Log.Information("Successfully completed update of {AnimeId} for {username}: {UpdateResult}. Processing took {duration}", updateDetails.AnimeId, username, result, stopWatch.Elapsed);
             return response;
         }
         
