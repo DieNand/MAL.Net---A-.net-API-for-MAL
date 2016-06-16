@@ -63,7 +63,7 @@ namespace MAL.NetSelfHosted.Controllers
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            Log.Information("Reveived request for {Anime Id}", id);
+            Log.Information("Reveived request for {AnimeId}", id);
             string anime;
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
@@ -76,7 +76,7 @@ namespace MAL.NetSelfHosted.Controllers
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(anime, Encoding.UTF8, "application/json");
             stopWatch.Stop();
-            Log.Information("Sent response for {Anime Id}. Processing took {Duration}", id, stopWatch.Elapsed);
+            Log.Information("Sent response for {AnimeId}. Processing took {Duration}", id, stopWatch.Elapsed);
 
             return response;
         }
