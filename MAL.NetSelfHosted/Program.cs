@@ -11,8 +11,11 @@ using MAL.NetLogic.Classes;
 using MAL.NetLogic.Factories;
 using MAL.NetLogic.Interfaces;
 using MAL.NetLogic.Objects;
+using MAL.NetSelfHosted.Classes;
+using MAL.NetSelfHosted.Enumerations;
 using MAL.NetSelfHosted.Handlers;
 using MAL.NetSelfHosted.Interfaces;
+using Serilog;
 using SimpleInjector;
 using SimpleInjector.Extensions.ExecutionContextScoping;
 using SimpleInjector.Integration.WebApi;
@@ -105,6 +108,8 @@ namespace MAL.NetSelfHosted
 
             container.Verify();
 
+            SetupLogging();
+
             config.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
 
             server.OpenAsync().Wait();
@@ -122,7 +127,9 @@ namespace MAL.NetSelfHosted
             Console.WriteLine("#");
             Console.WriteLine("########################################################");
             Console.WriteLine("");
-            consoleWriter.WriteAsLineEnd("Running self test...", ConsoleColor.DarkYellow);
+            Log.Information("Executing self test...");
+
+            //consoleWriter.WriteAsLineEnd("Running self test...", ConsoleColor.DarkYellow);
 
             try
             {
@@ -130,16 +137,11 @@ namespace MAL.NetSelfHosted
                 var response = client.GetAsync($"{_host}:{_port}" + "/1.0/Anime").Result;
                 var answer = response.Content.ReadAsStringAsync().Result;
                 var result = answer == "\"Call with an ID to get an anime value\"";
-                consoleWriter.WriteAsLineEnd($"Self test passed: ", ConsoleColor.DarkYellow);
-                consoleWriter.WriteAsLineEnd(result.ToString(), result ? ConsoleColor.Green : ConsoleColor.Red);
-            }
+                Log.Information("Self test passed: {Result}", result);
+              }
             catch (Exception ex)
             {
-                consoleWriter.WriteInline($"Self test passed: ", ConsoleColor.DarkYellow);
-                consoleWriter.WriteAsLineEnd("False", ConsoleColor.Red);
-                Console.WriteLine("");
-                consoleWriter.WriteInline($"The following error occured:\r\n", ConsoleColor.Gray);
-                consoleWriter.WriteAsLineEnd($"{ex}", ConsoleColor.Red);
+                Log.Error(ex, "Self test failed");
             }
 
 
@@ -148,6 +150,27 @@ namespace MAL.NetSelfHosted
             Console.WriteLine("");
 
             Console.ReadLine();
+        }
+
+        /// <summary>
+        /// Setup Logging
+        /// </summary>
+        private static void SetupLogging()
+        {
+            var logToConsole = ConfigurationKeys.LogToConsole.GetConfigurationValue<bool>();
+            var logToFile = ConfigurationKeys.LogToFile.GetConfigurationValue<bool>();
+            var logFile = ConfigurationKeys.LogPath.GetConfigurationValue<string>();
+
+            var configuration = new LoggerConfiguration();
+            if (logToConsole)
+            {
+                configuration.WriteTo.ColoredConsole();
+            }
+            if (logToFile)
+            {
+                configuration.WriteTo.File(logFile);
+            }
+            Log.Logger = configuration.CreateLogger();
         }
 
         private static void ReadSettings()
