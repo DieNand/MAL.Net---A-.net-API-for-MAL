@@ -5,24 +5,30 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MAL.NetLogic.Interfaces;
+using Serilog;
 
 namespace MAL.NetSelfHosted.Controllers
 {
+    /// <summary>
+    /// Controller used to retrieve Authentication details
+    /// </summary>
     public class AuthenticationController : ApiController
     {
         #region Variables
 
         private readonly ICredentialVerification _credentialVerification;
-        private readonly Stopwatch _stopwatch;
 
         #endregion
 
         #region Constructor
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="credentialVerification"></param>
         public AuthenticationController(ICredentialVerification credentialVerification)
         {
             _credentialVerification = credentialVerification;
-            _stopwatch = new Stopwatch();
         }
 
         #endregion
@@ -37,23 +43,29 @@ namespace MAL.NetSelfHosted.Controllers
         /// <returns></returns>
         public async Task<HttpResponseMessage> Get([FromUri] string username, [FromUri] string password)
         {
-            _stopwatch.Reset();
-            _stopwatch.Start();
-            Console.WriteLine($"{DateTime.Now} - [Auth] Received credential verification request for {username}");
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            Log.Information("Received credential verification request for {username}", username);
             bool result;
             try
             {
                 result = await _credentialVerification.VerifyCredentials(username, password);
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException)
             {
-                Console.WriteLine($"Received unauthorized - Credentails for {username} isn't valid");
+                Log.Information("Received unauthorized - Credentials for {username} isn't valid", username);
                 result = false;
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An error occured while trying to validate user credentails");
+                result = false;
+            }
+
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent($"Valid Credetials: {result}");
-            _stopwatch.Start();
-            Console.WriteLine($"{DateTime.Now} - [Auth] Verification completed for {username}. Processing took {_stopwatch.Elapsed}");
+            stopWatch.Start();
+            Log.Information("Verification completed for {username}. Processing took {duration}", username, stopWatch.Elapsed);
 
             return response;
         }

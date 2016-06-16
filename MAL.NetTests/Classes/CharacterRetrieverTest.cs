@@ -28,8 +28,6 @@ namespace MAL.NetTests.Classes
             var fakeFactory = A.Fake<IAnimeFactory>();
             var fakeAnime = A.Fake<IAnime>();
             var fakeJson = A.Fake<IAnimeOriginalJson>();
-            var fakeLog = A.Fake<ILogWriter>();
-            var fakeWriter = A.Fake<IConsoleWriter>();
             var fakeCharFactory = A.Fake<ICharacterFactory>();
             var fakeUrlHelper = A.Fake<IUrlHelper>();
 
@@ -37,7 +35,7 @@ namespace MAL.NetTests.Classes
             A.CallTo(() => fakeFactory.CreateJsonAnime()).Returns(fakeJson);
             A.CallTo(() => fakeUrlHelper.CharacterUrl).Returns(@"http://localhost:8081/character/{0}");
 
-            var instance = new CharacterRetriever(fakeLog, fakeWriter, fakeCharFactory, fakeUrlHelper);
+            var instance = new CharacterRetriever(fakeCharFactory, fakeUrlHelper);
             var tResult = instance.GetCharacter(36828);
         }
     }
