@@ -32,8 +32,6 @@ namespace MAL.NetTests.Classes
             var fakeFactory = A.Fake<IAnimeFactory>();
             var fakeAnime = A.Fake<IAnime>();
             var fakeJson = A.Fake<IAnimeOriginalJson>();
-            var fakeLog = A.Fake<ILogWriter>();
-            var fakeWriter = A.Fake<IConsoleWriter>();
             var fakeCharFactory = A.Fake<ICharacterFactory>();
             var fakeUrlHelper = A.Fake<IUrlHelper>();
 
@@ -42,7 +40,7 @@ namespace MAL.NetTests.Classes
             A.CallTo(() => fakeUrlHelper.MalUrl).Returns("http://localhost:8083/anime/{0}");
             A.CallTo(() => fakeUrlHelper.CleanMalUrl).Returns("http://myanimelist.net{0}");
 
-            var instance = new AnimeRetriever(fakeFactory, fakeLog, fakeWriter, fakeCharFactory, fakeUrlHelper);
+            var instance = new AnimeRetriever(fakeFactory, fakeCharFactory, fakeUrlHelper);
             var tResult = instance.GetAnime(11757, "testuser", "testPass");
             var result = tResult.Result;
 

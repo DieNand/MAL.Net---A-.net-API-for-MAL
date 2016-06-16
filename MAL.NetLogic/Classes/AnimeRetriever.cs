@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
-using MAL.NetLogic.Helpers;
 using MAL.NetLogic.Interfaces;
 using MAL.NetLogic.Objects;
+using Serilog;
 
 namespace MAL.NetLogic.Classes
 {
@@ -24,8 +22,6 @@ namespace MAL.NetLogic.Classes
         #region Variables
 
         private readonly IAnimeFactory _animeFactory;
-        private readonly ILogWriter _logWriter;
-        private readonly IConsoleWriter _consoleWriter;
         private readonly ICharacterFactory _characterFactory;
         private readonly IUrlHelper _urlHelper;
 
@@ -33,11 +29,9 @@ namespace MAL.NetLogic.Classes
 
         #region Constructor
 
-        public AnimeRetriever(IAnimeFactory animeFactory, ILogWriter logWriter, IConsoleWriter consoleWriter, ICharacterFactory characterFactory, IUrlHelper urlHelper)
+        public AnimeRetriever(IAnimeFactory animeFactory, ICharacterFactory characterFactory, IUrlHelper urlHelper)
         {
             _animeFactory = animeFactory;
-            _logWriter = logWriter;
-            _consoleWriter = consoleWriter;
             _characterFactory = characterFactory;
             _urlHelper = urlHelper;
         }
@@ -386,13 +380,7 @@ namespace MAL.NetLogic.Classes
             {
                 anime.ErrorOccured = true;
                 anime.ErrorMessage = ex.Message;
-                fullTrace = ex.ToString();
-                Console.WriteLine($"{DateTime.Now} - {_consoleWriter.WriteInline($"[Anime] Error occured while retrieving {animeId}. Error: {ex.Message}", ConsoleColor.Red)}");
-            }
-
-            if (anime.ErrorOccured)
-            {
-                _logWriter.WriteLogData($"Error occured retrieving {anime.Id}. Error msg:{fullTrace}");
+                Log.Error(ex, "Error occured while trying to retrieve {Anime Id}", animeId);
             }
 
             return anime;
@@ -461,8 +449,7 @@ namespace MAL.NetLogic.Classes
             }
             catch (Exception ex)
             {
-                Console.Write($"{DateTime.Now} - ");
-                _consoleWriter.WriteAsLineEnd($"[Anime] Error occured retrieving character and staff data\r\n{ex}", ConsoleColor.Red);
+                Log.Error(ex, "Error occured while trying to retrieve character and staff data");
             }
 
         }

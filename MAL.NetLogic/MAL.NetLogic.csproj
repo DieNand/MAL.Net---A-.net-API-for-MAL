@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MAL.NetLogic</RootNamespace>
     <AssemblyName>MAL.NetLogic</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -57,8 +57,16 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SimpleInjector, Version=2.8.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleInjector.2.8.0\lib\net45\SimpleInjector.dll</HintPath>
+    <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.1.5.14\lib\net45\Serilog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog.FullNetFx, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.1.5.14\lib\net45\Serilog.FullNetFx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SimpleInjector, Version=3.0.5.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.3.0.5\lib\net45\SimpleInjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -90,7 +98,6 @@
     <Compile Include="Classes\AnimeRetriever.cs" />
     <Compile Include="Classes\CacheHandler.cs" />
     <Compile Include="Classes\CharacterRetriever.cs" />
-    <Compile Include="Classes\ConsoleWriter.cs" />
     <Compile Include="Classes\CredentialVerification.cs" />
     <Compile Include="Classes\DataPush.cs" />
     <Compile Include="Classes\SanityChecker.cs" />
@@ -126,14 +133,12 @@
     <Compile Include="Interfaces\ICharacterInformation.cs" />
     <Compile Include="Interfaces\ICharacterInformationJson.cs" />
     <Compile Include="Interfaces\ICharacterJson.cs" />
-    <Compile Include="Interfaces\IConsoleWriter.cs" />
     <Compile Include="Interfaces\ICredentialVerification.cs" />
     <Compile Include="Interfaces\IDataPush.cs" />
     <Compile Include="Interfaces\IInfoUrls.cs" />
     <Compile Include="Interfaces\IListAnime.cs" />
     <Compile Include="Interfaces\IListAnimeJson.cs" />
     <Compile Include="Interfaces\IListAnimeXml.cs" />
-    <Compile Include="Interfaces\ILogWriter.cs" />
     <Compile Include="Interfaces\ILoginData.cs" />
     <Compile Include="Interfaces\IMangaography.cs" />
     <Compile Include="Interfaces\IMangaographyJson.cs" />
@@ -144,7 +149,6 @@
     <Compile Include="Interfaces\IMyInfoJson.cs" />
     <Compile Include="Interfaces\IMyInfoXml.cs" />
     <Compile Include="Interfaces\IRelated.cs" />
-    <Compile Include="Classes\LogWriter.cs" />
     <Compile Include="Interfaces\ISeiyuuInformation.cs" />
     <Compile Include="Interfaces\ISeiyuuInformationJson.cs" />
     <Compile Include="Interfaces\IWebHttpWebRequest.cs" />

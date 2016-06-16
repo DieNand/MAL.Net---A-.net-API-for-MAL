@@ -4,8 +4,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
-using MAL.NetLogic.Helpers;
 using MAL.NetLogic.Interfaces;
+using Serilog;
 
 namespace MAL.NetLogic.Classes
 {
@@ -13,8 +13,6 @@ namespace MAL.NetLogic.Classes
     {
         #region Variables
 
-        private readonly ILogWriter _logWriter;
-        private readonly IConsoleWriter _consoleWriter;
         private readonly ICharacterFactory _characterFactory;
         private readonly IUrlHelper _urlHelper;
 
@@ -22,10 +20,8 @@ namespace MAL.NetLogic.Classes
 
         #region Constructor
 
-        public CharacterRetriever(ILogWriter logWriter, IConsoleWriter consoleWriter, ICharacterFactory characterFactory, IUrlHelper urlHelper)
+        public CharacterRetriever(ICharacterFactory characterFactory, IUrlHelper urlHelper)
         {
-            _logWriter = logWriter;
-            _consoleWriter = consoleWriter;
             _characterFactory = characterFactory;
             _urlHelper = urlHelper;
         }
@@ -96,8 +92,7 @@ namespace MAL.NetLogic.Classes
             {
                 character.ErrorOccured = true;
                 character.ErrorMessage = ex.Message;
-                fullTrace = ex.ToString();
-                Console.WriteLine($"{DateTime.Now} - {_consoleWriter.WriteInline($"[Character] Error occured while retrieving {character}. Error: {ex.Message}", ConsoleColor.Red)}");
+                Log.Error(ex, "Error occured while retrieving {Character Id}", character.Id);
             }
 
             return character;

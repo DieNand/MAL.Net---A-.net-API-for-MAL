@@ -4,27 +4,32 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using AutoMapper;
 using MAL.NetLogic.Interfaces;
 using MAL.NetLogic.Objects;
+using Serilog;
 
 namespace MAL.NetSelfHosted.Controllers
 {
+    /// <summary>
+    /// Constoller used to update user list
+    /// </summary>
     public class UpdateController : ApiController
     {
         #region Variables
 
         private readonly IDataPush _dataPush;
-        private readonly Stopwatch _stopwatch;
 
         #endregion
 
         #region Constructor
 
+        /// <summary>
+        /// Constuctor
+        /// </summary>
+        /// <param name="dataPush"></param>
         public UpdateController(IDataPush dataPush)
         {
             _dataPush = dataPush;
-            _stopwatch = new Stopwatch();
         }
 
         #endregion
@@ -41,12 +46,12 @@ namespace MAL.NetSelfHosted.Controllers
         /// <returns>OK - Updated succeeded, NotModified - Error occured, no update happened</returns>
         public async Task<HttpResponseMessage> Post(string username, string password, bool cancache, [FromBody] AnimeDetailsJson updateDetails)
         {
-            _stopwatch.Reset();
-            _stopwatch.Start();
-            Console.WriteLine($"{DateTime.Now} - [Update] Received update request from {username} for {updateDetails.AnimeId}");
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            Log.Information("Received update request for {username} for {Anime Id}", username, updateDetails.AnimeId);
             var result = await _dataPush.PushAnimeDetailsToMal(updateDetails, username, password, cancache);
             var response = Request.CreateResponse(result ? HttpStatusCode.OK : HttpStatusCode.NotModified);
-            Console.WriteLine($"{DateTime.Now} - [Update] Successfully completed update of {updateDetails.AnimeId} for {username}: {result}");
+            Log.Information("Successfully completed update of {AnimeId} for {username}: {Update Result}. Processing took {duration}", updateDetails.AnimeId, username, result, stopWatch.Elapsed);
             return response;
         }
         
