@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using HtmlAgilityPack;
 using MAL.NetLogic.Interfaces;
 using MAL.NetLogic.Objects;
+using Serilog;
 
 namespace MAL.NetLogic.Classes
 {
@@ -22,20 +22,18 @@ namespace MAL.NetLogic.Classes
         private readonly IWebHttpWebRequestFactory _webHttpWebRequestFactory;
         private readonly IAnimeFactory _animeFactory;
         private readonly IMappingToJson _mapper;
-        private readonly IConsoleWriter _consoleWriter;
 
 
         #endregion
 
         #region Constructor
 
-        public AnimeListRetriever(IWebHttpWebRequestFactory webHttpWebRequestFactory, IAnimeFactory animeFactory, IMappingToJson mapper, IConsoleWriter consoleWriter)
+        public AnimeListRetriever(IWebHttpWebRequestFactory webHttpWebRequestFactory, IAnimeFactory animeFactory, IMappingToJson mapper)
         {
             _webHttpWebRequestFactory = webHttpWebRequestFactory;
             _userAgent = ConfigurationManager.AppSettings["UserAgent"];
             _animeFactory = animeFactory;
             _mapper = mapper;
-            _consoleWriter = consoleWriter;
         }
 
         #endregion
@@ -89,8 +87,7 @@ namespace MAL.NetLogic.Classes
             }
             catch (Exception ex)
             {
-                Console.Write($"{DateTime.Now} - ");
-                _consoleWriter.WriteAsLineEnd($"[ListRetriever] Error occured fetching list.\r\n{ex}", ConsoleColor.Red);
+                Log.Error(ex, "Error occured while fetching list");
             }
             return mylist;
         }
@@ -122,14 +119,13 @@ namespace MAL.NetLogic.Classes
                 }
                 else
                 {
-                    Console.WriteLine($"{DateTime.Now} - [ListRetriever] - Got response {statusCode} from server");
+                    Log.Warning("Got response {StatusCode} from server", statusCode);
                     return "Error";
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{DateTime.Now} - ");
-                _consoleWriter.WriteAsLineEnd($"[ListRetriever] Error occured while waiting for web response. {ex}", ConsoleColor.Red);
+                Log.Error(ex, "Error occured while waiting for web response");
             }
             return result;
         }

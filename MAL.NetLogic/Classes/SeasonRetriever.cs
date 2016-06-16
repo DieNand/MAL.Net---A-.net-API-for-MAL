@@ -5,8 +5,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
-using MAL.NetLogic.Helpers;
 using MAL.NetLogic.Interfaces;
+using Serilog;
 
 namespace MAL.NetLogic.Classes
 {
@@ -16,19 +16,14 @@ namespace MAL.NetLogic.Classes
 
         #endregion
         
-
-        private readonly ILogWriter _logWriter;
-        private readonly IConsoleWriter _consoleWriter;
         private readonly ISeasonFactory _seasonFactory;
         private readonly ISeasonLookup _seasonLookup;
         private readonly IUrlHelper _urlHelper;
 
         #region Constructor
 
-        public SeasonRetriever(ILogWriter logWriter, IConsoleWriter consoleWriter, ISeasonFactory seasonFactory, ISeasonLookup seasonLookup, IUrlHelper urlHelper)
+        public SeasonRetriever(ISeasonFactory seasonFactory, ISeasonLookup seasonLookup, IUrlHelper urlHelper)
         {
-            _logWriter = logWriter;
-            _consoleWriter = consoleWriter;
             _seasonFactory = seasonFactory;
             _seasonLookup = seasonLookup;
             _urlHelper = urlHelper;
@@ -41,14 +36,11 @@ namespace MAL.NetLogic.Classes
         public async Task<List<ISeasonData>> GetSeasonData(int year, string season)
         {
             var seasonList = new List<ISeasonData>();
-            var errorOccured = false;
-            var fullTrace = string.Empty;
-
             try
             {
                 var doc = new HtmlDocument();
                 var uri = string.Format(_urlHelper.SeasonUrl, year, season.ToLower(CultureInfo.InvariantCulture));
-                _consoleWriter.WriteAsLineEnd($"{new DateTime()} [Season] Querying - {uri}", ConsoleColor.DarkYellow);
+                Log.Information("Quering {Uri}", uri);
                 var webClient = new HttpClient();
                 var data = await webClient.GetStreamAsync(new Uri(uri));
                 doc.Load(data, Encoding.UTF8);
@@ -74,14 +66,7 @@ namespace MAL.NetLogic.Classes
             }
             catch (Exception ex)
             {
-                _consoleWriter.WriteAsLineEnd($"Error occured:\r\n{ex}", ConsoleColor.Red);
-                fullTrace = ex.ToString();
-                errorOccured = true;
-            }
-
-            if (errorOccured)
-            {
-                _logWriter.WriteLogData($"Error occured retrieving season data for {year} - {season}\r\n{fullTrace}");
+                Log.Error(ex, "An error occured while retrieving season data for {year} - {season}", year, season);
             }
             return seasonList;
         }
@@ -99,10 +84,10 @@ namespace MAL.NetLogic.Classes
 
             for (var r = 0; r < 3; r++)
             {
-                _consoleWriter.WriteAsLineEnd($"{DateTime.Now} - Retrieving Season data for season {r} - {currentSeason}{year}", ConsoleColor.Gray);
+                Log.Information("Retrieving season data {Round} which contains {year} - {season}", r, year, currentSeason);
                 var tmpData = await GetSeasonData(year, currentSeason);
                 seasonData.AddRange(tmpData);
-                _consoleWriter.WriteAsLineEnd($"{DateTime.Now} - Retrieved Season data for season {r} - {currentSeason}{year}. {tmpData.Count} item.", ConsoleColor.Gray);
+                Log.Information("Retrieved season data {Round} which contains {year} - {season}", r, year, currentSeason);
 
                 //Get info for the next seas
                 year = _seasonLookup.NextSeasonYear(currentSeason, year);

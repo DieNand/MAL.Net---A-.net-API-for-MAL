@@ -30,15 +30,13 @@ namespace MAL.NetTests.Classes
             var content = File.ReadAllText(file);
             httpMock.Stub(x => x.Get($"/anime/season/{year}/{season.ToLower(CultureInfo.InvariantCulture)}")).Return(content).OK();
 
-            var fakeLog = A.Fake<ILogWriter>();
-            var fakeConsole = A.Fake<IConsoleWriter>();
             var fakeFactory = A.Fake<ISeasonFactory>();
             var fakeSeasonLookup = A.Fake<ISeasonLookup>();
             var fakeUrlHelper = A.Fake<IUrlHelper>();
 
             A.CallTo(() => fakeUrlHelper.SeasonUrl).Returns(@"http://localhost:8082/anime/season/{0}/{1}");
 
-            var instance = new SeasonRetriever(fakeLog, fakeConsole, fakeFactory, fakeSeasonLookup, fakeUrlHelper);
+            var instance = new SeasonRetriever(fakeFactory, fakeSeasonLookup, fakeUrlHelper);
             var result = instance.GetSeasonData(year, season).Result;
 
             Assert.AreEqual(result.Count, 78);
@@ -54,8 +52,6 @@ namespace MAL.NetTests.Classes
             const int year = 2016;
             var seasons = new[] {"Winter", "Spring", "Summer"};
 
-            var fakeLog = A.Fake<ILogWriter>();
-            var fakeConsole = A.Fake<IConsoleWriter>();
             var fakeFactory = A.Fake<ISeasonFactory>();
             var fakeSeasonLookup = A.Fake<ISeasonLookup>();
             var fakeUrlHelper = A.Fake<IUrlHelper>();
@@ -80,7 +76,7 @@ namespace MAL.NetTests.Classes
             A.CallTo(() => fakeSeasonLookup.NextSeasonYear("Winter", year)).Returns(year);
             A.CallTo(() => fakeSeasonLookup.NextSeasonYear("Spring", year)).Returns(year);
 
-            var instance = new SeasonRetriever(fakeLog, fakeConsole, fakeFactory, fakeSeasonLookup, fakeUrlHelper);
+            var instance = new SeasonRetriever(fakeFactory, fakeSeasonLookup, fakeUrlHelper);
             var result = instance.RetrieveCurrentSeason().Result;
 
             Assert.AreEqual(result.Count, 299);

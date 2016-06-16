@@ -71,7 +71,7 @@ namespace MAL.NetSelfHosted.Controllers
             var stringResponse = JsonConvert.SerializeObject(data);
             response.Content = new StringContent(stringResponse, Encoding.UTF8, "application/json");
             watch.Stop();
-            Log.Information("Send current season data. Processing took {duration}", watch.Elapsed)
+            Log.Information("Send current season data. Processing took {duration}", watch.Elapsed);
             return response;
         }
 

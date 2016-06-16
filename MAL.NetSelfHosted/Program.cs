@@ -39,14 +39,12 @@ namespace MAL.NetSelfHosted
             var config = ConfigureRoutes();
             ConfigureSwagger(config);
             var server = new HttpSelfHostServer(config);
-            var container = ConfigureContainer();
+            var container = ConfigureContainer(config);
             SetupLogging();
 
             config.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
             server.OpenAsync().Wait();
 
-            var consoleWriter = container.GetInstance<IConsoleWriter>();
-            var version = Assembly.GetEntryAssembly().GetName().Version;
             Console.WriteLine("########################################################");
             Console.Write("# MAL.NET Self Hosted - Ninetail Labs".PadRight(55));
             Console.WriteLine("#");
@@ -93,8 +91,6 @@ namespace MAL.NetSelfHosted
             container.Register<IMappingToJson, MappingToJson>(Lifestyle.Singleton);
             container.Register<IAnimeHandler, AnimeHandler>(Lifestyle.Singleton);
             container.Register<ICacheHandler, CacheHandler>(Lifestyle.Singleton);
-            container.Register<ILogWriter, LogWriter>(Lifestyle.Singleton);
-            container.Register<IConsoleWriter, ConsoleWriter>(Lifestyle.Singleton);
             container.Register<IWebHttpWebRequestFactory, WebHttpWebRequestFactory>(Lifestyle.Singleton);
             container.Register<IWebHttpWebRequest, WebHttpWebRequest>();
             container.Register<IAnimeListRetriever, AnimeListRetriever>();
