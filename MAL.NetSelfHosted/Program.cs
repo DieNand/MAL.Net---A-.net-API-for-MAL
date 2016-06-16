@@ -163,6 +163,7 @@ namespace MAL.NetSelfHosted
         {
             var logToConsole = ConfigurationKeys.LogToConsole.GetConfigurationValue<bool>();
             var logToFile = ConfigurationKeys.LogToFile.GetConfigurationValue<bool>();
+            var logToSplunk = ConfigurationKeys.LogToSplunk.GetConfigurationValue<bool>();
             var logFile = ConfigurationKeys.LogPath.GetConfigurationValue<string>();
 
             var configuration = new LoggerConfiguration();
@@ -173,6 +174,12 @@ namespace MAL.NetSelfHosted
             if (logToFile)
             {
                 configuration.WriteTo.File(logFile);
+            }
+            if (logToSplunk)
+            {
+                var splunkUri = ConfigurationKeys.SplunkUrl.GetConfigurationValue<string>();
+                var splunkToken = ConfigurationKeys.SplunkToken.GetConfigurationValue<string>();
+                configuration.WriteTo.SplunkViaEventCollector(splunkUri, splunkToken);
             }
             Log.Logger = configuration.CreateLogger();
         }
