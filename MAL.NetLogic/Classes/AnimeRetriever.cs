@@ -448,7 +448,12 @@ namespace MAL.NetLogic.Classes
                                     tmpSeiyuu.Language = detail.ChildNodes["td"].ChildNodes["small"].InnerText;
                                     tmpSeiyuu.Name = detail.ChildNodes["td"].ChildNodes["a"].InnerText;
                                     tmpSeiyuu.Url = detail.ChildNodes["td"].ChildNodes["a"].Attributes["href"].Value;
-                                    tmpSeiyuu.PictureUrl = detail.ChildNodes[3].ChildNodes["div"].ChildNodes["a"].ChildNodes["img"].Attributes["src"].Value;
+                                    var tmpImage = detail.ChildNodes[3].ChildNodes["div"].ChildNodes["a"].ChildNodes["img"].Attributes["src"]?.Value;
+                                    if (string.IsNullOrEmpty(tmpImage))
+                                    {
+                                        tmpImage = detail.ChildNodes[3].ChildNodes["div"].ChildNodes["a"].ChildNodes["img"].Attributes["data-src"].Value;
+                                    }
+                                    tmpSeiyuu.PictureUrl = tmpImage;
                                     tmpChar.Seiyuu.Add(tmpSeiyuu);
                                 }
                                 if(anime.CharacterInformation.Count(t => t.CharacterUrl == tmpChar.CharacterUrl) == 0)
