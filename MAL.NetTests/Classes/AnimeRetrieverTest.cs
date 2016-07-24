@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Web;
 using FakeItEasy;
 using HttpMock;
@@ -59,6 +58,7 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual("S.A.O", result.SynonymousTitles[0]);
             Assert.AreEqual("SAO", result.SynonymousTitles[1]);
 
+            Assert.That(result.ImageUrl, Is.EqualTo("http://cdn.myanimelist.net/images/anime/11/39717.jpg"));
             Assert.AreEqual("TV", result.Type);
             Assert.AreEqual(25, result.Episodes);
             Assert.AreEqual("PG-13 - Teens 13 or older", result.Classification);
@@ -67,13 +67,13 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(endDate, result.EndDate);
 
             Assert.AreEqual(2, result.Popularity);
-            Assert.AreEqual(646, result.Rank);
+            Assert.AreEqual(700, result.Rank);
             Assert.AreEqual("http://cdn.myanimelist.net/images/anime/11/39717.jpg", result.ImageUrl);
             Assert.AreEqual("http://cdn.myanimelist.net/images/anime/11/39717l.jpg", result.HighResImageUrl);
 
-            Assert.AreEqual(7.92, Math.Round(result.MemberScore, 2));
-            Assert.AreEqual(763723, result.MemberCount);
-            Assert.AreEqual(38446, result.FavoriteCount);
+            Assert.AreEqual(7.89, Math.Round(result.MemberScore, 2));
+            Assert.AreEqual(798757, result.MemberCount);
+            Assert.AreEqual(39180, result.FavoriteCount);
 
             Assert.AreEqual(10, result.UserScore);
             Assert.AreEqual(25, result.UserWatchedEpisodes);

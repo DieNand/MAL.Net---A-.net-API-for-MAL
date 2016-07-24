@@ -140,7 +140,12 @@ namespace MAL.NetLogic.Classes
                     }
                 }
 
-                var img = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']")?.Attributes["data-src"].Value;
+                var img = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']")?.Attributes["data-src"]?.Value;
+                if (string.IsNullOrEmpty(img))
+                {
+                    img = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']")?.Attributes["src"]?.Value;
+                }
+
                 //If we cannot find an image check if there is a na_series image
                 if (string.IsNullOrEmpty(img))
                 {
@@ -180,7 +185,7 @@ namespace MAL.NetLogic.Classes
                             var tNodes = node.ChildNodes.Where(t => t.Name == "a");
                             foreach (var innerNode in tNodes)
                             {
-                                if(innerNode.Attributes["href"].Value.StartsWith("http://myanimelist.net/topanime.php?type="))
+                                if (innerNode.Attributes["href"].Value.StartsWith("http://myanimelist.net/topanime.php?type="))
                                 {
                                     var type = innerNode.InnerText.Replace("\r\n", "").Trim();
                                     anime.Type = type;
@@ -423,8 +428,14 @@ namespace MAL.NetLogic.Classes
                             if (columns.Count == 3)
                             {
                                 var tmpChar = _characterFactory.CreateCharacter();
+                                var charPic = columns[0].ChildNodes["div"].ChildNodes["a"].ChildNodes["img"].Attributes["data-src"]?.Value;
+                                if (string.IsNullOrEmpty(charPic))
+                                {
+                                    charPic = columns[0].ChildNodes["div"].ChildNodes["a"].ChildNodes["img"].Attributes["src"]?.Value;
+                                }
+                                tmpChar.CharacterPicture = charPic;
 
-                                tmpChar.CharacterPicture = columns[0].ChildNodes["div"].ChildNodes["a"].ChildNodes["img"].Attributes["data-src"].Value;
+
                                 tmpChar.CharacterName = columns[1].ChildNodes["a"].InnerText;
                                 tmpChar.CharacterUrl = columns[1].ChildNodes["a"].Attributes["href"].Value;
                                 tmpChar.CharacterType = columns[1].ChildNodes["div"].InnerText;
@@ -476,6 +487,7 @@ namespace MAL.NetLogic.Classes
                         case "Stats":
                             anime.AdditionalInfoUrls.Stats = child.ChildNodes["a"].Attributes["href"].Value;
                             break;
+                        case "Characters & Staff":
                         case "Characters &amp; Staff":
                             anime.AdditionalInfoUrls.CharactersAndStaff = child.ChildNodes["a"].Attributes["href"].Value;
                             break;
