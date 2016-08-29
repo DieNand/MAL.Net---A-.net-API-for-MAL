@@ -18,7 +18,7 @@ namespace MAL.NetLogic.Classes
         #region Variables
 
         private readonly string _userAgent;
-        private const string AnimeListUrl = "http://myanimelist.net/malappinfo.php?u={0}&status=all&type=anime";
+        private const string AnimeListUrl = "https://myanimelist.net/malappinfo.php?u={0}&status=all&type=anime";
         private readonly IWebHttpWebRequestFactory _webHttpWebRequestFactory;
         private readonly IAnimeFactory _animeFactory;
         private readonly IMappingToJson _mapper;
