@@ -58,7 +58,7 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual("S.A.O", result.SynonymousTitles[0]);
             Assert.AreEqual("SAO", result.SynonymousTitles[1]);
 
-            Assert.That(result.ImageUrl, Is.EqualTo("http://cdn.myanimelist.net/images/anime/11/39717.jpg"));
+            Assert.That(result.ImageUrl, Is.EqualTo("https://myanimelist.cdn-dena.com/images/anime/11/39717.jpg"));
             Assert.AreEqual("TV", result.Type);
             Assert.AreEqual(25, result.Episodes);
             Assert.AreEqual("PG-13 - Teens 13 or older", result.Classification);
@@ -67,13 +67,13 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(endDate, result.EndDate);
 
             Assert.AreEqual(2, result.Popularity);
-            Assert.AreEqual(700, result.Rank);
-            Assert.AreEqual("http://cdn.myanimelist.net/images/anime/11/39717.jpg", result.ImageUrl);
-            Assert.AreEqual("http://cdn.myanimelist.net/images/anime/11/39717l.jpg", result.HighResImageUrl);
+            Assert.AreEqual(736, result.Rank);
+            Assert.AreEqual("https://myanimelist.cdn-dena.com/images/anime/11/39717.jpg", result.ImageUrl);
+            Assert.AreEqual("https://myanimelist.cdn-dena.com/images/anime/11/39717l.jpg", result.HighResImageUrl);
 
-            Assert.AreEqual(7.89, Math.Round(result.MemberScore, 2));
-            Assert.AreEqual(798757, result.MemberCount);
-            Assert.AreEqual(39180, result.FavoriteCount);
+            Assert.AreEqual(7.87, Math.Round(result.MemberScore, 2));
+            Assert.AreEqual(824847, result.MemberCount);
+            Assert.AreEqual(39696, result.FavoriteCount);
 
             Assert.AreEqual(10, result.UserScore);
             Assert.AreEqual(25, result.UserWatchedEpisodes);
@@ -82,16 +82,16 @@ namespace MAL.NetTests.Classes
             Assert.AreEqual(5, result.Genres.Count);
             Assert.AreEqual(0, result.Tags.Count);
 
-            Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/episode", result.AdditionalInfoUrls.Episodes);
-            Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/reviews", result.AdditionalInfoUrls.Reviews);
-            Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/userrecs", result.AdditionalInfoUrls.Recommendation);
-            Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/stats", result.AdditionalInfoUrls.Stats);
-            Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/characters", result.AdditionalInfoUrls.CharactersAndStaff);
-            Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/news", result.AdditionalInfoUrls.News);
-            Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/forum", result.AdditionalInfoUrls.Forum);
-            Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/featured", result.AdditionalInfoUrls.Featured);
-            Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/clubs", result.AdditionalInfoUrls.Clubs);
-            Assert.AreEqual("http://myanimelist.net/anime/11757/Sword_Art_Online/pics", result.AdditionalInfoUrls.Pictures);
+            Assert.AreEqual("https://myanimelist.net/anime/11757/Sword_Art_Online/episode", result.AdditionalInfoUrls.Episodes);
+            Assert.AreEqual("https://myanimelist.net/anime/11757/Sword_Art_Online/reviews", result.AdditionalInfoUrls.Reviews);
+            Assert.AreEqual("https://myanimelist.net/anime/11757/Sword_Art_Online/userrecs", result.AdditionalInfoUrls.Recommendation);
+            Assert.AreEqual("https://myanimelist.net/anime/11757/Sword_Art_Online/stats", result.AdditionalInfoUrls.Stats);
+            Assert.AreEqual("https://myanimelist.net/anime/11757/Sword_Art_Online/characters", result.AdditionalInfoUrls.CharactersAndStaff);
+            Assert.AreEqual("https://myanimelist.net/anime/11757/Sword_Art_Online/news", result.AdditionalInfoUrls.News);
+            Assert.AreEqual("https://myanimelist.net/anime/11757/Sword_Art_Online/forum", result.AdditionalInfoUrls.Forum);
+            Assert.AreEqual("https://myanimelist.net/anime/11757/Sword_Art_Online/featured", result.AdditionalInfoUrls.Featured);
+            Assert.AreEqual("https://myanimelist.net/anime/11757/Sword_Art_Online/clubs", result.AdditionalInfoUrls.Clubs);
+            Assert.AreEqual("https://myanimelist.net/anime/11757/Sword_Art_Online/pics", result.AdditionalInfoUrls.Pictures);
 
             Assert.AreEqual(2, result.MangaAdaptation.Count);
             Assert.AreEqual(0, result.Prequels.Count);
