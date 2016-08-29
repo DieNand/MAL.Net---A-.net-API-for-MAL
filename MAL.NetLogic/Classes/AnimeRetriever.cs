@@ -185,7 +185,7 @@ namespace MAL.NetLogic.Classes
                             var tNodes = node.ChildNodes.Where(t => t.Name == "a");
                             foreach (var innerNode in tNodes)
                             {
-                                if (innerNode.Attributes["href"].Value.StartsWith("http://myanimelist.net/topanime.php?type="))
+                                if (innerNode.Attributes["href"].Value.StartsWith("https://myanimelist.net/topanime.php?type="))
                                 {
                                     var type = innerNode.InnerText.Replace("\r\n", "").Trim();
                                     anime.Type = type;
