@@ -16,9 +16,6 @@ namespace MAL.NetLogic.Objects
         [XmlElement(ElementName = "score")]
         public int Score { get; set; }
 
-        [XmlElement(ElementName = "downloaded_episodes")]
-        public string DownloadedEpisodes { get; set; }
-
         [XmlElement(ElementName = "storage_type")]
         public int StorageType { get; set; }
 
@@ -48,9 +45,6 @@ namespace MAL.NetLogic.Objects
 
         [XmlElement(ElementName = "comments")]
         public string Comments { get; set; }
-
-        [XmlElement(ElementName = "fansub_group")]
-        public string FansubGroup { get; set; }
 
         [XmlElement(ElementName = "tags")]
         public string Tags { get; set; }
