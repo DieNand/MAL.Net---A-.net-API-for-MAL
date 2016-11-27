@@ -14,8 +14,8 @@ namespace MAL.NetLogic.Classes
     {
         #region Variables
 
-        private const string AddShowUrl = "http://myanimelist.net/api/animelist/add/{0}.xml";
-        private const string EditShowUrl = "http://myanimelist.net/api/animelist/update/{0}.xml";
+        private const string AddShowUrl = "https://myanimelist.net/api/animelist/add/{0}.xml";
+        private const string EditShowUrl = "https://myanimelist.net/api/animelist/update/{0}.xml";
         private readonly IWebHttpWebRequestFactory _webHttpWebRequestFactory;
         private readonly IMappingToJson _jsonMapper;
         private readonly IAnimeListRetriever _animeListRetriever;

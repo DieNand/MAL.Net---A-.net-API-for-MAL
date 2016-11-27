@@ -7,7 +7,6 @@ namespace MAL.NetLogic.Interfaces
         int Episodes { get; set; }
         string Status { get; set; }
         int Score { get; set; }
-        string DownloadedEpisodes { get; set; }
         int StorageType { get; set; }
         float StorageValue { get; set; }
         int Rewatched { get; set; }
@@ -18,7 +17,6 @@ namespace MAL.NetLogic.Interfaces
         int EnableDiscussion { get; set; }
         int EnableRewatching { get; set; }
         string Comments { get; set; }
-        string FansubGroup { get; set; }
         string Tags { get; set; }
     }
 }
