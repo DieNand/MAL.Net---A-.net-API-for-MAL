@@ -49,7 +49,7 @@ namespace MAL.NetTests.Classes
         [Test]
         public void TestCurrentSeason()
         {
-            const int year = 2016;
+            const int year = 2017;
             var seasons = new[] {"Winter", "Spring", "Summer"};
 
             var fakeFactory = A.Fake<ISeasonFactory>();
@@ -60,7 +60,7 @@ namespace MAL.NetTests.Classes
             var path = AppDomain.CurrentDomain.BaseDirectory;
             foreach (var season in seasons)
             {
-                var file = Path.Combine(path, "AnimeExamples", $"{year}{season}.html");
+                var file = Path.Combine(path, "AnimeExamples", $"{2016}{season}.html");
                 var content = File.ReadAllText(file);
                 httpMock.Stub(x => x.Get($"/anime/season/{year}/{season.ToLower(CultureInfo.InvariantCulture)}"))
                     .Return(content)

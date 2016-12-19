@@ -100,7 +100,11 @@ namespace MAL.NetLogic.Classes
                 anime.Synopsis = synopsis;
 
                 //Retrieve Alternative titles
-                foreach (var node in doc.DocumentNode.SelectNodes("//div[@class='spaceit_pad']"))
+                var divNodes = doc.DocumentNode.SelectNodes("//div[@class='spaceit_pad']") ??
+                               doc.DocumentNode.SelectNodes("//div");
+
+
+                foreach (var node in divNodes)
                 {
                     var lang = node.ChildNodes.Descendants().FirstOrDefault()?.InnerText.Trim(':');
 
