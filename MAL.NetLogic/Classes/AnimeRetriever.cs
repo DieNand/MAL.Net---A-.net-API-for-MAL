@@ -535,39 +535,39 @@ namespace MAL.NetLogic.Classes
 
         private void ParseTd(HtmlNode node, IAnime anime)
         {
-            switch (node.ChildNodes[0].InnerText.Replace(":", ""))
+            switch (node.ChildNodes[0].InnerText.Replace(":", "").ToLower())
             {
-                case "Adaptation":
+                case "adaptation":
                     anime.MangaAdaptation.AddRange(MapRelated(node));
                     break;
-                case "Prequel":
+                case "prequel":
                     anime.Prequels.AddRange(MapRelated(node));
                     break;
-                case "Sequel":
+                case "sequel":
                     anime.Sequels.AddRange(MapRelated(node));
                     break;
-                case "Side Story":
+                case "side story":
                     anime.SideStories.AddRange(MapRelated(node));
                     break;
-                case "Parent Story":
+                case "parent story":
                     anime.ParentStory = MapRelated(node).FirstOrDefault();
                     break;
-                case "Character Anime":
+                case "character":
                     anime.CharacterAnime.AddRange(MapRelated(node));
                     break;
-                case "Spin Off":
+                case "spin-off":
                     anime.SpinOffs.AddRange(MapRelated(node));
                     break;
-                case "Summary":
+                case "summary":
                     anime.Summaries.AddRange(MapRelated(node));
                     break;
-                case "Alternative Versions":
+                case "alternative version":
                     anime.AlternativeVersion.AddRange(MapRelated(node));
                     break;
-                case "Alternative setting":
+                case "alternative setting":
                     anime.AlternativeSetting.AddRange(MapRelated(node));
                     break;
-                case "Full story":
+                case "full story":
                     anime.FullStories.AddRange(MapRelated(node));
                     break;
                 default:
