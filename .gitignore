@@ -25,6 +25,10 @@ bld/
 # Visual Studo 2015 cache/options directory
 .vs/
 
+# Folders for Cake
+tools/
+!tools/packages.config
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*

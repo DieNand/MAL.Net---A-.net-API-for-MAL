@@ -9,9 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MAL.NetLogic</RootNamespace>
     <AssemblyName>MAL.NetLogic</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,11 +57,20 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SimpleInjector, Version=2.8.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleInjector.2.8.0\lib\net45\SimpleInjector.dll</HintPath>
+    <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.1.5.14\lib\net45\Serilog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog.FullNetFx, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.1.5.14\lib\net45\Serilog.FullNetFx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SimpleInjector, Version=3.0.5.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.3.0.5\lib\net45\SimpleInjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -83,32 +94,115 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\AnimeListRetriever.cs" />
     <Compile Include="Classes\AnimeRetriever.cs" />
     <Compile Include="Classes\CacheHandler.cs" />
+    <Compile Include="Classes\CharacterRetriever.cs" />
     <Compile Include="Classes\CredentialVerification.cs" />
+    <Compile Include="Classes\DataPush.cs" />
+    <Compile Include="Classes\SanityChecker.cs" />
+    <Compile Include="Interfaces\IUrlHelper.cs" />
+    <Compile Include="Helpers\UrlHelper.cs" />
+    <Compile Include="Interfaces\ISeasonLookup.cs" />
+    <Compile Include="Classes\SeasonLookup.cs" />
+    <Compile Include="Interfaces\ISeasonRetriever.cs" />
     <Compile Include="Classes\MappingToJson.cs" />
+    <Compile Include="Classes\ReverseMapper.cs" />
+    <Compile Include="Classes\SeasonRetriever.cs" />
+    <Compile Include="Enumerations\Season.cs" />
     <Compile Include="Factories\AnimeFactory.cs" />
+    <Compile Include="Factories\CharacterFactory.cs" />
+    <Compile Include="Interfaces\ISeasonFactory.cs" />
+    <Compile Include="Factories\SeasonFactory.cs" />
+    <Compile Include="Factories\WebHttpWebRequestFactory.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Interfaces\IAnime.cs" />
+    <Compile Include="Interfaces\IAnimeDetails.cs" />
+    <Compile Include="Interfaces\IAnimeDetailsJson.cs" />
+    <Compile Include="Interfaces\IAnimeDetailsXml.cs" />
     <Compile Include="Interfaces\IAnimeFactory.cs" />
+    <Compile Include="Interfaces\IAnimeListRetriever.cs" />
+    <Compile Include="Interfaces\IAnimeograhyJson.cs" />
+    <Compile Include="Interfaces\IAnimeography.cs" />
     <Compile Include="Interfaces\IAnimeOriginalJson.cs" />
     <Compile Include="Interfaces\IAnimeRetriever.cs" />
+    <Compile Include="Interfaces\IAuthFactory.cs" />
     <Compile Include="Interfaces\ICacheHandler.cs" />
+    <Compile Include="Interfaces\ICharacter.cs" />
+    <Compile Include="Interfaces\ICharacterFactory.cs" />
+    <Compile Include="Interfaces\ICharacterInformation.cs" />
+    <Compile Include="Interfaces\ICharacterInformationJson.cs" />
+    <Compile Include="Interfaces\ICharacterJson.cs" />
+    <Compile Include="Interfaces\ICredentialVerification.cs" />
+    <Compile Include="Interfaces\IDataPush.cs" />
     <Compile Include="Interfaces\IInfoUrls.cs" />
+    <Compile Include="Interfaces\IListAnime.cs" />
+    <Compile Include="Interfaces\IListAnimeJson.cs" />
+    <Compile Include="Interfaces\IListAnimeXml.cs" />
+    <Compile Include="Interfaces\ILoginData.cs" />
+    <Compile Include="Interfaces\IMangaography.cs" />
+    <Compile Include="Interfaces\IMangaographyJson.cs" />
     <Compile Include="Interfaces\IMappingToJson.cs" />
+    <Compile Include="Interfaces\IMyAnimeList.cs" />
+    <Compile Include="Interfaces\IMyAnimeListJson.cs" />
+    <Compile Include="Interfaces\IMyInfo.cs" />
+    <Compile Include="Interfaces\IMyInfoJson.cs" />
+    <Compile Include="Interfaces\IMyInfoXml.cs" />
     <Compile Include="Interfaces\IRelated.cs" />
+    <Compile Include="Interfaces\ISeiyuuInformation.cs" />
+    <Compile Include="Interfaces\ISeiyuuInformationJson.cs" />
+    <Compile Include="Interfaces\IWebHttpWebRequest.cs" />
+    <Compile Include="Interfaces\IWebHttpWebRequestFactory.cs" />
     <Compile Include="Objects\Anime.cs" />
+    <Compile Include="Objects\AnimeDetails.cs" />
+    <Compile Include="Objects\AnimeDetailsJson.cs" />
+    <Compile Include="Objects\AnimeDetailsXml.cs" />
+    <Compile Include="Objects\Animeography.cs" />
+    <Compile Include="Objects\AnimeographyJson.cs" />
     <Compile Include="Objects\AnimeOriginalJson.cs" />
+    <Compile Include="Objects\CharacterInformation.cs" />
+    <Compile Include="Objects\Character.cs" />
+    <Compile Include="Objects\CharacterInformationJson.cs" />
+    <Compile Include="Objects\CharacterJson.cs" />
     <Compile Include="Objects\InfoUrls.cs" />
+    <Compile Include="Interfaces\ISeasonData.cs" />
+    <Compile Include="Objects\ListAnime.cs" />
+    <Compile Include="Objects\ListAnimeJson.cs" />
+    <Compile Include="Objects\LoginData.cs" />
+    <Compile Include="Objects\Mangaography.cs" />
+    <Compile Include="Objects\MangaographyJson.cs" />
+    <Compile Include="Objects\MyAnimeList.cs" />
+    <Compile Include="Objects\MyAnimeListJson.cs" />
+    <Compile Include="Objects\MyInfo.cs" />
+    <Compile Include="Objects\MyInfoJson.cs" />
+    <Compile Include="Objects\MyInfoXml.cs" />
+    <Compile Include="Objects\ListAnimeXml.cs" />
     <Compile Include="Objects\Related.cs" />
+    <Compile Include="Objects\SeasonData.cs" />
+    <Compile Include="Objects\SeiyuuInformation.cs" />
+    <Compile Include="Objects\SeiyuuInformationJson.cs" />
+    <Compile Include="Objects\Utf8StringWriter.cs" />
+    <Compile Include="Objects\WebHttpWebRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="SemVer.MSBuild.props" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\SemVer.Git.MSBuild.1.0.0\build\SemVer.Git.MSBuild.targets" Condition="Exists('..\packages\SemVer.Git.MSBuild.1.0.0\build\SemVer.Git.MSBuild.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\SemVer.Git.MSBuild.1.0.0\build\SemVer.Git.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SemVer.Git.MSBuild.1.0.0\build\SemVer.Git.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.4\build\dotnet\Fody.targets'))" />
+  </Target>
+  <Import Project="..\packages\Fody.1.29.4\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

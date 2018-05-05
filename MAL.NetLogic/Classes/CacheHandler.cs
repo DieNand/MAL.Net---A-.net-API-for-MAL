@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Runtime.Caching;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using MAL.NetLogic.Interfaces;
+using Serilog;
 
 namespace MAL.NetLogic.Classes
 {
@@ -13,8 +13,8 @@ namespace MAL.NetLogic.Classes
 
         private readonly IAnimeRetriever _animeRetriever;
         private readonly MemoryCache _animeCahce;
-        public const string AnimeCache = "AnimeCache";
-        public readonly ConcurrentDictionary<string, object> AnimePadlock;  
+        private const string AnimeCache = "AnimeCache";
+        private readonly ConcurrentDictionary<string, object> _animePadlock;  
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace MAL.NetLogic.Classes
         public CacheHandler(IAnimeRetriever animeRetriever)
         {
             _animeCahce = new MemoryCache(AnimeCache);
-            AnimePadlock = new ConcurrentDictionary<string, object>();
+            _animePadlock = new ConcurrentDictionary<string, object>();
             _animeRetriever = animeRetriever;
         }
 
@@ -33,11 +33,11 @@ namespace MAL.NetLogic.Classes
 
         public async Task<IAnime> GetAnime(int id)
         {
-            IAnime finalItem = null;
+            IAnime finalItem;
             var item = _animeCahce.Get(id.ToString());
             if (item == null)
             {
-                Console.WriteLine($"{DateTime.Now} - [Cache] Cache miss [{id}]");
+                Log.Information("Cache miss for {AnimeId}", id);
 
                 var anime = await _animeRetriever.GetAnime(id);
                 finalItem = anime;
@@ -46,19 +46,19 @@ namespace MAL.NetLogic.Classes
                     AbsoluteExpiration = DateTime.Now.AddHours(1),
                     RemovedCallback = RemovedCallback
                 };
-                lock (AnimePadlock.GetOrAdd(id.ToString(), new object()))
+                lock (_animePadlock.GetOrAdd(id.ToString(), new object()))
                 {
                     item = _animeCahce.Get(id.ToString());
                     if (item == null)
                     {
                         _animeCahce.Add(id.ToString(), finalItem, cip);
-                        Console.WriteLine($"{DateTime.Now} [Cache] Added to cache [{id}]");
+                        Log.Information("Added {AnimeId} to cache", id);
                     }
                 }
             }
             else
             {
-                Console.WriteLine($"{DateTime.Now} - [Cache] Cache hit [{id}]");
+                Log.Information("Cache hit for {AnimeId}", id);
                 finalItem = (IAnime) item;
             }
             return finalItem;
@@ -66,7 +66,7 @@ namespace MAL.NetLogic.Classes
 
         public async Task<IAnime> GetAnime(int id, string username, string password)
         {
-            Console.WriteLine($"{DateTime.Now} - [Cache] Cache ignore - User spesific request");
+            Log.Information("User spesific request - Ignoring cache");
             return await _animeRetriever.GetAnime(id, username, password);
         }
 
@@ -76,7 +76,7 @@ namespace MAL.NetLogic.Classes
 
         private void RemovedCallback(CacheEntryRemovedArguments arguments)
         {
-            Console.WriteLine($"{DateTime.Now} - [Cache] {arguments.CacheItem.Key} expired. Removed from cache");
+            Log.Information("{AnimeId} cache expired. Removed from cache", arguments.CacheItem.Key);
         }
 
         #endregion
