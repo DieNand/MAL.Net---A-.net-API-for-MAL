@@ -9,10 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MAL.NetSelfHosted</RootNamespace>
     <AssemblyName>MAL.NetSelfHosted</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -23,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\MAL.NetSelfHosted.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,10 +35,16 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\MAL.NetSelfHosted.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=4.0.4.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.4.0.4\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ColoredConsole, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ColoredConsole.0.5.0\lib\net45\ColoredConsole.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Glimpse.AspNet, Version=1.9.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -78,6 +87,18 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.1.5.14\lib\net45\Serilog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog.FullNetFx, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.1.5.14\lib\net45\Serilog.FullNetFx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog.Sinks.Splunk.FullNetFx, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.Splunk.1.8.83\lib\net45\Serilog.Sinks.Splunk.FullNetFx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SimpleInjector, Version=3.0.5.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleInjector.3.0.5\lib\net45\SimpleInjector.dll</HintPath>
       <Private>True</Private>
@@ -88,6 +109,14 @@
     </Reference>
     <Reference Include="SimpleInjector.Integration.WebApi, Version=3.0.5.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleInjector.Integration.WebApi.3.0.5\lib\net45\SimpleInjector.Integration.WebApi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Splunk.Logging.Common, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Splunk.Logging.Common.1.5.0\lib\net45\Splunk.Logging.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.Core.5.2.1\lib\net40\Swashbuckle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -127,7 +156,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ConfigurationHelper.cs" />
     <Compile Include="Controllers\AnimeController.cs" />
+    <Compile Include="Controllers\AuthenticationController.cs" />
+    <Compile Include="Controllers\HealthController.cs" />
+    <Compile Include="Controllers\MyListController.cs" />
+    <Compile Include="Controllers\SeasonController.cs" />
+    <Compile Include="Controllers\UpdateController.cs" />
+    <Compile Include="Enumerations\ConfigurationKeys.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Handlers\AnimeHandler.cs" />
     <Compile Include="Interfaces\IAnimeHandler.cs" />
@@ -140,6 +176,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="SemVer.MSBuild.props" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MAL.NetLogic\MAL.NetLogic.csproj">
@@ -147,7 +184,19 @@
       <Name>MAL.NetLogic</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\SemVer.Git.MSBuild.1.0.0\build\SemVer.Git.MSBuild.targets" Condition="Exists('..\packages\SemVer.Git.MSBuild.1.0.0\build\SemVer.Git.MSBuild.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\SemVer.Git.MSBuild.1.0.0\build\SemVer.Git.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SemVer.Git.MSBuild.1.0.0\build\SemVer.Git.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.4\build\dotnet\Fody.targets'))" />
+  </Target>
+  <Import Project="..\packages\Fody.1.29.4\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.4\build\dotnet\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,13 +1,18 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
+using MAL.NetLogic.Interfaces;
 
 namespace MAL.NetLogic.Classes
 {
-    public class CredentialVerification
+    public class CredentialVerification : ICredentialVerification
     {
         #region Variables
 
-        private const string Url = "http://myanimelist.net/api/account/verify_credentials.xml";
+        private const string Url = "https://myanimelist.net/api/account/verify_credentials.xml";
 
         #endregion
 
@@ -15,12 +20,13 @@ namespace MAL.NetLogic.Classes
 
         public async Task<bool> VerifyCredentials(string username, string password)
         {
-            var request = WebRequest.Create(Url);
-            request.Method = "GET";
-            request.UseDefaultCredentials = false;
-            request.Credentials = new NetworkCredential(username, password);
-            var response = await request.GetResponseAsync();
-            return ((HttpWebResponse) response).StatusCode == HttpStatusCode.OK;
+            using (var httpClient = new HttpClient())
+            {
+                var credentials = Convert.ToBase64String(Encoding.Default.GetBytes($"{username}:{password}"));
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
+                var response = await httpClient.GetAsync(Url);
+                return response.IsSuccessStatusCode;
+            }
         }
 
         #endregion

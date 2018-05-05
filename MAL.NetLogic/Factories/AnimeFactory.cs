@@ -3,8 +3,6 @@ using SimpleInjector;
 
 namespace MAL.NetLogic.Factories
 {
-
-
     public class AnimeFactory : IAnimeFactory
     {
         #region Variables
@@ -32,6 +30,41 @@ namespace MAL.NetLogic.Factories
         public IAnimeOriginalJson CreateJsonAnime()
         {
             return _container.GetInstance<IAnimeOriginalJson>();
+        }
+
+        public IAnimeDetails CreateAnimeDetails()
+        {
+            return _container.GetInstance<IAnimeDetails>();
+        }
+
+        public IAnimeDetailsJson CreateJsonAnimeDetails()
+        {
+            return _container.GetInstance<IAnimeDetailsJson>();
+        }
+
+        public IMyAnimeList CreateAnimeList()
+        {
+            return _container.GetInstance<IMyAnimeList>();
+        }
+
+        public IMyAnimeListJson CreateJsonAnimeList()
+        {
+            return _container.GetInstance<IMyAnimeListJson>();
+        }
+
+        public IListAnime CreateListAnime()
+        {
+            return _container.GetInstance<IListAnime>();
+        }
+
+        public IMyInfo CreateMyInfo()
+        {
+            return _container.GetInstance<IMyInfo>();
+        }
+
+        public IAnimeDetailsXml CreateAnimeDetailsXml()
+        {
+            return _container.GetInstance<IAnimeDetailsXml>();
         }
 
         #endregion
